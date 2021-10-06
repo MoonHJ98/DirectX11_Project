@@ -10,6 +10,8 @@ int Management::Update(float _timeDelta)
 
 	ObjectMgr->Update(_timeDelta);
 
+	// test 1
+
 	return 0;
 }
 
