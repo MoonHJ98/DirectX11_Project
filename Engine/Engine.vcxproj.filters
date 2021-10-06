@@ -1,0 +1,245 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="99. Default">
+      <UniqueIdentifier>{5dc8f61a-8a54-44e9-994e-c684b80e4c65}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00. System">
+      <UniqueIdentifier>{e40a97e6-746d-4259-a232-c56e6811ff0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00. System\00. Device">
+      <UniqueIdentifier>{3276ab82-c139-478c-bf5f-26214fdcb4b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00. System\01. Timer">
+      <UniqueIdentifier>{83d3170b-535f-4695-bb12-ab7894e44524}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00. System\00. Device\00. Graphic">
+      <UniqueIdentifier>{aa47515e-b954-4c54-8f37-631dace2953c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility">
+      <UniqueIdentifier>{30da6128-eca8-4bfe-8053-06e42a791c7d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\00. Management">
+      <UniqueIdentifier>{37056554-c654-46cd-8698-9f5d4f64f1e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\01. Scene">
+      <UniqueIdentifier>{ee9bc5fc-759b-48ed-8c86-25fa9548d6c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\02. Object">
+      <UniqueIdentifier>{1fe0fddf-c3b9-4ca9-81eb-42981a8ac3e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00. System\01. Timer\00. Manager">
+      <UniqueIdentifier>{7aefc65b-c413-41de-bdbf-8910f2619610}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\01. Scene\00. Manager">
+      <UniqueIdentifier>{00a6611b-043f-4c96-9e22-cdef1930e8c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\02. Object\00. Manager">
+      <UniqueIdentifier>{5cf2b27e-0e9c-4d6c-9ecc-b72677ce446d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\02. Object\01. Layer">
+      <UniqueIdentifier>{44a057d4-b3c6-4e66-8b7c-ab6e886a46c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\02. Object\02. GameObject">
+      <UniqueIdentifier>{f435cae9-301d-47d4-9628-8cec54da1f4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00. System\00. Device\01. Input">
+      <UniqueIdentifier>{2ddd64fc-a145-429a-a0a9-476d9eac46ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\03. Component">
+      <UniqueIdentifier>{a62af1d5-add2-46bc-be9e-39277cbbd45e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\03. Component\00. Manager">
+      <UniqueIdentifier>{c0d7fbc9-7d6a-4238-98a0-6677ac5b7aff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\03. Component\01. Buffer">
+      <UniqueIdentifier>{7c521d6e-f379-4f25-a5ff-de114da26a16}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\03. Component\01. Texture">
+      <UniqueIdentifier>{8a1fc8fd-a5ae-4bb2-992f-4cb513b11873}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\03. Component\02. Shader">
+      <UniqueIdentifier>{eb73d1d2-c7eb-40a5-b4ac-2c44adb9d907}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\03. Component\04. Transform">
+      <UniqueIdentifier>{04985359-90e4-4e6c-bfd4-84c8b57d35ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\03. Component\05. Model">
+      <UniqueIdentifier>{ec94e30a-872f-491f-898d-8bf8a5a1f68d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\03. Component\05. Model\00. Dynamic">
+      <UniqueIdentifier>{75f38ec0-df6c-4646-bf7c-931a5779baaf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\03. Component\05. Model\01. Static">
+      <UniqueIdentifier>{1d83bd97-f7e1-4857-bd6d-32a371e13d80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\03. Component\05. Model\00. Dynamic\00. Animation">
+      <UniqueIdentifier>{5442c1ed-e44d-4e42-87fe-2e79dad32a60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\99. Base">
+      <UniqueIdentifier>{e1bf571c-015f-475a-8ee0-70648e32918b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\04. Pipiline">
+      <UniqueIdentifier>{d1430254-8cce-4165-9397-b91deaa3d7ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Includes">
+      <UniqueIdentifier>{cf552c28-80ae-4371-bc9d-9f25d4d9e4c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Includes\00. Struct">
+      <UniqueIdentifier>{57f724e9-e84f-43c2-b4c5-b3805a5b3ccc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Includes\01. HLSL">
+      <UniqueIdentifier>{f3cda84f-e410-4d77-88f2-7505c8f0d169}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Includes\02. Assimp">
+      <UniqueIdentifier>{b9b7ac54-c9c4-48ab-84fe-bed078f08513}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\02. Object\02. GameObject\00. ObjectManager">
+      <UniqueIdentifier>{757f7d86-0056-40c7-ad53-4cc58b85827c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\02. Object\02. GameObject\01. Camera">
+      <UniqueIdentifier>{3b08dede-ee9a-46e1-867d-b684b508bcc1}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="framework.h">
+      <Filter>99. Default</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>99. Default</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicDevice.h">
+      <Filter>00. System\00. Device\00. Graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>00. System\01. Timer</Filter>
+    </ClInclude>
+    <ClInclude Include="TimeManager.h">
+      <Filter>00. System\01. Timer\00. Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>01. Utility\02. Object\02. GameObject\01. Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="InputDevice.h">
+      <Filter>00. System\00. Device\01. Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>01. Utility\03. Component\01. Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.h">
+      <Filter>01. Utility\03. Component\04. Transform</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>01. Utility\02. Object\02. GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="DynamicModel.h">
+      <Filter>01. Utility\03. Component\05. Model\00. Dynamic</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationController.h">
+      <Filter>01. Utility\03. Component\05. Model\00. Dynamic\00. Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Base.h">
+      <Filter>01. Utility\99. Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes.h">
+      <Filter>02. Includes</Filter>
+    </ClInclude>
+    <ClInclude Include="Struct.h">
+      <Filter>02. Includes\00. Struct</Filter>
+    </ClInclude>
+    <ClInclude Include="PipeLine.h">
+      <Filter>01. Utility\04. Pipiline</Filter>
+    </ClInclude>
+    <ClInclude Include="AssimpLoader.h">
+      <Filter>02. Includes\02. Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="Layer.h">
+      <Filter>01. Utility\02. Object\01. Layer</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneManager.h">
+      <Filter>01. Utility\01. Scene\00. Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>01. Utility\01. Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectManager.h">
+      <Filter>01. Utility\02. Object\02. GameObject\00. ObjectManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Management.h">
+      <Filter>01. Utility\00. Management</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="pch.cpp">
+      <Filter>99. Default</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine.cpp">
+      <Filter>99. Default</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicDevice.cpp">
+      <Filter>00. System\00. Device\00. Graphic</Filter>
+    </ClCompile>
+    <ClCompile Include="Timer.cpp">
+      <Filter>00. System\01. Timer</Filter>
+    </ClCompile>
+    <ClCompile Include="TimeManager.cpp">
+      <Filter>00. System\01. Timer\00. Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>01. Utility\02. Object\02. GameObject\01. Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="InputDevice.cpp">
+      <Filter>00. System\00. Device\01. Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>01. Utility\03. Component\01. Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Transform.cpp">
+      <Filter>01. Utility\03. Component\04. Transform</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>01. Utility\02. Object\02. GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="DynamicModel.cpp">
+      <Filter>01. Utility\03. Component\05. Model\00. Dynamic</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationController.cpp">
+      <Filter>01. Utility\03. Component\05. Model\00. Dynamic\00. Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Base.cpp">
+      <Filter>01. Utility\99. Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Struct.cpp">
+      <Filter>02. Includes\00. Struct</Filter>
+    </ClCompile>
+    <ClCompile Include="PipeLine.cpp">
+      <Filter>01. Utility\04. Pipiline</Filter>
+    </ClCompile>
+    <ClCompile Include="AssimpLoader.cpp">
+      <Filter>02. Includes\02. Assimp</Filter>
+    </ClCompile>
+    <ClCompile Include="Layer.cpp">
+      <Filter>01. Utility\02. Object\01. Layer</Filter>
+    </ClCompile>
+    <ClCompile Include="Management.cpp">
+      <Filter>01. Utility\00. Management</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneManager.cpp">
+      <Filter>01. Utility\01. Scene\00. Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>01. Utility\01. Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectManager.cpp">
+      <Filter>01. Utility\02. Object\02. GameObject\00. ObjectManager</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="SkinnedMeshPS.hlsl">
+      <Filter>02. Includes\01. HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="SkinnedMeshVS.hlsl">
+      <Filter>02. Includes\01. HLSL</Filter>
+    </FxCompile>
+  </ItemGroup>
+</Project>
