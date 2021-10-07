@@ -18,7 +18,7 @@ public:
 public:
 	HRESULT Initialize(ID3D11Device* _Device);
 public:
-	static Player* Create(ID3D11Device* _Device);
+	static shared_ptr<Player> Create(ID3D11Device* _Device);
 
 private:
 	DynamicModel*  Model = nullptr;

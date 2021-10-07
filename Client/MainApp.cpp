@@ -53,7 +53,7 @@ HRESULT MainApp::Initialize()
 
 HRESULT MainApp::ReadyScene(SCENEID sceneID)
 {
-	Scene* scene = nullptr;
+	shared_ptr<Scene> scene = nullptr;
 	switch (sceneID)
 	{
 	case STATIC:

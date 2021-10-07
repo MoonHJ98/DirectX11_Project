@@ -19,7 +19,7 @@ public:
 
 public:
 	HRESULT					ReserveLayerMap(int _Size);
-	void					AddLayer(int _Index, wstring _LayerKey, GameObject* _Object);
+	void					AddLayer(int _Index, wstring _LayerKey, shared_ptr<GameObject> _Object);
 	Layer*					FindLayer(int _Index, wstring _LayerKey);
 
 

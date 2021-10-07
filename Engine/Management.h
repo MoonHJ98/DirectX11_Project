@@ -32,10 +32,10 @@ public:
 	XMMATRIX*				GetTransform(_D3DTRANSFORMSTATETYPE _Type);
 
 	// Layer
-	void					AddLayer(int _Index, wstring _LayerKey, GameObject* _Object);
+	void					AddLayer(int _Index, wstring _LayerKey, shared_ptr<GameObject> _Object);
 
 	// Scene
-	HRESULT					SetScene(Scene* scene);
+	HRESULT					SetScene(shared_ptr<Scene> scene);
 
 public:
 	void					Initialize(HINSTANCE hInst, HWND hWnd, int SceneCnt, int screenWidth, int screenHeight, bool vsync, bool fullscreen, float screenDepth, float screenNear);

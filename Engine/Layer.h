@@ -11,13 +11,13 @@ public:
 
 public:
 	HRESULT		Initialize();
-	void		AddGameObject(GameObject* _GameObject);
+	void		AddGameObject(shared_ptr<GameObject> _GameObject);
 
 
 public:
 	static Layer* Create();
 
 private:
-	list<GameObject*> GameObjects;
+	list<shared_ptr<GameObject>> GameObjects;
 };
 

@@ -51,7 +51,7 @@ HRESULT ObjectManager::ReserveLayerMap(int _Size)
 	return S_OK;
 }
 
-void ObjectManager::AddLayer(int _Index, wstring _LayerKey, GameObject * _Object)
+void ObjectManager::AddLayer(int _Index, wstring _LayerKey, shared_ptr<GameObject> _Object)
 {
 	auto layerFind = FindLayer(_Index, _LayerKey);
 	if (layerFind == nullptr)

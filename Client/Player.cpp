@@ -14,15 +14,18 @@ Player::Player(const Player & Rhs)
 
 Player::~Player()
 {
-	delete Model;
-	Model = nullptr;
+	if (Model)
+	{
+		delete Model;
+		Model = nullptr;
+	}
 }
 
 int Player::Update(float _TimeDelta)
 {
 	TimeDelta = _TimeDelta;
 
-	return 0;
+	return -1;
 }
 
 void Player::Render()
@@ -52,9 +55,9 @@ HRESULT Player::Initialize(ID3D11Device * _Device)
 	return S_OK;
 }
 
-Player * Player::Create(ID3D11Device * _Device)
+shared_ptr<Player> Player::Create(ID3D11Device * _Device)
 {
-	auto Instance = new Player();
+	shared_ptr<Player> Instance(new Player);
 	if (FAILED(Instance->Initialize(_Device)))
 	{
 		MSG_BOX("Failed to create Player.");

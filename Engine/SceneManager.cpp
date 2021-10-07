@@ -5,7 +5,6 @@
 
 SceneManager::~SceneManager()
 {
-	SAFEDELETE(scene);
 }
 
 int SceneManager::Update(float _timeDelta)
@@ -21,9 +20,9 @@ void SceneManager::Render()
 	scene->Render();
 }
 
-HRESULT SceneManager::SetScene(Scene * _scene)
+HRESULT SceneManager::SetScene(shared_ptr<Scene> _scene)
 {
-	SAFEDELETE(scene);
+	scene.reset();
 
 	scene = _scene;
 

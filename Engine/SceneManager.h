@@ -14,9 +14,9 @@ public:
 	virtual void Render() override;
 
 public:
-	HRESULT		SetScene(Scene* _scene);
+	HRESULT		SetScene(shared_ptr<Scene> _scene);
 
 private:
-	Scene*		scene = nullptr;
+	shared_ptr<Scene>		scene = nullptr;
 };
 

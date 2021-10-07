@@ -100,9 +100,9 @@ void StaticCamera::Render()
 {
 }
 
-StaticCamera * StaticCamera::Create(CAMERADECS _Decs)
+shared_ptr<StaticCamera> StaticCamera::Create(CAMERADECS _Decs)
 {
-	StaticCamera* Instance = new StaticCamera();
+	shared_ptr<StaticCamera> Instance(new StaticCamera);
 
 	if (nullptr == Instance || FAILED(Instance->Initialize(_Decs)))
 	{

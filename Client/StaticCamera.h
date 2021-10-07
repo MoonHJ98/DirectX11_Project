@@ -20,7 +20,7 @@ public:
 	virtual void Render() override;
 
 public:
-	static StaticCamera*	Create(CAMERADECS _Decs);
+	static shared_ptr<StaticCamera>	Create(CAMERADECS _Decs);
 
 };
 

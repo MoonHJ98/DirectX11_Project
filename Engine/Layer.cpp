@@ -10,7 +10,8 @@ int Layer::Update(float _timeDelta)
 		Res = (*iter)->Update(_timeDelta);
 		if (Res & 0x80000000)
 		{
-			delete *iter;
+
+			delete (*iter).get();
 			iter = GameObjects.erase(iter);
 		}
 		else
@@ -34,7 +35,7 @@ HRESULT Layer::Initialize()
 	return S_OK;
 }
 
-void Layer::AddGameObject(GameObject * _GameObject)
+void Layer::AddGameObject(shared_ptr<GameObject> _GameObject)
 {
 	GameObjects.push_back(_GameObject);
 }

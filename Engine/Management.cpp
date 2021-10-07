@@ -49,12 +49,12 @@ XMMATRIX * Management::GetTransform(_D3DTRANSFORMSTATETYPE _Type)
 
 }
 
-void Management::AddLayer(int _Index, wstring _LayerKey, GameObject * _Object)
+void Management::AddLayer(int _Index, wstring _LayerKey, shared_ptr<GameObject> _Object)
 {
 	ObjectMgr->AddLayer(_Index, _LayerKey, _Object);
 }
 
-HRESULT Management::SetScene(Scene * scene)
+HRESULT Management::SetScene(shared_ptr<Scene> scene)
 {
 	if (SceneMgr == nullptr)
 		return E_FAIL;

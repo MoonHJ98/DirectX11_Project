@@ -20,16 +20,19 @@ HRESULT Stage::Initialize(ID3D11Device * _Device)
 
 int Stage::Update(float _timeDelta)
 {
+	int a = 10;
 	return 0;
 }
 
 void Stage::Render()
 {
+	int a = 10;
+
 }
 
-Stage * Stage::Create(ID3D11Device * _Device)
+shared_ptr<Stage> Stage::Create(ID3D11Device * _Device)
 {
-	auto Instance = new Stage();
+	shared_ptr<Stage> Instance(new Stage());
 	if (FAILED(Instance->Initialize(_Device)))
 	{
 		MSG_BOX("Failed to create Stage.");

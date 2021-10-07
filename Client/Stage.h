@@ -21,7 +21,7 @@ public:
 	virtual void Render() override;
 
 public:
-	static Stage* Create(ID3D11Device* _Device);
+	static shared_ptr<Stage> Create(ID3D11Device* _Device);
 
 };
 
