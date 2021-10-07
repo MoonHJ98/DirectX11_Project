@@ -10,8 +10,8 @@ int Layer::Update(float _timeDelta)
 		Res = (*iter)->Update(_timeDelta);
 		if (Res & 0x80000000)
 		{
-
-			delete (*iter).get();
+			(*iter).reset();
+			//delete (*iter).get();
 			iter = GameObjects.erase(iter);
 		}
 		else
