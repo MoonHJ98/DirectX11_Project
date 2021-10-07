@@ -15,7 +15,7 @@ public:
 
 
 public:
-	static Layer* Create();
+	static shared_ptr<Layer> Create();
 
 private:
 	list<shared_ptr<GameObject>> GameObjects;

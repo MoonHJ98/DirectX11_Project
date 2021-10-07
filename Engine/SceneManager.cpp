@@ -3,10 +3,6 @@
 #include "Scene.h"
 
 
-SceneManager::~SceneManager()
-{
-}
-
 int SceneManager::Update(float _timeDelta)
 {
 	if (!scene)

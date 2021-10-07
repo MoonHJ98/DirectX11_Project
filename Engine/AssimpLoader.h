@@ -28,17 +28,17 @@ public:
 	~AssimpLoader();
 
 private:
-	HRESULT				ReadFile(string _MeshFilePath, vector<MESH*>& _meshes, vector<shared_ptr<Texture>>& _textures, AnimationController** _Animator);
-	void				ProcessNode(aiNode* _Node, vector<MESH*>& _meshes, vector<shared_ptr<Texture>>& _textures, AnimationController** _Animator);
-	void				ProcessMesh(aiNode* node, vector<MESH*>& _meshes, vector<shared_ptr<Texture>>& _textures, AnimationController** _Animator);
-	vector<Weights>		CalculateWeights(aiMesh * _mesh, AnimationController** _Animator);
-	HRESULT				ProcessMaterial(MESH* _mesh, vector<shared_ptr<Texture>>& _textures);
+	HRESULT				ReadFile(string _MeshFilePath, vector< shared_ptr<MESH>>& _meshes, vector<shared_ptr<Texture>>& _textures, shared_ptr<AnimationController>* _Animator);
+	void				ProcessNode(aiNode* _Node, vector<shared_ptr<MESH>>& _meshes, vector<shared_ptr<Texture>>& _textures, shared_ptr<AnimationController>* _Animator);
+	void				ProcessMesh(aiNode* node, vector<shared_ptr<MESH>>& _meshes, vector<shared_ptr<Texture>>& _textures, shared_ptr<AnimationController>* _Animator);
+	vector<Weights>		CalculateWeights(aiMesh * _mesh, shared_ptr<AnimationController>* _Animator);
+	HRESULT				ProcessMaterial(shared_ptr<MESH> _mesh, vector<shared_ptr<Texture>>& _textures);
 	shared_ptr<Texture> MatchTexture(TEXTUREDESC& _texture, vector<shared_ptr<Texture>>& _textures);
 
 
 
 public:
-	HRESULT				LoadModel(string _MeshFilePath, vector<MESH*>& _meshes, vector<shared_ptr<Texture>>& _textures, AnimationController** _Animator);
+	HRESULT				LoadModel(string _MeshFilePath, vector<shared_ptr<MESH>>& _meshes, vector<shared_ptr<Texture>>& _textures, shared_ptr<AnimationController>* _Animator);
 
 private:
 	Assimp::Importer	importer;

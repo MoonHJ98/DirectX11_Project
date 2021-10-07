@@ -47,7 +47,7 @@ public:
 	HRESULT						SetRotation(XMFLOAT3 _Axis, float _Radian);
 
 public:
-	static Transform*		Create(TRANSDESC _TransDecs);
+	static shared_ptr<Transform>		Create(TRANSDESC _TransDecs);
 
 private:
 	XMMATRIX					WorldMatrix;

@@ -31,6 +31,5 @@ private:
 	shared_ptr<GraphicDevice>	GraphicDev = nullptr;
 
 
-
 };
 

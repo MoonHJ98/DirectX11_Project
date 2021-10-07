@@ -12,7 +12,7 @@ AssimpLoader::~AssimpLoader()
 {
 }
 
-HRESULT AssimpLoader::ReadFile(string _MeshFilePath, vector<MESH*>& _meshes, vector<shared_ptr<Texture>>& _textures, AnimationController** _Animator)
+HRESULT AssimpLoader::ReadFile(string _MeshFilePath, vector<shared_ptr<MESH>>& _meshes, vector<shared_ptr<Texture>>& _textures, shared_ptr<AnimationController>* _Animator)
 {
 	filesystem::path p = _MeshFilePath;
 	p = p.parent_path();
@@ -34,15 +34,16 @@ HRESULT AssimpLoader::ReadFile(string _MeshFilePath, vector<MESH*>& _meshes, vec
 		return E_FAIL;
 	}
 
-	(*_Animator) = new AnimationController();
-	(*_Animator)->Initialize(scene);
+	
+	*_Animator = AnimationController::Create(scene);
+
 
 	ProcessNode(scene->mRootNode, _meshes, _textures, _Animator);
 
 	return S_OK;
 }
 
-void AssimpLoader::ProcessNode(aiNode* _Node, vector<MESH*>& _meshes, vector<shared_ptr<Texture>>& _textures, AnimationController** _Animator)
+void AssimpLoader::ProcessNode(aiNode* _Node, vector<shared_ptr<MESH>>& _meshes, vector<shared_ptr<Texture>>& _textures, shared_ptr<AnimationController>* _Animator)
 {
 	ProcessMesh(_Node, _meshes, _textures, _Animator);
 
@@ -50,7 +51,7 @@ void AssimpLoader::ProcessNode(aiNode* _Node, vector<MESH*>& _meshes, vector<sha
 		ProcessNode(_Node->mChildren[i], _meshes, _textures, _Animator);
 }
 
-void AssimpLoader::ProcessMesh(aiNode * node, vector<MESH*>& _meshes, vector<shared_ptr<Texture>>& _textures, AnimationController** _Animator)
+void AssimpLoader::ProcessMesh(aiNode * node, vector<shared_ptr<MESH>>& _meshes, vector<shared_ptr<Texture>>& _textures, shared_ptr<AnimationController>* _Animator)
 {
 	if (node->mNumMeshes < 1)
 		return;
@@ -59,7 +60,7 @@ void AssimpLoader::ProcessMesh(aiNode * node, vector<MESH*>& _meshes, vector<sha
 
 	for (UINT i = 0; i < node->mNumMeshes; ++i)
 	{
-		MESH* mesh = new MESH();
+		shared_ptr<MESH> mesh(new MESH());
 		mesh->Name = node->mName.C_Str();
 
 		UINT index = node->mMeshes[i];
@@ -136,7 +137,7 @@ void AssimpLoader::ProcessMesh(aiNode * node, vector<MESH*>& _meshes, vector<sha
 	}
 }
 
-vector<Weights> AssimpLoader::CalculateWeights(aiMesh * _mesh, AnimationController** _Animator)
+vector<Weights> AssimpLoader::CalculateWeights(aiMesh * _mesh, shared_ptr<AnimationController>* _Animator)
 {
 	vector<Weights> weights(_mesh->mNumVertices);
 
@@ -158,7 +159,7 @@ vector<Weights> AssimpLoader::CalculateWeights(aiMesh * _mesh, AnimationControll
 	return weights;
 }
 
-HRESULT AssimpLoader::ProcessMaterial(MESH* _mesh, vector<shared_ptr<Texture>>& _textures)
+HRESULT AssimpLoader::ProcessMaterial(shared_ptr<MESH> _mesh, vector<shared_ptr<Texture>>& _textures)
 {
 	string MaterialPath = FolderPath + "\\" + _mesh->MaterialName + ".mat";
 
@@ -221,7 +222,7 @@ shared_ptr<Texture> AssimpLoader::MatchTexture(TEXTUREDESC& _texture, vector<sha
 	return tex;
 }
 
-HRESULT AssimpLoader::LoadModel(string _MeshFilePath, vector<MESH*>& _meshes, vector<shared_ptr<Texture>>& _textures, AnimationController** _Animator)
+HRESULT AssimpLoader::LoadModel(string _MeshFilePath, vector<shared_ptr<MESH>>& _meshes, vector<shared_ptr<Texture>>& _textures, shared_ptr<AnimationController>* _Animator)
 {
 	if (FAILED(ReadFile(_MeshFilePath, _meshes, _textures, _Animator)))
 	{

@@ -9,18 +9,21 @@
 
 DynamicModel::~DynamicModel()
 {
+	
 }
 
 HRESULT DynamicModel::Initialize(ID3D11Device * _Device, string _MeshFilePath, wstring VSPath, wstring _PSPath)
 {
 	if (FAILED(LoadModel(_MeshFilePath)))
 		return E_FAIL;
-
+	
 	if (FAILED(InitializeShader(_Device, VSPath, _PSPath)))
 		return E_FAIL;
 
 	// Constant Buffer.
 	MatrixBuffer.Create(_Device);
+	BoneTransformBuffer.Create(_Device);
+
 
 	return S_OK;
 }
@@ -132,6 +135,13 @@ void DynamicModel::Render(MATRIXBUFFERTYPE _MatrixbufferDesc, float _timeDelta)
 	auto buffer = MatrixBuffer.GetBuffer();
 	GraphicDev->GetDeviceContext()->VSSetConstantBuffers(0, 1, &buffer);
 
+	Animator->SetAnimation("Take 001");
+
+	vector<XMFLOAT4X4> finalTransforms = Animator->GetTransforms(_timeDelta);
+	BoneTransformBuffer.SetData(GraphicDev->GetDeviceContext(), finalTransforms);
+	auto Transform = BoneTransformBuffer.GetBuffer();
+	GraphicDev->GetDeviceContext()->VSSetConstantBuffers(1, 1, &Transform);
+
 
 	GraphicDev->GetDeviceContext()->IASetInputLayout(Layout.Get());
 
@@ -149,9 +159,9 @@ void DynamicModel::Render(MATRIXBUFFERTYPE _MatrixbufferDesc, float _timeDelta)
 	}
 }
 
-DynamicModel * DynamicModel::Create(ID3D11Device * _Device, string _MeshFilePath, wstring _VSPath, wstring _PSPath)
+shared_ptr<DynamicModel> DynamicModel::Create(ID3D11Device * _Device, string _MeshFilePath, wstring _VSPath, wstring _PSPath)
 {
-	auto Instance = new DynamicModel();
+	shared_ptr<DynamicModel> Instance(new DynamicModel());
 
 	if (FAILED(Instance->Initialize(_Device, _MeshFilePath, _VSPath, _PSPath)))
 	{

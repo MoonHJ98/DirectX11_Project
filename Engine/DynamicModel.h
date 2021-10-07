@@ -26,12 +26,12 @@ public:
 	virtual void Render(MATRIXBUFFERTYPE _Matrixbuffer, float _timeDelta);
 
 public:
-	static DynamicModel* Create(ID3D11Device* _Device, string _MeshFilePath, wstring _VSPath, wstring _PSPath);
+	static shared_ptr<DynamicModel> Create(ID3D11Device* _Device, string _MeshFilePath, wstring _VSPath, wstring _PSPath);
 
 private:
-	vector<MESH*>						Meshes;
+	vector<shared_ptr<MESH>>			Meshes;
 	vector<shared_ptr<Texture>>			Textures;
-	AnimationController*				Animator = nullptr;
+	shared_ptr<AnimationController>		Animator = nullptr;
 	// Shader.
 	ComPtr<ID3D11VertexShader>			VertexShader = nullptr;
 	ComPtr<ID3D11PixelShader>			PixelShader = nullptr;
@@ -40,5 +40,6 @@ private:
 
 	// Constant Buffer.
 	ConstantBuffer<MATRIXBUFFERTYPE>    MatrixBuffer;
+	ConstantBuffer<vector<XMFLOAT4X4>>  BoneTransformBuffer;
 };
 

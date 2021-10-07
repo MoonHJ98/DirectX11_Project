@@ -79,7 +79,7 @@ HRESULT MainApp::ReadyScene(SCENEID sceneID)
 int MainApp::Update(float _timeDelta)
 {
 	Manage->UpdateInputDevice();
-
+	
 	Manage->Update(_timeDelta);
 
 	return 0;

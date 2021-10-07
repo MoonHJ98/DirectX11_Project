@@ -10,10 +10,10 @@ AnimationController::~AnimationController()
 	Release();
 }
 
-void AnimationController::Initialize(const aiScene * pScene)
+HRESULT AnimationController::Initialize(const aiScene * pScene)
 {
 	if (!pScene->HasAnimations())
-		return;
+		return E_FAIL;
 
 	Release();
 
@@ -75,6 +75,7 @@ void AnimationController::Initialize(const aiScene * pScene)
 		}
 	}
 
+	return S_OK;
 }
 
 bool AnimationController::SetAnimIndex(UINT pAnimIndex)
@@ -184,6 +185,18 @@ BONE * AnimationController::CreateBoneTree(aiNode * pNode, BONE * pParent)
 	}
 
 	return Bone;
+}
+
+shared_ptr<AnimationController> AnimationController::Create(const aiScene* _scene)
+{
+	shared_ptr<AnimationController> Instance(new AnimationController);
+
+	if (FAILED(Instance->Initialize(_scene)))
+	{
+		MSG_BOX("Failed to create AnimationController.");
+		return nullptr;
+	}
+	return Instance;
 }
 
 

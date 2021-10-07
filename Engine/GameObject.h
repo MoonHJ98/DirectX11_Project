@@ -17,7 +17,7 @@ public:
 
 
 protected:
-	Transform*				transform = nullptr;
+	shared_ptr<Transform>	transform = nullptr;
 	float					TimeDelta = 0;
 };
 

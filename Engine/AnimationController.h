@@ -9,7 +9,7 @@ public:
 	~AnimationController();
 
 public:
-	void	Initialize(const aiScene* pScene);
+	HRESULT	Initialize(const aiScene* pScene);
 	bool	SetAnimIndex(UINT pAnimIndex);// this takes an index to set the current animation to
 	bool	SetAnimation(const string& name);// this takes a string to set the animation to, i.e. SetAnimation("Idle");
 	int		GetBoneIndex(const string& bname);
@@ -30,6 +30,8 @@ protected:
 	void	ExtractAnimations(const aiScene* pScene);
 	BONE*	CreateBoneTree(aiNode* pNode, BONE* pParent);// Recursively creates an internal node structure matching the current scene and animation.
 
+public:
+	static shared_ptr<AnimationController> Create(const aiScene* _scene);
 public:
 	vector<AnimEvaluator> Animations;// a std::vector that holds each animation 
 	int32_t CurrentAnimIndex;/** Current animation index */

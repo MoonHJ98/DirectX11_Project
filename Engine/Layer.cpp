@@ -11,7 +11,7 @@ int Layer::Update(float _timeDelta)
 		if (Res & 0x80000000)
 		{
 			(*iter).reset();
-			//delete (*iter).get();
+			
 			iter = GameObjects.erase(iter);
 		}
 		else
@@ -40,9 +40,9 @@ void Layer::AddGameObject(shared_ptr<GameObject> _GameObject)
 	GameObjects.push_back(_GameObject);
 }
 
-Layer * Layer::Create()
+shared_ptr<Layer> Layer::Create()
 {
-	auto Instance = new Layer();
+	shared_ptr<Layer> Instance(new Layer());
 	if (FAILED(Instance->Initialize()))
 	{
 		MSG_BOX("Failed to create Layer.");

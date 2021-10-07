@@ -2,18 +2,6 @@
 #include "ObjectManager.h"
 #include "Layer.h"
 
-ObjectManager::~ObjectManager()
-{
-	for (int i = 0; i < LayerCnt; ++i)
-	{
-		for (auto iter = LayerMap[i].begin(); iter != LayerMap[i].end(); ++iter)
-		{
-			SAFEDELETE(iter->second);
-
-		}
-		LayerMap[i].clear();
-	}
-}
 
 int ObjectManager::Update(float _timeDelta)
 {
@@ -23,8 +11,8 @@ int ObjectManager::Update(float _timeDelta)
 		for (auto& Pair : LayerMap[i])
 		{
 			Res = Pair.second->Update(_timeDelta);
-			//if (Res & 0x80000000)
-			//	return Res;
+			if (Res & 0x80000000)
+				return Res;
 		}
 	}
 
@@ -34,7 +22,7 @@ int ObjectManager::Update(float _timeDelta)
 
 void ObjectManager::Render()
 {
-	for (int i = 0; i < LayerCnt; ++i)
+	for (UINT i = 0; i < LayerCnt; ++i)
 	{
 		for (auto& Pair : LayerMap[i])
 			Pair.second->Render();
@@ -43,8 +31,8 @@ void ObjectManager::Render()
 
 HRESULT ObjectManager::ReserveLayerMap(int _Size)
 {
-	shared_ptr<LAYER[]> tempLayerMap(new LAYER[_Size]);
-	LayerMap = tempLayerMap;
+	unique_ptr<LAYER[]> tempLayerMap(new LAYER[_Size]);
+	LayerMap = move(tempLayerMap);
 
 	LayerCnt = _Size;
 
@@ -63,7 +51,7 @@ void ObjectManager::AddLayer(int _Index, wstring _LayerKey, shared_ptr<GameObjec
 	LayerMap[_Index][_LayerKey]->AddGameObject(_Object);
 }
 
-Layer * ObjectManager::FindLayer(int _Index, wstring _LayerKey)
+shared_ptr<Layer> ObjectManager::FindLayer(int _Index, wstring _LayerKey)
 {
 	auto iter = LayerMap[_Index].find(_LayerKey);
 

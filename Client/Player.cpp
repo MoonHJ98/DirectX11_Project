@@ -14,18 +14,13 @@ Player::Player(const Player & Rhs)
 
 Player::~Player()
 {
-	if (Model)
-	{
-		delete Model;
-		Model = nullptr;
-	}
 }
 
 int Player::Update(float _TimeDelta)
 {
 	TimeDelta = _TimeDelta;
 
-	return -1;
+	return 0;
 }
 
 void Player::Render()

@@ -170,9 +170,9 @@ HRESULT Transform::SetRotation(XMFLOAT3 Axis, float Radian)
 	return S_OK;
 }
 
-Transform * Transform::Create(TRANSDESC _TransDecs)
+shared_ptr<Transform> Transform::Create(TRANSDESC _TransDecs)
 {
-	Transform* Instance = new Transform();
+	shared_ptr<Transform> Instance(new Transform());
 
 	if (FAILED(Instance->Initialize(_TransDecs)))
 	{
