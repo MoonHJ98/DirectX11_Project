@@ -18,6 +18,8 @@ HWND GhWnd = nullptr;
 HINSTANCE GInstance = nullptr;
 int  GX;
 int  GY;
+SCENEID GSceneID = SCENE_END;
+
 
 // DLL 경로 설정 https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=sharonichoya&logNo=220817543315
 

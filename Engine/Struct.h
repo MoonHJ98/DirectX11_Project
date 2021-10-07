@@ -2,7 +2,6 @@
 
 #include "Includes.h"
 
-enum SCENEID { STATIC, LOGO, SCENE_END };
 
 
 struct SkinnedMesh

@@ -5,7 +5,6 @@
 class Management;
 
 class GraphicDevice;
-class Stage;
 
 class MainApp : public Base
 {
@@ -18,6 +17,7 @@ public:
 
 private:
 	HRESULT Initialize();
+	HRESULT	ReadyScene(SCENEID sceneID);
 
 public:
 	virtual int Update(float _timeDelta) override;
@@ -29,7 +29,6 @@ public:
 private:
 	shared_ptr<Management>      Manage = nullptr;
 	shared_ptr<GraphicDevice>	GraphicDev = nullptr;
-	Stage* stage = nullptr;
 
 
 

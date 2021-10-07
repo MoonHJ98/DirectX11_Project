@@ -1,11 +1,11 @@
 #pragma once
 
-#include "Base.h"
+#include "Includes.h"
 
 class Texture;
 class AnimationController;
 
-class DynamicModel : public Base
+class DynamicModel
 {
 private:
 	DynamicModel() {}
@@ -23,8 +23,7 @@ public:
 
 
 public:
-	virtual int Update(float _timeDelta) override;
-	virtual void Render() override;
+	virtual void Render(MATRIXBUFFERTYPE _Matrixbuffer, float _timeDelta);
 
 public:
 	static DynamicModel* Create(ID3D11Device* _Device, string _MeshFilePath, wstring _VSPath, wstring _PSPath);

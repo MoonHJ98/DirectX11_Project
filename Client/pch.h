@@ -9,6 +9,8 @@
 
 // 여기에 미리 컴파일하려는 헤더 추가
 #include "framework.h"
+enum SCENEID { STATIC, LOGO, SCENE_END };
+
 
 //#pragma comment(lib, "Engine.lib")
 
@@ -16,11 +18,14 @@ extern HINSTANCE GInstance;
 extern HWND GhWnd;
 extern int GX;
 extern int GY;
+extern SCENEID GSceneID;
+
 
 #define VSYNC_ENABLE true
 #define FULLSCREEN false
 #define SCREENDEPTH 1000.f
 #define SCREENNEAR 0.1f
 #define FoV 3.141592654f / 4.f
+
 
 #endif //PCH_H

@@ -2,10 +2,13 @@
 #include "Base.h"
 
 class Layer;
+class GameObject;
 
 class ObjectManager : public Base
 {
 	SINGLETON(ObjectManager)
+
+	~ObjectManager();
 
 public:
 	typedef	map<wstring, Layer*>	LAYER;
@@ -16,6 +19,9 @@ public:
 
 public:
 	HRESULT					ReserveLayerMap(int _Size);
+	void					AddLayer(int _Index, wstring _LayerKey, GameObject* _Object);
+	Layer*					FindLayer(int _Index, wstring _LayerKey);
+
 
 
 private:

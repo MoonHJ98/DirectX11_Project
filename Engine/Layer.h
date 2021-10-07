@@ -5,11 +5,13 @@ class GameObject;
 
 class Layer : public Base
 {
+public:
 	virtual int Update(float _timeDelta) override;
 	virtual void Render() override;
 
 public:
 	HRESULT		Initialize();
+	void		AddGameObject(GameObject* _GameObject);
 
 
 public:

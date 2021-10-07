@@ -1,10 +1,9 @@
 #pragma once
-#include "Base.h"
+#include "Scene.h"
 
-class StaticCamera;
-class DynamicModel;
 
-class Stage : public Base
+
+class Stage : public Scene
 {
 private:
 	Stage();
@@ -24,8 +23,5 @@ public:
 public:
 	static Stage* Create(ID3D11Device* _Device);
 
-private:
-	StaticCamera* camera = nullptr;
-	DynamicModel* model = nullptr;
 };
 

@@ -4,6 +4,21 @@
     <Filter Include="99. Default">
       <UniqueIdentifier>{cbb73dbd-9e34-4293-9179-c64dcc2412c2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="00. MainApp">
+      <UniqueIdentifier>{f82cf110-2a7c-4009-9cb9-1ada61ab99e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene">
+      <UniqueIdentifier>{e30e000c-7798-4ddd-81dc-138cc5bb9a54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject">
+      <UniqueIdentifier>{d346a7bc-93b6-4c6d-86b1-2d758bc6e988}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\00. Camera">
+      <UniqueIdentifier>{167eb78b-e2fa-48bb-95d4-c5ff608c5f24}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. Player">
+      <UniqueIdentifier>{eedad099-f6cc-4127-9c93-f571c4e829b6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -21,9 +36,18 @@
     <ClInclude Include="targetver.h">
       <Filter>99. Default</Filter>
     </ClInclude>
-    <ClInclude Include="MainApp.h" />
-    <ClInclude Include="Stage.h" />
-    <ClInclude Include="StaticCamera.h" />
+    <ClInclude Include="MainApp.h">
+      <Filter>00. MainApp</Filter>
+    </ClInclude>
+    <ClInclude Include="Stage.h">
+      <Filter>01. Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticCamera.h">
+      <Filter>02. GameObject\00. Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>02. GameObject\01. Player</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -32,9 +56,18 @@
     <ClCompile Include="pch.cpp">
       <Filter>99. Default</Filter>
     </ClCompile>
-    <ClCompile Include="MainApp.cpp" />
-    <ClCompile Include="Stage.cpp" />
-    <ClCompile Include="StaticCamera.cpp" />
+    <ClCompile Include="MainApp.cpp">
+      <Filter>00. MainApp</Filter>
+    </ClCompile>
+    <ClCompile Include="Stage.cpp">
+      <Filter>01. Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticCamera.cpp">
+      <Filter>02. GameObject\00. Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>02. GameObject\01. Player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

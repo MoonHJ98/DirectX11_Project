@@ -45,6 +45,8 @@ using namespace Microsoft::WRL;
 			{																			\
 					static shared_ptr<CLASSNAME> instance{ new CLASSNAME};				\
 					return instance;													\
-			};																								
+			};																						
+
+#define SAFEDELETE(Instance) { if(Instance) {delete Instance; Instance = nullptr;}}
 
 #include "Struct.h"

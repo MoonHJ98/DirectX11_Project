@@ -3,7 +3,7 @@
 #include "GraphicDevice.h"
 #include "AssimpLoader.h"
 #include "AnimationController.h"
-#include "PipeLine.h"
+#include "Management.h"
 #include "Texture.h"
 #include <winnt.h>
 
@@ -125,38 +125,27 @@ HRESULT DynamicModel::InitializeShader(ID3D11Device * _Device, wstring _VSPath, 
 	return S_OK;
 }
 
-int DynamicModel::Update(float _timeDelta)
+void DynamicModel::Render(MATRIXBUFFERTYPE _MatrixbufferDesc, float _timeDelta)
 {
-	return 0;
-}
-
-void DynamicModel::Render()
-{
-	XMMATRIX world = XMMatrixIdentity();
-	XMMATRIX view = *PipeLine::GetInstance()->GetTransform(D3DTRANSFORMSTATE_VIEW);
-	XMMATRIX proj = *PipeLine::GetInstance()->GetTransform(D3DTRANSFORMSTATE_PROJECTION);
-	world = XMMatrixTranspose(world);
-	view = XMMatrixTranspose(view);
-	proj = XMMatrixTranspose(proj);
-	MATRIXBUFFERTYPE _Matrixbuffer = {world, view, proj};
-	MatrixBuffer.SetData(GraphicDevice::GetInstance()->GetDeviceContext(), _Matrixbuffer);
+	auto GraphicDev = GraphicDevice::GetInstance();
+	MatrixBuffer.SetData(GraphicDev->GetDeviceContext(), _MatrixbufferDesc);
 	auto buffer = MatrixBuffer.GetBuffer();
-	GraphicDevice::GetInstance()->GetDeviceContext()->VSSetConstantBuffers(0, 1, &buffer);
+	GraphicDev->GetDeviceContext()->VSSetConstantBuffers(0, 1, &buffer);
 
 
-	GraphicDevice::GetInstance()->GetDeviceContext()->IASetInputLayout(Layout.Get());
+	GraphicDev->GetDeviceContext()->IASetInputLayout(Layout.Get());
 
-	GraphicDevice::GetInstance()->GetDeviceContext()->VSSetShader(VertexShader.Get(), NULL, 0);
-	GraphicDevice::GetInstance()->GetDeviceContext()->PSSetShader(PixelShader.Get(), NULL, 0);
+	GraphicDev->GetDeviceContext()->VSSetShader(VertexShader.Get(), NULL, 0);
+	GraphicDev->GetDeviceContext()->PSSetShader(PixelShader.Get(), NULL, 0);
 
 	// ÇÈ¼¿½¦ÀÌ´õ¿¡ ÀÖ´Â sampler state ¼³Á¤
-	GraphicDevice::GetInstance()->GetDeviceContext()->PSSetSamplers(0, 1, &SampleState);
+	GraphicDev->GetDeviceContext()->PSSetSamplers(0, 1, &SampleState);
 
 	for (UINT i = 0; i < Meshes.size(); ++i)
 	{
 		if (Meshes[i]->Diffuse)
-			GraphicDevice::GetInstance()->GetDeviceContext()->PSSetShaderResources(0, 1, Meshes[i]->Diffuse->GetTexture());
-		Meshes[i]->RenderBuffer(GraphicDevice::GetInstance()->GetDeviceContext());
+			GraphicDev->GetDeviceContext()->PSSetShaderResources(0, 1, Meshes[i]->Diffuse->GetTexture());
+		Meshes[i]->RenderBuffer(GraphicDev->GetDeviceContext());
 	}
 }
 

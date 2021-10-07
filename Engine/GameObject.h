@@ -18,5 +18,6 @@ public:
 
 protected:
 	Transform*				transform = nullptr;
+	float					TimeDelta = 0;
 };
 

@@ -6,9 +6,11 @@
 
 
 class GraphicDevice;
-
+class PipeLine;
+class GameObject;
 class SceneManager;
 class ObjectManager;
+class Scene;
 
 class Management : public Base
 {
@@ -26,13 +28,22 @@ public:
 	UCHAR					GetDIMouseState(InputDevice::MOUSEKEYSTATE _MouseState);
 	LONG					GetDIMouseMove(InputDevice::MOUSEMOVESTATE _MouseState);
 
+	// Pipeline
+	XMMATRIX*				GetTransform(_D3DTRANSFORMSTATETYPE _Type);
 
+	// Layer
+	void					AddLayer(int _Index, wstring _LayerKey, GameObject* _Object);
+
+	// Scene
+	HRESULT					SetScene(Scene* scene);
 
 public:
-	void		 Initialize(HINSTANCE hInst, HWND hWnd, int SceneCnt, int screenWidth, int screenHeight, bool vsync, bool fullscreen, float screenDepth, float screenNear);
+	void					Initialize(HINSTANCE hInst, HWND hWnd, int SceneCnt, int screenWidth, int screenHeight, bool vsync, bool fullscreen, float screenDepth, float screenNear);
 
 private:
 	shared_ptr<SceneManager>		SceneMgr = nullptr;
 	shared_ptr<ObjectManager>		ObjectMgr = nullptr;
+	shared_ptr<PipeLine>			Pipeline = nullptr;
+
 };
 
