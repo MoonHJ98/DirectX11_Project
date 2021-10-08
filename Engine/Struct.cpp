@@ -62,11 +62,17 @@ AnimEvaluator::AnimEvaluator(const aiAnimation * pAnim)
 	Name = pAnim->mName.data;
 
 	Channels.resize(pAnim->mNumChannels);
-	for (unsigned int a = 0; a < pAnim->mNumChannels; a++) {
+	for (unsigned int a = 0; a < pAnim->mNumChannels; a++)
+	{
 		Channels[a].Name = pAnim->mChannels[a]->mNodeName.data;
-		for (unsigned int i(0); i < pAnim->mChannels[a]->mNumPositionKeys; i++) Channels[a].PositionKeys.push_back(pAnim->mChannels[a]->mPositionKeys[i]);
-		for (unsigned int i(0); i < pAnim->mChannels[a]->mNumRotationKeys; i++) Channels[a].RotationKeys.push_back(pAnim->mChannels[a]->mRotationKeys[i]);
-		for (unsigned int i(0); i < pAnim->mChannels[a]->mNumScalingKeys; i++) Channels[a].ScalingKeys.push_back(pAnim->mChannels[a]->mScalingKeys[i]);
+		for (unsigned int i(0); i < pAnim->mChannels[a]->mNumPositionKeys; i++)
+			Channels[a].PositionKeys.push_back(pAnim->mChannels[a]->mPositionKeys[i]);
+
+		for (unsigned int i(0); i < pAnim->mChannels[a]->mNumRotationKeys; i++)
+			Channels[a].RotationKeys.push_back(pAnim->mChannels[a]->mRotationKeys[i]);
+
+		for (unsigned int i(0); i < pAnim->mChannels[a]->mNumScalingKeys; i++) 
+			Channels[a].ScalingKeys.push_back(pAnim->mChannels[a]->mScalingKeys[i]);
 	}
 	LastPositions.resize(pAnim->mNumChannels, std::make_tuple(0, 0, 0));
 }

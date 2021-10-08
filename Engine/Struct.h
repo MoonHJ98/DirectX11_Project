@@ -25,6 +25,7 @@ typedef struct MatrixBufferType
 	XMMATRIX View = {};
 	XMMATRIX Projection = {};
 
+
 }MATRIXBUFFERTYPE;
 
 typedef struct Weights

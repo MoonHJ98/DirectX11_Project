@@ -41,5 +41,6 @@ private:
 	// Constant Buffer.
 	ConstantBuffer<MATRIXBUFFERTYPE>    MatrixBuffer;
 	ConstantBuffer<vector<XMFLOAT4X4>>  BoneTransformBuffer;
+	ComPtr<ID3D11Buffer>	test;
 };
 

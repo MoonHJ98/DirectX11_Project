@@ -16,7 +16,6 @@ public:
 
 	vector<XMFLOAT4X4>& GetTransforms(float _FrameTime) { return Animations[CurrentAnimIndex].GetTransforms(_FrameTime); }
 
-
 	void	Release();
 protected:
 

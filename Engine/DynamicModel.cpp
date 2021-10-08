@@ -24,7 +24,6 @@ HRESULT DynamicModel::Initialize(ID3D11Device * _Device, string _MeshFilePath, w
 	MatrixBuffer.Create(_Device);
 	BoneTransformBuffer.Create(_Device);
 
-
 	return S_OK;
 }
 
@@ -138,6 +137,7 @@ void DynamicModel::Render(MATRIXBUFFERTYPE _MatrixbufferDesc, float _timeDelta)
 	Animator->SetAnimation("Take 001");
 
 	vector<XMFLOAT4X4> finalTransforms = Animator->GetTransforms(_timeDelta);
+
 	BoneTransformBuffer.SetData(GraphicDev->GetDeviceContext(), finalTransforms);
 	auto Transform = BoneTransformBuffer.GetBuffer();
 	GraphicDev->GetDeviceContext()->VSSetConstantBuffers(1, 1, &Transform);

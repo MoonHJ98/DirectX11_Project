@@ -98,6 +98,7 @@ bool AnimationController::SetAnimation(const string & name)
 	return oldindex != CurrentAnimIndex;
 }
 
+
 void AnimationController::Release()
 {
 	CurrentAnimIndex = -1;

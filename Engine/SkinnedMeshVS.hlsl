@@ -7,8 +7,10 @@ cbuffer MatrixBuffer : register(b0)
 
 cbuffer cbSkinned : register(b1)
 {
-    float4x4 gBoneTransforms[96];
+    float4x4 BoneTransforms[96];
 };
+
+
 
 struct SkinnedInput
 {
@@ -18,6 +20,7 @@ struct SkinnedInput
     float4 Weights : WEIGHT0;
     uint4 BoneIndices : BLENDINDICES;  
 };
+
 
 struct SkinnedOutput
 {
@@ -46,14 +49,15 @@ SkinnedOutput main(SkinnedInput _Input)
 
     for (int i = 0; i < 4; ++i)
     {
-        Out.PositionLocal += Out.Weights[i] * mul(float4(_Input.Position, 1.0f), gBoneTransforms[_Input.BoneIndices[i]]).xyz;
+        Out.PositionLocal += Out.Weights[i] * mul(float4(_Input.Position, 1.0f), BoneTransforms[0]).xyz;
     }
+    BoneTransforms[0].rgb;
 
 
     Out.Position = mul(float4(_Input.Position, 1.f), WorldMatrix);
     Out.Position = mul(Out.Position, ViewMatrix);
     Out.Position = mul(Out.Position, ProjectionMatrix);
-
+    
     Out.Tex = _Input.Tex;
     
     Out.Normal = normalize(mul(float4(_Input.Normal, 0.f), WorldMatrix));
