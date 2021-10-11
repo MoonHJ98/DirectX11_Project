@@ -130,15 +130,17 @@ HRESULT DynamicModel::InitializeShader(ID3D11Device * _Device, wstring _VSPath, 
 void DynamicModel::Render(MATRIXBUFFERTYPE _MatrixbufferDesc, float _timeDelta)
 {
 	auto GraphicDev = GraphicDevice::GetInstance();
+
 	MatrixBuffer.SetData(GraphicDev->GetDeviceContext(), _MatrixbufferDesc);
 	auto buffer = MatrixBuffer.GetBuffer();
 	GraphicDev->GetDeviceContext()->VSSetConstantBuffers(0, 1, &buffer);
 
-	Animator->SetAnimation("Take 001");
 
 	vector<XMFLOAT4X4> finalTransforms = Animator->GetTransforms(_timeDelta);
+	BONETRASFORMBUFFERTYPE transformCB;
+	copy(finalTransforms.begin(), finalTransforms.end() - 1, transformCB.BoneTransform);
 
-	BoneTransformBuffer.SetData(GraphicDev->GetDeviceContext(), finalTransforms);
+	BoneTransformBuffer.SetData(GraphicDev->GetDeviceContext(), transformCB);
 	auto Transform = BoneTransformBuffer.GetBuffer();
 	GraphicDev->GetDeviceContext()->VSSetConstantBuffers(1, 1, &Transform);
 

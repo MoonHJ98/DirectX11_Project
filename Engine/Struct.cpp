@@ -29,8 +29,8 @@ void MeshEntry::Initialize(ID3D11Device * _Device, vector<SkinnedMesh>& Vertices
 	NumIndices = Indices.size();
 
 
-	CreateStaticBuffer(_Device, &Vertices[0], Vertices.size(), sizeof(SkinnedMesh), D3D11_BIND_VERTEX_BUFFER, VertexBuffer.GetAddressOf());
-	CreateStaticBuffer(_Device, &Indices[0], Indices.size(), sizeof(UINT), D3D11_BIND_INDEX_BUFFER, IndexBuffer.GetAddressOf());
+	CreateStaticBuffer(_Device, &Vertices[0], Vertices.size(), sizeof(SkinnedMesh), D3D11_BIND_VERTEX_BUFFER, VertexBuffers.GetAddressOf());
+	CreateStaticBuffer(_Device, &Indices[0], Indices.size(), sizeof(UINT), D3D11_BIND_INDEX_BUFFER, IndexBuffers.GetAddressOf());
 }
 
 void MeshEntry::RenderBuffer(ID3D11DeviceContext * _DeviceContext)
@@ -43,10 +43,10 @@ void MeshEntry::RenderBuffer(ID3D11DeviceContext * _DeviceContext)
 	offset = 0;
 
 	// Set the vertex buffer to active in the input assembler so it can be rendered.
-	_DeviceContext->IASetVertexBuffers(0, 1, VertexBuffer.GetAddressOf(), &stride, &offset);
+	_DeviceContext->IASetVertexBuffers(0, 1, VertexBuffers.GetAddressOf(), &stride, &offset);
 
 	// Set the index buffer to active in the input assembler so it can be rendered.
-	_DeviceContext->IASetIndexBuffer(IndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+	_DeviceContext->IASetIndexBuffer(IndexBuffers.Get(), DXGI_FORMAT_R32_UINT, 0);
 
 	// Set the type of primitive that should be rendered from this vertex buffer, in this case triangles.
 	_DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -194,4 +194,183 @@ unsigned int AnimEvaluator::GetFrameIndexAt(float _time)
 	float percent = time / Duration;
 	if (!PlayAnimationForward) percent = (percent - 1.0f)*-1.0f;// this will invert the percent so the animation plays backwards
 	return static_cast<unsigned int>((static_cast<float>(Transforms.size()) * percent));
+}
+
+#pragma warning(disable : 4996)
+
+//////////////////////////////////////////////////////////////////////////
+///@brief 문자열 자르기
+///@param orgin : 원본 문자열
+///@param tok : 자를 기준이 되는 문자열
+///@return 완료된 문자열 배열
+//////////////////////////////////////////////////////////////////////////
+void SplitString(vector<string>* result, string origin, string tok)
+{
+	result->clear();
+
+	int cutAt = 0; //자를 위치s
+	while ((cutAt = (int)origin.find_first_of(tok)) != origin.npos)
+	{
+		if (cutAt > 0) //자르는 위치가 0보다크면
+			result->push_back(origin.substr(0, cutAt));
+
+		origin = origin.substr(cutAt + 1);
+	}
+
+	if (origin.length() > 0) //자르고도 남은 것이 있다면
+		result->push_back(origin.substr(0, cutAt));
+}
+
+void SplitString(vector<wstring>* result, wstring origin, wstring tok)
+{
+	result->clear();
+
+	int cutAt = 0; //자를 위치s
+	while ((cutAt = (int)origin.find_first_of(tok)) != origin.npos)
+	{
+		if (cutAt > 0) //자르는 위치가 0보다크면
+			result->push_back(origin.substr(0, cutAt));
+
+		origin = origin.substr(cutAt + 1);
+	}
+
+	if (origin.length() > 0) //자르고도 남은 것이 있다면
+		result->push_back(origin.substr(0, cutAt));
+}
+
+
+//////////////////////////////////////////////////////////////////////////
+///@brief 시작 문자열이 같은지 체크
+///@param str : 체크하려는 문자열
+///@param comp : 시작 비교문자열
+//////////////////////////////////////////////////////////////////////////
+bool StartsWith(string str, string comp)
+{
+	wstring::size_type index = str.find(comp);
+	if (index != wstring::npos && (int)index == 0)
+		return true;
+
+	return false;
+}
+
+bool StartsWith(wstring str, wstring comp)
+{
+	wstring::size_type index = str.find(comp);
+	if (index != wstring::npos && (int)index == 0)
+		return true;
+
+	return false;
+}
+
+//////////////////////////////////////////////////////////////////////////
+///@brief 해당 문자열이 포함되어 있는지
+///@param str : 체크하려는 문자열
+///@param comp : 비교문자열
+//////////////////////////////////////////////////////////////////////////
+bool Contain(string str, string comp)
+{
+	size_t found = str.find(comp);
+
+	return found != wstring::npos;
+}
+
+bool Contain(wstring str, wstring comp)
+{
+	size_t found = str.find(comp);
+
+	return found != wstring::npos;
+}
+
+
+//////////////////////////////////////////////////////////////////////////
+///@brief 해당 문자열에서 comp 문자를 rep로 변경
+///@param str : 체크하려는 문자열
+///@param comp : 비교문자열
+///@param rep : 바꿀문자열
+//////////////////////////////////////////////////////////////////////////
+void Replace(string * str, string comp, string rep)
+{
+	string temp = *str;
+
+	size_t start_pos = 0;
+	while ((start_pos = temp.find(comp, start_pos)) != wstring::npos)
+	{
+		temp.replace(start_pos, comp.length(), rep);
+		start_pos += rep.length();
+	}
+
+	*str = temp;
+}
+
+void Replace(wstring* str, wstring comp, wstring rep)
+{
+	wstring temp = *str;
+
+	size_t start_pos = 0;
+	while ((start_pos = temp.find(comp, start_pos)) != wstring::npos)
+	{
+		temp.replace(start_pos, comp.length(), rep);
+		start_pos += rep.length();
+	}
+
+	*str = temp;
+}
+
+//////////////////////////////////////////////////////////////////////////
+///@brief string형을 wstring형으로 변경
+///@param value : 변환할 문자열
+///@return 변환 완료 문자열
+//////////////////////////////////////////////////////////////////////////
+wstring ToWString(string value)
+{
+	wstring temp = L"";
+	temp.assign(value.begin(), value.end());
+
+	return temp;
+}
+
+//////////////////////////////////////////////////////////////////////////
+///@brief wstring형을 string형으로 변경
+///@param value : 변환할 문자열
+///@return 변환 완료 문자열
+//////////////////////////////////////////////////////////////////////////
+string ToString(wstring value)
+{
+	string temp = "";
+	temp.assign(value.begin(), value.end());
+
+	return temp;
+}
+string Format(const string format, ...)
+{
+	va_list args;
+
+	va_start(args, format);
+	size_t len = vsnprintf(NULL, 0, format.c_str(), args);
+	va_end(args);
+
+	vector<char> vec(len + 1);
+
+	va_start(args, format);
+	vsnprintf(&vec[0], len + 1, format.c_str(), args);
+	va_end(args);
+
+	return &vec[0];
+}
+
+wstring Format(const wstring format, ...)
+{
+	va_list args;
+
+	va_start(args, format);
+	size_t len = _vsnwprintf(NULL, 0, format.c_str(), args);
+	va_end(args);
+
+	vector<WCHAR> vec(len + 1);
+
+	va_start(args, format);
+	_vsnwprintf(&vec[0], len + 1, format.c_str(), args);
+	va_end(args);
+
+	return &vec[0];
 }

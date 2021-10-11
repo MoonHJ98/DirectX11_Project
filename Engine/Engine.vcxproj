@@ -157,8 +157,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AnimationController.h" />
+    <ClInclude Include="AssimpConverter.h" />
     <ClInclude Include="AssimpLoader.h" />
     <ClInclude Include="Base.h" />
+    <ClInclude Include="BinaryFile.h" />
+    <ClInclude Include="Bone.h" />
+    <ClInclude Include="Buffers.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="DynamicModel.h" />
     <ClInclude Include="framework.h" />
@@ -168,7 +172,9 @@
     <ClInclude Include="InputDevice.h" />
     <ClInclude Include="Layer.h" />
     <ClInclude Include="Management.h" />
+    <ClInclude Include="Model.h" />
     <ClInclude Include="ObjectManager.h" />
+    <ClInclude Include="Path.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="PipeLine.h" />
     <ClInclude Include="Scene.h" />
@@ -181,8 +187,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AnimationController.cpp" />
+    <ClCompile Include="AssimpConverter.cpp" />
     <ClCompile Include="AssimpLoader.cpp" />
     <ClCompile Include="Base.cpp" />
+    <ClCompile Include="BinaryFile.cpp" />
+    <ClCompile Include="Bone.cpp" />
+    <ClCompile Include="Buffers.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="DynamicModel.cpp" />
     <ClCompile Include="Engine.cpp" />
@@ -191,7 +201,9 @@
     <ClCompile Include="InputDevice.cpp" />
     <ClCompile Include="Layer.cpp" />
     <ClCompile Include="Management.cpp" />
+    <ClCompile Include="Model.cpp" />
     <ClCompile Include="ObjectManager.cpp" />
+    <ClCompile Include="Path.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

@@ -1,3 +1,5 @@
+#define MAX_BONE_TRANSFORM 96
+
 cbuffer MatrixBuffer : register(b0)
 {
     matrix WorldMatrix;
@@ -7,7 +9,7 @@ cbuffer MatrixBuffer : register(b0)
 
 cbuffer cbSkinned : register(b1)
 {
-    float4x4 BoneTransforms[96];
+    float4x4 BoneTransforms[MAX_BONE_TRANSFORM];
 };
 
 
@@ -36,7 +38,7 @@ struct SkinnedOutput
 
 SkinnedOutput main(SkinnedInput _Input)
 {
-    SkinnedOutput Out;
+    SkinnedOutput Out ;
 
     Out.BoneIndices = _Input.BoneIndices;
 
@@ -47,14 +49,16 @@ SkinnedOutput main(SkinnedInput _Input)
     Out.Weights[2] = _Input.Weights.z;
     Out.Weights[3] = _Input.Weights.w;
 
+ 
+
+
     for (int i = 0; i < 4; ++i)
     {
-        Out.PositionLocal += Out.Weights[i] * mul(float4(_Input.Position, 1.0f), BoneTransforms[0]).xyz;
+        Out.PositionLocal += Out.Weights[i] * mul(float4(_Input.Position, 1.0f), BoneTransforms[_Input.BoneIndices[i]]).xyz;
     }
-    BoneTransforms[0].rgb;
 
 
-    Out.Position = mul(float4(_Input.Position, 1.f), WorldMatrix);
+    Out.Position = mul(float4(Out.PositionLocal, 1.f), WorldMatrix);
     Out.Position = mul(Out.Position, ViewMatrix);
     Out.Position = mul(Out.Position, ProjectionMatrix);
     

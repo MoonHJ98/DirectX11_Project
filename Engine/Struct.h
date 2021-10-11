@@ -3,7 +3,6 @@
 #include "Includes.h"
 
 
-
 struct SkinnedMesh
 {
 	XMFLOAT3 Position;
@@ -25,8 +24,13 @@ typedef struct MatrixBufferType
 	XMMATRIX View = {};
 	XMMATRIX Projection = {};
 
-
 }MATRIXBUFFERTYPE;
+
+typedef struct BoneTransformBufferType
+{
+	XMFLOAT4X4 BoneTransform[MAX_BONE_TRANSFORM] = {};
+
+}BONETRASFORMBUFFERTYPE;
 
 typedef struct Weights
 {
@@ -70,8 +74,8 @@ typedef struct MeshEntry
 	void Initialize(ID3D11Device* _Device, vector<SkinnedMesh>& Vertices, const vector<UINT>& Indices);
 
 	// For Buffer.
-	ComPtr<ID3D11Buffer> VertexBuffer;
-	ComPtr<ID3D11Buffer> IndexBuffer;
+	ComPtr<ID3D11Buffer> VertexBuffers;
+	ComPtr<ID3D11Buffer> IndexBuffers;
 	UINT NumIndices = 0;
 	string MaterialName;
 
@@ -110,6 +114,55 @@ struct AnimEvaluator
 	float LastTime = 0.f, TicksPerSecond = 0.f, Duration = 0.f;
 	vector<tuple<UINT, UINT, UINT> > LastPositions;
 	vector<vector<XMFLOAT4X4>> Transforms;//, QuatTransforms;/** Array to return transformations results inside. */
+
 };
+
+
+///////////////////////////////////////////////////////////
+
+
+void SplitString(vector<string>* result, string origin, string tok);
+void SplitString(vector<wstring>* result, wstring origin, wstring tok);
+
+bool StartsWith(string str, string comp);
+bool StartsWith(wstring str, wstring comp);
+
+bool Contain(string str, string comp);
+bool Contain(wstring str, wstring comp);
+
+void Replace(string* str, string comp, string rep);
+void Replace(wstring* str, wstring comp, wstring rep);
+
+wstring ToWString(string value);
+string ToString(wstring value);
+
+string Format(const string format, ...);
+wstring Format(const wstring format, ...);
+
+typedef VertexPositionNormalTangentColorTextureSkinning ModelVertex;
+
+
+struct asBone
+{
+	int Index;
+	string Name;
+
+	int Parent;
+	Matrix transform;
+};
+
+struct asMesh
+{
+	string Name;
+	int BoneIndex;
+
+	aiMesh* Mesh;
+
+	string MaterialName;
+
+	vector<ModelVertex> Vertices;
+	vector<UINT> Indices;
+};
+
 
 void TransformMatrix(XMFLOAT4X4& out, const aiMatrix4x4& in);

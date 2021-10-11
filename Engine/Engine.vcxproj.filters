@@ -168,6 +168,12 @@
     <ClInclude Include="Management.h">
       <Filter>01. Utility\00. Management</Filter>
     </ClInclude>
+    <ClInclude Include="Buffers.h" />
+    <ClInclude Include="AssimpConverter.h" />
+    <ClInclude Include="Model.h" />
+    <ClInclude Include="BinaryFile.h" />
+    <ClInclude Include="Path.h" />
+    <ClInclude Include="Bone.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -233,6 +239,12 @@
     <ClCompile Include="ObjectManager.cpp">
       <Filter>01. Utility\02. Object\02. GameObject\00. ObjectManager</Filter>
     </ClCompile>
+    <ClCompile Include="Buffers.cpp" />
+    <ClCompile Include="AssimpConverter.cpp" />
+    <ClCompile Include="Model.cpp" />
+    <ClCompile Include="BinaryFile.cpp" />
+    <ClCompile Include="Path.cpp" />
+    <ClCompile Include="Bone.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="SkinnedMeshPS.hlsl">

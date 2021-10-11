@@ -22,6 +22,7 @@
 #include <wrl\client.h>
 
 
+
 namespace DirectX
 {
     // Helpers for creating initialized Direct3D buffer resources.

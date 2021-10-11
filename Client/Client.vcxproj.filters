@@ -48,6 +48,7 @@
     <ClInclude Include="Player.h">
       <Filter>02. GameObject\01. Player</Filter>
     </ClInclude>
+    <ClInclude Include="Mesh.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -68,6 +69,7 @@
     <ClCompile Include="Player.cpp">
       <Filter>02. GameObject\01. Player</Filter>
     </ClCompile>
+    <ClCompile Include="Mesh.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

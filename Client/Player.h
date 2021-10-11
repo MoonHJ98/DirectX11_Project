@@ -2,6 +2,8 @@
 #include "GameObject.h"
 
 class DynamicModel;
+class Model;
+
 
 class Player : public GameObject
 {
@@ -21,6 +23,7 @@ public:
 	static shared_ptr<Player> Create(ID3D11Device* _Device);
 
 private:
-	shared_ptr<DynamicModel>  Model = nullptr;
+	Model * model;
+	//shared_ptr<DynamicModel>  Model = nullptr;
 };
 

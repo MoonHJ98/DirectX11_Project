@@ -9,13 +9,18 @@
 #include <vector>
 #include <list>
 #include <fstream>
+#include <stdio.h>
 
 #include <DirectXTK/BufferHelpers.h>
+#include <DirectXTK/SimpleMath.h>
+#include <DirectXTK/VertexTypes.h>
 #include "DirectXTex.h"
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
+
+
 
 
 #pragma comment(lib, "d3d11.lib")
@@ -32,6 +37,8 @@
 using namespace std;
 using namespace DirectX;
 using namespace Microsoft::WRL;
+using namespace SimpleMath;
+using namespace PackedVector;
 
 
 #define MSG_BOX(MESSAGE) MessageBox(0, TEXT(MESSAGE), TEXT("System Message"), MB_OK)
@@ -48,5 +55,7 @@ using namespace Microsoft::WRL;
 			};																						
 
 #define SAFEDELETE(Instance) { if(Instance) {delete Instance; Instance = nullptr;}}
+#define MAX_MODEL_TRANSFORMS 250
+#define MAX_BONE_TRANSFORM 96
 
 #include "Struct.h"
