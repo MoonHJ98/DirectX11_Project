@@ -175,6 +175,7 @@
     <ClInclude Include="Path.h" />
     <ClInclude Include="Bone.h" />
     <ClInclude Include="Mesh.h" />
+    <ClInclude Include="Shader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -247,6 +248,7 @@
     <ClCompile Include="Path.cpp" />
     <ClCompile Include="Bone.cpp" />
     <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="Shader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="SkinnedMeshPS.hlsl">
@@ -255,5 +257,7 @@
     <FxCompile Include="SkinnedMeshVS.hlsl">
       <Filter>02. Includes\01. HLSL</Filter>
     </FxCompile>
+    <FxCompile Include="ModelVS.hlsl" />
+    <FxCompile Include="ModelPS.hlsl" />
   </ItemGroup>
 </Project>

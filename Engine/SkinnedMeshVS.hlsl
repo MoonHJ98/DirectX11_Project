@@ -38,7 +38,7 @@ struct SkinnedOutput
 
 SkinnedOutput main(SkinnedInput _Input)
 {
-    SkinnedOutput Out ;
+    SkinnedOutput Out;
 
     Out.BoneIndices = _Input.BoneIndices;
 

@@ -85,6 +85,7 @@ void AssimpConverter::ReadMeshData(aiNode * _Node, int _Bone)
 
 	for (UINT i = 0; i < _Node->mNumMeshes; ++i)
 	{
+
 		asMesh* mesh = new asMesh();
 		mesh->Name = _Node->mName.C_Str();
 		mesh->BoneIndex = _Bone;

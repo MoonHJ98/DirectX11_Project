@@ -31,6 +31,7 @@ public:
 	shared_ptr<Bone> GetBone() { return bone; }
 	void SetBone(shared_ptr<Bone> _bone) { bone = _bone; }
 
+	void SetTransforms(Matrix* transforms);
 	//void GetTransforms(Matrix* transforms);
 	//void SetTransform(Transform* transform);
 

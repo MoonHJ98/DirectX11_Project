@@ -8,8 +8,8 @@
 Model::Model()
 {
 	//a = new AssimpConverter();
-	//a->ReadFile(L"Player/SK_CHR_Jack.FBX");
-	//a->ExportMesh(L"Player/SK_CHR_Jack.FBX");
+	//a->ReadFile(L"Player/SKM_styx.FBX");
+	//a->ExportMesh(L"Player/SKM_styx.FBX");
 	ReadMesh(L"Player/SK_CHR_Jack.FBX");
 }
 
@@ -110,4 +110,41 @@ void Model::BindMesh()
 		mesh->SetBone(bones[mesh->GetBoneIndex()]);
 
 	}
+}
+
+void Model::UpdateTransform(Bone * bone, const Matrix & matrix)
+{
+	if (bone != NULL)
+		UpdateBones(bone, matrix);
+
+	for (UINT i = 0; i < bones.size(); i++)
+	{
+		auto& bone = bones[i];
+		transforms[i] = bone->GetTransform();
+	}
+
+	for (auto& mesh : meshes)
+		mesh->SetTransforms(transforms); // 본의 transforms를 메쉬에 넣어주기
+}
+
+void Model::UpdateBones(Bone * bone, const Matrix & matrix)
+{
+}
+
+int Model::Update()
+{
+
+	UpdateTransform();
+
+	for (auto& mesh : meshes)
+		mesh->Update();
+
+	return 0;
+}
+
+void Model::Render()
+{
+	for (auto& mesh : meshes)
+		mesh->Render();
+	
 }

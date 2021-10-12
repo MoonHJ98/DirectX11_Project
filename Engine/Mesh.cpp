@@ -44,6 +44,12 @@ void Mesh::Render()
 	GraphicDevice::GetInstance()->GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
+void Mesh::SetTransforms(Matrix * transforms)
+{
+	memcpy(boneDesc.Transforms, transforms, sizeof(Matrix) * MAX_MODEL_TRANSFORMS);
+
+}
+
 shared_ptr<Mesh> Mesh::Create(wstring _name, int _boneIndex, wstring _materialName, shared_ptr<ModelVertex> _vertices, UINT _vertexCount, shared_ptr<UINT> _indices, UINT _indexCount)
 {
 	shared_ptr<Mesh> Instance(new Mesh());
