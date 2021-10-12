@@ -137,9 +137,9 @@ void AssimpLoader::ProcessMesh(aiNode * node, vector<shared_ptr<MESH>>& _meshes,
 	}
 }
 
-vector<Weights> AssimpLoader::CalculateWeights(aiMesh * _mesh, shared_ptr<AnimationController>* _Animator)
+vector<WEIGHTS> AssimpLoader::CalculateWeights(aiMesh * _mesh, shared_ptr<AnimationController>* _Animator)
 {
-	vector<Weights> weights(_mesh->mNumVertices);
+	vector<WEIGHTS> weights(_mesh->mNumVertices);
 
 	// Loop through all bones.
 	for (UINT i = 0; i < _mesh->mNumBones; i++)

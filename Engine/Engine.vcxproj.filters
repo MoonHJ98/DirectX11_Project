@@ -174,6 +174,7 @@
     <ClInclude Include="BinaryFile.h" />
     <ClInclude Include="Path.h" />
     <ClInclude Include="Bone.h" />
+    <ClInclude Include="Mesh.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -245,6 +246,7 @@
     <ClCompile Include="BinaryFile.cpp" />
     <ClCompile Include="Path.cpp" />
     <ClCompile Include="Bone.cpp" />
+    <ClCompile Include="Mesh.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="SkinnedMeshPS.hlsl">
