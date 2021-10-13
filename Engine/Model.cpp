@@ -1,16 +1,23 @@
 #include "pch.h"
 #include "Model.h"
 #include "AssimpConverter.h"
+#include "GraphicDevice.h"
 #include "Bone.h"
 #include "Mesh.h"
 #include "BinaryFile.h"
+#include "Shader.h"
+#include "Texture.h"
+#include "Transform.h"
+#include "Management.h"
 
 Model::Model()
 {
 	//a = new AssimpConverter();
-	//a->ReadFile(L"Player/SKM_styx.FBX");
-	//a->ExportMesh(L"Player/SKM_styx.FBX");
+	//a->ReadFile(L"Player/SK_CHR_Jack.FBX");
+	//a->ExportMesh(L"Player/SK_CHR_Jack.FBX");
 	ReadMesh(L"Player/SK_CHR_Jack.FBX");
+	ReadMaterial();
+	shader = Shader::Create(L"../Engine/ModelVS.hlsl", L"../Engine/ModelPS.hlsl");
 }
 
 Model::~Model()
@@ -44,53 +51,95 @@ void Model::ReadMesh(wstring filePath)
 		wstring name = ToWString(r->ReadString());
 		int boneIndex = r->ReadInt();
 		wstring materialName = ToWString(r->ReadString());
-		shared_ptr<ModelVertex> MeshVertices = nullptr;
-		UINT VertexCount = 0;
-		shared_ptr<UINT> MeshIndices = nullptr;
-		UINT IndexCount = 0;
-
+		vector<ModelVertex> vertices;
+		vector<UINT> indices;
 		// Vertex.
 		{
 			UINT count = r->ReadUInt();
-			vector<ModelVertex> vertices;
+			
 			vertices.assign(count, ModelVertex());
 	
 			void* ptr = (void*)&(vertices[0]);
 			r->ReadByte(&ptr, sizeof(ModelVertex)* count);
-	
-			shared_ptr<ModelVertex> tempVertices(new ModelVertex[count]);
-			VertexCount = count;
-			copy(vertices.begin(), vertices.end(), tempVertices.get());
-			MeshVertices = tempVertices;
-	
 		}
 		// Index
 		{
 			UINT count = r->ReadUInt();
-			vector<UINT> indices;
+			
 			indices.assign(count, UINT());
 
 			void* ptr = (void*)&(indices[0]);
 			r->ReadByte(&ptr, sizeof(UINT) * count);
-			shared_ptr<UINT> tempIndices(new UINT[count]);
-			IndexCount = count;
-			copy(indices.begin(), indices.end(), tempIndices.get());
-			MeshIndices = tempIndices;
 		}
-		meshes.push_back(Mesh::Create(name, boneIndex, materialName, MeshVertices, VertexCount, MeshIndices, IndexCount));
+		meshes.push_back(Mesh::Create(name, boneIndex, materialName, vertices, indices));
 	}
 
 	r->Close();
 	SAFEDELETE(r);
 
 	BindBone();
-	//BindMesh();
+	BindMesh();
 	
+}
+
+void Model::ReadMaterial()
+{
+	for (UINT i = 0; i < meshes.size(); ++i)
+	{
+		wstring MaterialPath = L"../Resources/Player/" + meshes[i]->GetMaterialName() + L".mat";
+		wfstream file;
+		file.open(MaterialPath.c_str(), ios::in);
+		
+		if (!file.is_open())
+			continue;
+
+		for (int j = 0; j < 2; ++j)
+		{
+			TEXTUREDESC textureDesc;
+
+			wstring MaterialRead;
+
+			getline(file, MaterialRead);
+			wstring TextureType;
+			TextureType.assign(MaterialRead.begin(), MaterialRead.begin() + MaterialRead.find(L"="));
+			MaterialRead.erase(MaterialRead.begin(), MaterialRead.begin() + MaterialRead.find(L"=") + 1);
+			wstring TextureName;
+			TextureName = MaterialRead + L".tga";
+
+			textureDesc.MaterialName = meshes[i]->GetMaterialName();
+			textureDesc.Type = TextureType;
+			textureDesc.Path = L"../Resources/Player/" + TextureName;
+
+			if (TextureType == L"Diffuse")
+			{
+				meshes[i]->SetDiffuse(MatchTexture(textureDesc));
+
+			}
+			else if (TextureType == L"Normal")
+			{
+				meshes[i]->SetNormal(MatchTexture(textureDesc));
+			}
+		}
+		file.close();
+
+	}
+}
+shared_ptr<Texture> Model::MatchTexture(TEXTUREDESC& _texture)
+{
+	for (UINT i = 0; i < Textures.size(); ++i)
+	{
+		if (Textures[i]->GetTextureDecs().Path == _texture.Path)
+			return Textures[i];
+	}
+
+	auto tex = Texture::Create(GraphicDevice::GetInstance()->GetDevice(), &_texture);
+	Textures.push_back(tex);
+	return tex;
 }
 
 void Model::BindBone()
 {
-	Root = bones[0];
+	Root = bones[1];
 	for (auto& bone : bones)
 	{
 		if (bone->GetParentIndex() > -1)
@@ -108,11 +157,10 @@ void Model::BindMesh()
 	for (auto& mesh : meshes)
 	{
 		mesh->SetBone(bones[mesh->GetBoneIndex()]);
-
 	}
 }
 
-void Model::UpdateTransform(Bone * bone, const Matrix & matrix)
+void Model::UpdateTransform(shared_ptr<Bone> bone, const Matrix & matrix)
 {
 	if (bone != NULL)
 		UpdateBones(bone, matrix);
@@ -120,20 +168,25 @@ void Model::UpdateTransform(Bone * bone, const Matrix & matrix)
 	for (UINT i = 0; i < bones.size(); i++)
 	{
 		auto& bone = bones[i];
-		transforms[i] = bone->GetTransform();
+		transforms[i] = *bone->GetTransform();
 	}
 
 	for (auto& mesh : meshes)
 		mesh->SetTransforms(transforms); // 본의 transforms를 메쉬에 넣어주기
 }
 
-void Model::UpdateBones(Bone * bone, const Matrix & matrix)
+void Model::UpdateBones(shared_ptr<Bone> bone, const Matrix & matrix)
 {
+	Matrix temp = *bone->GetTransform();
+	Matrix a = temp * matrix;
+	bone->SetTransform(a);
+
+	for (auto& bone : bone->GetChilds())
+		UpdateBones(bone, matrix);
 }
 
 int Model::Update()
 {
-
 	UpdateTransform();
 
 	for (auto& mesh : meshes)
@@ -144,6 +197,7 @@ int Model::Update()
 
 void Model::Render()
 {
+	shader->Render();
 	for (auto& mesh : meshes)
 		mesh->Render();
 	

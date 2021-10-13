@@ -3,8 +3,8 @@
 #include "Includes.h"
 
 class Bone;
-class VertexBuffer;
-class IndexBuffer;
+class GraphicDevice;
+class Texture;
 
 class Mesh
 {
@@ -16,22 +16,25 @@ public:
 	~Mesh();
 
 private:
-	HRESULT Initialize(wstring _name, int _boneIndex, wstring _materialName, shared_ptr<ModelVertex> _vertices, UINT _vertexCount, shared_ptr<UINT> _indices, UINT _indexCount);
+	HRESULT				Initialize(wstring _name, int _boneIndex, wstring _materialName, vector<ModelVertex>& _vertices, vector<UINT>& _indices);
 
 public:
-	//void Pass(UINT val) { pass = val; }
-	//void SetShader(Shader* shader);
+	void				Update();
+	void				Render();
 
-	void Update();
-	void Render();
+public:
+	wstring				GetName()								 { return name; }
+	wstring				GetMaterialName()						 { return materialName; }
+																 
+	int					GetBoneIndex()							 { return boneIndex; }
+	shared_ptr<Bone>	GetBone()								 { return bone; }
+	void				SetBone(shared_ptr<Bone> _bone)			 { bone = _bone; }
 
-	wstring GetName() { return name; }
+	void				SetDiffuse(shared_ptr<Texture> _Diffuse) { Diffuse = _Diffuse; }
+	void				SetNormal(shared_ptr<Texture> _Normal)	 { Normal = _Normal; }
+	
 
-	int GetBoneIndex() { return boneIndex; }
-	shared_ptr<Bone> GetBone() { return bone; }
-	void SetBone(shared_ptr<Bone> _bone) { bone = _bone; }
-
-	void SetTransforms(Matrix* transforms);
+	void				SetTransforms(Matrix* transforms);
 	//void GetTransforms(Matrix* transforms);
 	//void SetTransform(Transform* transform);
 
@@ -42,30 +45,40 @@ private:
 
 		UINT Index;
 		float Padding[3];
-	} boneDesc;
+	};
 
 
 public:
-	static shared_ptr<Mesh> Create(wstring _name, int _boneIndex, wstring _materialName, shared_ptr<ModelVertex> _vertices, UINT _vertexCount, shared_ptr<UINT> _indices, UINT _indexCount);
+	static shared_ptr<Mesh> Create(wstring _name, int _boneIndex, wstring _materialName, vector<ModelVertex>& _vertices, vector<UINT>& _indices);
 
 private:
+	shared_ptr<GraphicDevice> Graphic = nullptr;
 	wstring name;
 	wstring materialName = L"";
 	int boneIndex;
 	shared_ptr<Bone> bone = nullptr;
 
-	shared_ptr<VertexBuffer> vertexBuffer = nullptr;
+	ComPtr<ID3D11Buffer> vertexBuffer;
+	ComPtr<ID3D11Buffer> indexBuffer;
 	UINT vertexCount;
-	shared_ptr<ModelVertex> vertices = nullptr;
-
-	shared_ptr<IndexBuffer> indexBuffer = nullptr;
 	UINT indexCount;
+
+	shared_ptr<ModelVertex> vertices = nullptr;
 	shared_ptr<UINT> indices = nullptr;
+
+
+	BoneDesc boneDesc;
+	ConstantBuffer<BoneDesc> BoneMatrixbuffer;
+
+	shared_ptr<Texture> Diffuse;
+	shared_ptr<Texture> Normal;
 
 	//Transform* transform = nullptr;
 	//Shader* shader;
 	//PerFrame* perFrame = NULL;
 	//ConstantBuffer* boneBuffer;
 	//ID3DX11EffectConstantBuffer* sBoneBuffer;
+
+
 };
 

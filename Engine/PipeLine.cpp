@@ -7,7 +7,7 @@ HRESULT PipeLine::Initialize()
 	return E_NOTIMPL;
 }
 
-XMMATRIX* PipeLine::GetTransform(_D3DTRANSFORMSTATETYPE _Type)
+Matrix* PipeLine::GetTransform(_D3DTRANSFORMSTATETYPE _Type)
 {
 	switch (_Type)
 	{

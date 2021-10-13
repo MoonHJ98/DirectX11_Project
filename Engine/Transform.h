@@ -2,6 +2,9 @@
 
 #include "Includes.h"
 
+class GraphicDevice;
+class Management;
+
 class Transform
 {
 public:
@@ -29,12 +32,14 @@ public:
 
 public:
 	HRESULT						Initialize(TRANSDESC _TransDecs);
-	XMVECTOR					GetState(STATE _State);
-	void 						SetState(STATE _State, XMVECTOR Vec);
-	XMMATRIX*					GetWorldMatrix();
+	Vector3						GetState(STATE _State);
+	void 						SetState(STATE _State, Vector3 Vec);
+	Matrix*						GetWorldMatrix();
 
 public:
+	void						Update();
 
+public:
 	HRESULT						GoForward(float _Frametime);
 	HRESULT						GoBackward(float _Frametime);
 	HRESULT						GoLeft(float _Frametime);
@@ -46,13 +51,17 @@ public:
 	HRESULT						RotationAxis(XMFLOAT3 _Axis, float _Frametime, float* _AngleAcc = nullptr);
 	HRESULT						SetRotation(XMFLOAT3 _Axis, float _Radian);
 
+
 public:
 	static shared_ptr<Transform>		Create(TRANSDESC _TransDecs);
 
 private:
-	XMMATRIX					WorldMatrix;
-	XMFLOAT3					Rotation;
-	TRANSDESC					Status;
-	float						TimeAcc = 0.f;
+	shared_ptr<GraphicDevice>		 Graphic = nullptr;
+	shared_ptr<Management>			 Manage = nullptr;
+	ConstantBuffer<MATRIXBUFFERTYPE> MatrixBuffer;
+	Matrix						     WorldMatrix;
+	XMFLOAT3					     Rotation;
+	TRANSDESC					     Status;
+	float						     TimeAcc = 0.f;
 };
 

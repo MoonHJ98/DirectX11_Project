@@ -1,5 +1,7 @@
 #include "pch.h"
 #include "Transform.h"
+#include "GraphicDevice.h"
+#include "Management.h"
 
 Transform::Transform()
 {
@@ -16,11 +18,16 @@ Transform::~Transform()
 
 HRESULT Transform::Initialize(TRANSDESC _TransDecs)
 {
+	Graphic = GraphicDevice::GetInstance();
+	Manage = Management::GetInstance();
+
+	MatrixBuffer.Create(Graphic->GetDevice());
+
 	Status = _TransDecs;
 	return S_OK;
 }
 
-XMVECTOR Transform::GetState(STATE _State)
+Vector3 Transform::GetState(STATE _State)
 {
 	XMFLOAT4X4 temp;
 	XMStoreFloat4x4(&temp, WorldMatrix);
@@ -29,19 +36,32 @@ XMVECTOR Transform::GetState(STATE _State)
 	return *(XMVECTOR*)&temp.m[_State][0];
 }
 
-void Transform::SetState(STATE _State, XMVECTOR _Vec)
+void Transform::SetState(STATE _State, Vector3 _Vec)
 {
 	XMFLOAT4X4 temp;
 	XMStoreFloat4x4(&temp, WorldMatrix);
 
-	memcpy(&temp.m[_State][0], &_Vec, sizeof(XMVECTOR));
+	memcpy(&temp.m[_State][0], &_Vec, sizeof(Vector3));
 
 	WorldMatrix = XMLoadFloat4x4(&temp);
 }
 
-XMMATRIX* Transform::GetWorldMatrix()
+Matrix* Transform::GetWorldMatrix()
 {
 	return &WorldMatrix;
+}
+
+void Transform::Update()
+{
+	MATRIXBUFFERTYPE desc;
+	desc.World = WorldMatrix;
+	desc.View = XMMatrixTranspose(*Manage->GetTransform(D3DTRANSFORMSTATE_VIEW));
+	desc.Projection = XMMatrixTranspose(*Manage->GetTransform(D3DTRANSFORMSTATE_PROJECTION));
+
+
+	MatrixBuffer.SetData(Graphic->GetDeviceContext(), desc);
+	auto buffer = MatrixBuffer.GetBuffer();
+	Graphic->GetDeviceContext()->VSSetConstantBuffers(0, 1, &buffer);
 }
 
 HRESULT Transform::GoForward(float _Frametime)
@@ -162,6 +182,7 @@ HRESULT Transform::RotationAxis(XMFLOAT3 _Axis, float _Frametime, float* _AngleA
 	SetState(Transform::LOOK, vLook);
 	SetState(Transform::UP, vUp);
 
+	
 	return S_OK;
 }
 
@@ -169,6 +190,8 @@ HRESULT Transform::SetRotation(XMFLOAT3 Axis, float Radian)
 {
 	return S_OK;
 }
+
+
 
 shared_ptr<Transform> Transform::Create(TRANSDESC _TransDecs)
 {

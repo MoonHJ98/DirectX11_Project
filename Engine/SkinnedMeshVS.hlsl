@@ -58,7 +58,7 @@ SkinnedOutput main(SkinnedInput _Input)
     }
 
 
-    Out.Position = mul(float4(Out.PositionLocal, 1.f), WorldMatrix);
+    Out.Position = mul(float4(_Input.Position, 1.f), WorldMatrix);
     Out.Position = mul(Out.Position, ViewMatrix);
     Out.Position = mul(Out.Position, ProjectionMatrix);
     

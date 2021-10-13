@@ -55,7 +55,7 @@ void AssimpConverter::ReadBoneData(aiNode * _Node, int _Index, int _Parent)
 
 
 	Matrix transform(_Node->mTransformation[0]);
-	transform = XMMatrixTranspose(transform);
+	bone->transform = XMMatrixTranspose(transform);
 	Matrix parentMatrix;
 
 	if (_Parent < 0)
@@ -100,14 +100,14 @@ void AssimpConverter::ReadMeshData(aiNode * _Node, int _Bone)
 		for (UINT v = 0; v < srcMesh->mNumVertices; ++v)
 		{
 			ModelVertex vertex;
-			memcpy(&vertex.position, &srcMesh->mVertices[v], sizeof(Vector3));
+			memcpy(&vertex.Position, &srcMesh->mVertices[v], sizeof(Vector3));
 
 			// 일반적으로 0으로 고정
 			if (srcMesh->HasTextureCoords(0))
-				memcpy(&vertex.textureCoordinate, &srcMesh->mTextureCoords[0][v], sizeof(Vector2));
+				memcpy(&vertex.Uv, &srcMesh->mTextureCoords[0][v], sizeof(Vector2));
 
 			if(srcMesh->HasNormals())
-				memcpy(&vertex.normal, &srcMesh->mNormals[v], sizeof(Vector3));
+				memcpy(&vertex.Normal, &srcMesh->mNormals[v], sizeof(Vector3));
 
 			mesh->Vertices.push_back(vertex);
 		}

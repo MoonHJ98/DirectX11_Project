@@ -14,6 +14,7 @@ struct SkinnedMesh
 
 typedef struct MatrixBufferType
 {
+	MatrixBufferType() {}
 	MatrixBufferType(XMMATRIX _World, XMMATRIX _View, XMMATRIX _Proj)
 	{
 		World = _World;
@@ -58,9 +59,9 @@ typedef struct BoneEntry
 
 typedef struct tagTexture
 {
-	string MaterialName;
-	string	Type;
-	string	Path;	// 다른 첵스쳐와 비교하기 위해 경로 저장.
+	wstring MaterialName;
+	wstring	Type;
+	wstring	Path;	// 다른 첵스쳐와 비교하기 위해 경로 저장.
 }TEXTUREDESC;
 
 
@@ -139,7 +140,16 @@ string ToString(wstring value);
 string Format(const string format, ...);
 wstring Format(const wstring format, ...);
 
-typedef VertexPositionNormalTangentColorTextureSkinning ModelVertex;
+struct ModelVertex
+{
+	Vector3 Position;
+	Vector2 Uv;
+	Vector3 Normal;
+	Vector4 Tangent;
+	Vector4 Weights;
+	Vector4 Indices;
+};
+//typedef VertexPositionNormalTangentColorTextureSkinning ModelVertex;
 
 
 struct asBone

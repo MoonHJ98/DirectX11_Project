@@ -10,18 +10,18 @@ public:
 	~Bone();
 
 public:
-	int GetIndex() { return index; }
+	int								GetIndex()									{ return index; }
 
-	int GetParentIndex() { return parentIndex; }
-	shared_ptr<Bone> GetParentBone() { return parent; }
-	void  SetParentBone(shared_ptr<Bone> _parent) { parent = _parent; }
+	int								GetParentIndex()							{ return parentIndex; }
+	shared_ptr<Bone>				GetParentBone()								{ return parent; }
+	void							SetParentBone(shared_ptr<Bone> _parent)		{ parent = _parent; }
 
-	wstring GetName() { return name; }
+	wstring							GetName()									{ return name; }
 
-	Matrix& GetTransform() { return transform; }
-	void SetTransform(Matrix& matrix) { transform = matrix; }
+	Matrix*							GetTransform()								{ return &transform; }
+	void							SetTransform(Matrix& matrix)				{ transform = matrix; }
 
-	vector<weak_ptr<Bone>>& GetChilds() { return childs; }
+	vector<shared_ptr<Bone>>&		GetChilds()									{ return childs; }
 
 private:
 	HRESULT Initialize(int _index, wstring _name, int _parentIndex, Matrix _transform);
@@ -36,6 +36,6 @@ private:
 	shared_ptr<Bone> parent;
 
 	Matrix transform;
-	vector<weak_ptr<Bone>> childs;
+	vector<shared_ptr<Bone>> childs;
 };
 

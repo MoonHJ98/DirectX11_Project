@@ -189,9 +189,9 @@ HRESULT AssimpLoader::ProcessMaterial(shared_ptr<MESH> _mesh, vector<shared_ptr<
 
 		string TexturePath = FolderPath + "\\" + MaterialRead;
 
-		texture.MaterialName = _mesh->MaterialName;
-		texture.Type = TextureType;
-		texture.Path = TexturePath;
+		//texture.MaterialName = _mesh->MaterialName;
+		//texture.Type = TextureType;
+		//texture.Path = TexturePath;
 
 		if (TextureType == "Diffuse")
 		{
@@ -211,11 +211,11 @@ HRESULT AssimpLoader::ProcessMaterial(shared_ptr<MESH> _mesh, vector<shared_ptr<
 
 shared_ptr<Texture> AssimpLoader::MatchTexture(TEXTUREDESC& _texture, vector<shared_ptr<Texture>>& _textures)
 {
-	for (UINT i = 0; i < _textures.size(); ++i)
-	{
-		if (_textures[i]->GetTextureDecs().Path == _texture.Path)
-			return _textures[i];
-	}
+	//for (UINT i = 0; i < _textures.size(); ++i)
+	//{
+	//	if (_textures[i]->GetTextureDecs().Path == _texture.Path)
+	//		return _textures[i];
+	//}
 
 	auto tex = Texture::Create(GraphicDevice::GetInstance()->GetDevice(), &_texture);
 	_textures.push_back(tex);

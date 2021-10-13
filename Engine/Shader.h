@@ -2,6 +2,8 @@
 
 #include "Includes.h"
 
+class GraphicDevice;
+
 class Shader
 {
 private:
@@ -13,10 +15,12 @@ public:
 
 private:
 	HRESULT Initialize(wstring _VSPath, wstring _PSPath);
+
+public:
 	void    Render();
 
 public:
-	shared_ptr<Shader> Create(wstring _VSPath, wstring _PSPath);
+	static shared_ptr<Shader> Create(wstring _VSPath, wstring _PSPath);
 
 private:
 	ComPtr<ID3D11VertexShader>			VertexShader = nullptr;

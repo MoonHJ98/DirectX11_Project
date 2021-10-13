@@ -43,7 +43,7 @@ LONG Management::GetDIMouseMove(InputDevice::MOUSEMOVESTATE _MouseState)
 	return InputDevice::GetInstance()->GetDIMouseMove(_MouseState);
 }
 
-XMMATRIX * Management::GetTransform(_D3DTRANSFORMSTATETYPE _Type)
+Matrix * Management::GetTransform(_D3DTRANSFORMSTATETYPE _Type)
 {
 	return Pipeline->GetTransform(_Type);
 

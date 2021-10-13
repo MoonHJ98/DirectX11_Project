@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "Mesh.h"
-#include "Buffers.h"
+#include "Texture.h"
 #include "GraphicDevice.h"
 
 Mesh::Mesh()
@@ -15,18 +15,24 @@ Mesh::~Mesh()
 {
 }
 
-HRESULT Mesh::Initialize(wstring _name, int _boneIndex, wstring _materialName, shared_ptr<ModelVertex> _vertices, UINT _vertexCount, shared_ptr<UINT> _indices, UINT _indexCount)
+HRESULT Mesh::Initialize(wstring _name, int _boneIndex, wstring _materialName, vector<ModelVertex>& _vertices, vector<UINT>& _indices)
 {
+	Graphic = GraphicDevice::GetInstance();
 	name = _name;
 	boneIndex = _boneIndex;
 	materialName = _materialName;
-	vertices = _vertices;
-	vertexCount = _vertexCount;
-	indices = _indices;
-	indexCount = _indexCount;
+	//vertices = _vertices;
+	vertexCount = _vertices.size();
+	//indices = _indices;
+	indexCount = _indices.size();
 
-	vertexBuffer = VertexBuffer::Create(vertices.get(), vertexCount, sizeof(ModelVertex));
-	indexBuffer = IndexBuffer::Create(indices.get(), indexCount);
+	CreateStaticBuffer(Graphic->GetDevice(), &_vertices[0], _vertices.size(), sizeof(ModelVertex), D3D11_BIND_VERTEX_BUFFER, vertexBuffer.GetAddressOf());
+	CreateStaticBuffer(Graphic->GetDevice(), &_indices[0], _indices.size(), sizeof(UINT), D3D11_BIND_INDEX_BUFFER, indexBuffer.GetAddressOf());
+
+
+
+	BoneMatrixbuffer.Create(Graphic->GetDevice());
+
 	return S_OK;
 }
 
@@ -38,10 +44,30 @@ void Mesh::Update()
 
 void Mesh::Render()
 {
-	vertexBuffer->Render();
-	indexBuffer->Render();
+	UINT stride;
+	UINT offset;
 
-	GraphicDevice::GetInstance()->GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	BoneMatrixbuffer.SetData(Graphic->GetDeviceContext(), boneDesc);
+	auto buffer = BoneMatrixbuffer.GetBuffer();
+	Graphic->GetDeviceContext()->VSSetConstantBuffers(1, 1, &buffer);
+
+	if(Diffuse)
+		Graphic->GetDeviceContext()->PSSetShaderResources(0, 1, Diffuse->GetTexture());
+
+	stride = sizeof(ModelVertex);
+	offset = 0;
+
+	// Set the vertex buffer to active in the input assembler so it can be rendered.
+	Graphic->GetDeviceContext()->IASetVertexBuffers(0, 1, vertexBuffer.GetAddressOf(), &stride, &offset);
+
+	// Set the index buffer to active in the input assembler so it can be rendered.
+	Graphic->GetDeviceContext()->IASetIndexBuffer(indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+
+	// Set the type of primitive that should be rendered from this vertex buffer, in this case triangles.
+	Graphic->GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	Graphic->GetDeviceContext()->DrawIndexed(indexCount, 0, 0);
+
 }
 
 void Mesh::SetTransforms(Matrix * transforms)
@@ -50,11 +76,11 @@ void Mesh::SetTransforms(Matrix * transforms)
 
 }
 
-shared_ptr<Mesh> Mesh::Create(wstring _name, int _boneIndex, wstring _materialName, shared_ptr<ModelVertex> _vertices, UINT _vertexCount, shared_ptr<UINT> _indices, UINT _indexCount)
+shared_ptr<Mesh> Mesh::Create(wstring _name, int _boneIndex, wstring _materialName, vector<ModelVertex>& _vertices, vector<UINT>& _indices)
 {
 	shared_ptr<Mesh> Instance(new Mesh());
 
-	if (FAILED(Instance->Initialize(_name, _boneIndex, _materialName, _vertices, _vertexCount, _indices, _indexCount)))
+	if (FAILED(Instance->Initialize(_name, _boneIndex, _materialName, _vertices, _indices)))
 	{
 		MSG_BOX("Failed to create Mesh.");
 		return nullptr;

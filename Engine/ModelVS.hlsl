@@ -37,9 +37,10 @@ VertexOutput main(VertexModel input)
     VertexOutput Out;
 
     // bone의 위치를 옮긴 후 월드로 옮겨야함
-    WorldMatrix = mul(BoneTransforms[BoneIndex], WorldMatrix);
+    matrix boneMatrix;
+    boneMatrix = mul(BoneTransforms[BoneIndex], WorldMatrix);
 
-    Out.Position = mul(float4(input.Position, 1.f), WorldMatrix);
+    Out.Position = mul(float4(input.Position, 1.f), boneMatrix);
     Out.Position = mul(Out.Position, ViewMatrix);
     Out.Position = mul(Out.Position, ProjectionMatrix);
 

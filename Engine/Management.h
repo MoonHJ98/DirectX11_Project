@@ -29,7 +29,7 @@ public:
 	LONG					GetDIMouseMove(InputDevice::MOUSEMOVESTATE _MouseState);
 
 	// Pipeline
-	XMMATRIX*				GetTransform(_D3DTRANSFORMSTATETYPE _Type);
+	Matrix*				GetTransform(_D3DTRANSFORMSTATETYPE _Type);
 
 	// Layer
 	void					AddLayer(int _Index, wstring _LayerKey, shared_ptr<GameObject> _Object);

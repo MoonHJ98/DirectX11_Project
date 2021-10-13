@@ -35,6 +35,6 @@ private:
 	ComPtr<ID3D11RasterizerState>		m_rasterState = nullptr;
 	//XMMATRIX					m_projectionMatrix = {};
 	//XMMATRIX					m_worldMatrix = {};
-	XMMATRIX					m_orthoMatrix = {};
+	Matrix								m_orthoMatrix = {};
 };
 

@@ -20,26 +20,14 @@ Player::~Player()
 int Player::Update(float _TimeDelta)
 {
 	TimeDelta += _TimeDelta;
-
+	transform->Update();
+	model->Update();
 	return 0;
 }
 
 void Player::Render()
 {
-	XMMATRIX world, view, proj;
-
-	auto manage = Management::GetInstance();
-
-	world = *transform->GetWorldMatrix();
-	view = *manage->GetTransform(D3DTRANSFORMSTATE_VIEW);
-	proj = *manage->GetTransform(D3DTRANSFORMSTATE_PROJECTION);
-
-	world = XMMatrixTranspose(world);
-	view = XMMatrixTranspose(view);
-	proj = XMMatrixTranspose(proj);
-
-
-
+	model->Render();
 	//Model->Render(MATRIXBUFFERTYPE(world, view, proj), TimeDelta);
 }
 

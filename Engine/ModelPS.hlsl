@@ -1,4 +1,6 @@
-float3 Directrion = float3(-1.f, -1.f, 1.f);
+// GLOBAL for Pixel Shader
+Texture2D ShaderTexture; // 받아온 텍스쳐
+SamplerState SampleType; // 텍스쳐를 도형에 셰이딩 할때 사용
 
 struct VertexOutput
 {
@@ -8,9 +10,11 @@ struct VertexOutput
 
 };
 
-float4 main(VertexOutput input)
+float4 main(VertexOutput input) : SV_TARGET
 {
-    float NDotL = dot(normalize(input.Normal), -Directrion);
-
-    return float4(1.f, 1.f, 1.f, 1.f) * NDotL;
+    float4 textureColor;
+    
+    textureColor = ShaderTexture.Sample(SampleType, input.Uv);
+    
+    return textureColor;
 }
