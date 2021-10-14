@@ -1,7 +1,6 @@
 #pragma once
 #include "GameObject.h"
 
-class DynamicModel;
 class Model;
 
 
@@ -24,6 +23,5 @@ public:
 
 private:
 	Model * model;
-	//shared_ptr<DynamicModel>  Model = nullptr;
 };
 

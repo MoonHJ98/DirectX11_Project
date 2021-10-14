@@ -67,15 +67,6 @@
     <Filter Include="01. Utility\03. Component\05. Model">
       <UniqueIdentifier>{ec94e30a-872f-491f-898d-8bf8a5a1f68d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Utility\03. Component\05. Model\00. Dynamic">
-      <UniqueIdentifier>{75f38ec0-df6c-4646-bf7c-931a5779baaf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Utility\03. Component\05. Model\01. Static">
-      <UniqueIdentifier>{1d83bd97-f7e1-4857-bd6d-32a371e13d80}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Utility\03. Component\05. Model\00. Dynamic\00. Animation">
-      <UniqueIdentifier>{5442c1ed-e44d-4e42-87fe-2e79dad32a60}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01. Utility\99. Base">
       <UniqueIdentifier>{e1bf571c-015f-475a-8ee0-70648e32918b}</UniqueIdentifier>
     </Filter>
@@ -99,6 +90,18 @@
     </Filter>
     <Filter Include="01. Utility\02. Object\02. GameObject\01. Camera">
       <UniqueIdentifier>{3b08dede-ee9a-46e1-867d-b684b508bcc1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Includes\03. BinaryFile">
+      <UniqueIdentifier>{4c92ae4e-cf02-4a12-82d0-549bdc43f80f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Includes\04. Path">
+      <UniqueIdentifier>{a986e948-9547-4c7a-90b6-7569a288b1f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\03. Component\05. Model\00. Mesh">
+      <UniqueIdentifier>{61b2f65a-5fbf-47c7-a8b5-d98224da2ea0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\03. Component\05. Model\01. Bone">
+      <UniqueIdentifier>{b450ccec-1a33-4216-b06f-d9e71cfb82ba}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -132,12 +135,6 @@
     <ClInclude Include="GameObject.h">
       <Filter>01. Utility\02. Object\02. GameObject</Filter>
     </ClInclude>
-    <ClInclude Include="DynamicModel.h">
-      <Filter>01. Utility\03. Component\05. Model\00. Dynamic</Filter>
-    </ClInclude>
-    <ClInclude Include="AnimationController.h">
-      <Filter>01. Utility\03. Component\05. Model\00. Dynamic\00. Animation</Filter>
-    </ClInclude>
     <ClInclude Include="Base.h">
       <Filter>01. Utility\99. Base</Filter>
     </ClInclude>
@@ -149,9 +146,6 @@
     </ClInclude>
     <ClInclude Include="PipeLine.h">
       <Filter>01. Utility\04. Pipiline</Filter>
-    </ClInclude>
-    <ClInclude Include="AssimpLoader.h">
-      <Filter>02. Includes\02. Assimp</Filter>
     </ClInclude>
     <ClInclude Include="Layer.h">
       <Filter>01. Utility\02. Object\01. Layer</Filter>
@@ -168,13 +162,27 @@
     <ClInclude Include="Management.h">
       <Filter>01. Utility\00. Management</Filter>
     </ClInclude>
-    <ClInclude Include="AssimpConverter.h" />
-    <ClInclude Include="Model.h" />
-    <ClInclude Include="BinaryFile.h" />
-    <ClInclude Include="Path.h" />
-    <ClInclude Include="Bone.h" />
-    <ClInclude Include="Mesh.h" />
-    <ClInclude Include="Shader.h" />
+    <ClInclude Include="AssimpConverter.h">
+      <Filter>02. Includes\02. Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="BinaryFile.h">
+      <Filter>02. Includes\03. BinaryFile</Filter>
+    </ClInclude>
+    <ClInclude Include="Path.h">
+      <Filter>02. Includes\04. Path</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>01. Utility\03. Component\02. Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>01. Utility\03. Component\05. Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Bone.h">
+      <Filter>01. Utility\03. Component\05. Model\01. Bone</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>01. Utility\03. Component\05. Model\00. Mesh</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -207,12 +215,6 @@
     <ClCompile Include="GameObject.cpp">
       <Filter>01. Utility\02. Object\02. GameObject</Filter>
     </ClCompile>
-    <ClCompile Include="DynamicModel.cpp">
-      <Filter>01. Utility\03. Component\05. Model\00. Dynamic</Filter>
-    </ClCompile>
-    <ClCompile Include="AnimationController.cpp">
-      <Filter>01. Utility\03. Component\05. Model\00. Dynamic\00. Animation</Filter>
-    </ClCompile>
     <ClCompile Include="Base.cpp">
       <Filter>01. Utility\99. Base</Filter>
     </ClCompile>
@@ -221,9 +223,6 @@
     </ClCompile>
     <ClCompile Include="PipeLine.cpp">
       <Filter>01. Utility\04. Pipiline</Filter>
-    </ClCompile>
-    <ClCompile Include="AssimpLoader.cpp">
-      <Filter>02. Includes\02. Assimp</Filter>
     </ClCompile>
     <ClCompile Include="Layer.cpp">
       <Filter>01. Utility\02. Object\01. Layer</Filter>
@@ -240,13 +239,27 @@
     <ClCompile Include="ObjectManager.cpp">
       <Filter>01. Utility\02. Object\02. GameObject\00. ObjectManager</Filter>
     </ClCompile>
-    <ClCompile Include="AssimpConverter.cpp" />
-    <ClCompile Include="Model.cpp" />
-    <ClCompile Include="BinaryFile.cpp" />
-    <ClCompile Include="Path.cpp" />
-    <ClCompile Include="Bone.cpp" />
-    <ClCompile Include="Mesh.cpp" />
-    <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="AssimpConverter.cpp">
+      <Filter>02. Includes\02. Assimp</Filter>
+    </ClCompile>
+    <ClCompile Include="BinaryFile.cpp">
+      <Filter>02. Includes\03. BinaryFile</Filter>
+    </ClCompile>
+    <ClCompile Include="Path.cpp">
+      <Filter>02. Includes\04. Path</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>01. Utility\03. Component\02. Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Model.cpp">
+      <Filter>01. Utility\03. Component\05. Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Bone.cpp">
+      <Filter>01. Utility\03. Component\05. Model\01. Bone</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>01. Utility\03. Component\05. Model\00. Mesh</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="SkinnedMeshPS.hlsl">
@@ -255,7 +268,11 @@
     <FxCompile Include="SkinnedMeshVS.hlsl">
       <Filter>02. Includes\01. HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="ModelVS.hlsl" />
-    <FxCompile Include="ModelPS.hlsl" />
+    <FxCompile Include="ModelVS.hlsl">
+      <Filter>02. Includes\01. HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="ModelPS.hlsl">
+      <Filter>02. Includes\01. HLSL</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

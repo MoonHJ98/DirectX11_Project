@@ -2,14 +2,14 @@
 
 #include "Includes.h"
 
-
-struct SkinnedMesh
+struct ModelVertex
 {
-	XMFLOAT3 Position;
-	XMFLOAT2 Texture;
-	XMFLOAT3 Normal;
-	XMFLOAT4 Weight;
-	XMUINT4 BoneIndices;
+	Vector3 Position;
+	Vector2 Uv;
+	Vector3 Normal;
+	Vector4 Tangent;
+	Vector4 BlendIndices;
+	Vector4 BlendWeights;
 };
 
 typedef struct MatrixBufferType
@@ -27,130 +27,12 @@ typedef struct MatrixBufferType
 
 }MATRIXBUFFERTYPE;
 
-typedef struct BoneTransformBufferType
-{
-	XMFLOAT4X4 BoneTransform[MAX_BONE_TRANSFORM] = {};
-
-}BONETRASFORMBUFFERTYPE;
-
-typedef struct asWeights
-{
-	XMFLOAT4 Weight;
-	XMUINT4 BoneIndices;
-
-	vector<int>		boneIndices;
-	vector<float>	weights;
-}WEIGHTS;
-
-typedef struct BoneEntry
-{
-	string Name = {};
-	XMFLOAT4X4 Offset = {}, LocalTransform = {}, GlobalTransform = {}, OriginalLocalTransform = {};
-	BoneEntry* Parent = nullptr;
-	vector<BoneEntry*> Children;
-
-	BoneEntry() {}
-	~BoneEntry()
-	{
-		for (size_t i(0); i < Children.size(); i++)
-			delete Children[i];
-	}
-}BONE;
-
 typedef struct tagTexture
 {
 	wstring MaterialName;
 	wstring	Type;
 	wstring	Path;	// 다른 첵스쳐와 비교하기 위해 경로 저장.
 }TEXTUREDESC;
-
-
-class Texture;
-typedef struct MeshEntry
-{
-	MeshEntry() {}
-
-	~MeshEntry() {}
-
-	void Initialize(ID3D11Device* _Device, vector<SkinnedMesh>& Vertices, const vector<UINT>& Indices);
-
-	// For Buffer.
-	ComPtr<ID3D11Buffer> VertexBuffers;
-	ComPtr<ID3D11Buffer> IndexBuffers;
-	UINT NumIndices = 0;
-	string MaterialName;
-
-	shared_ptr<Texture> Diffuse;
-	shared_ptr<Texture> Normal;
-	string Name;
-
-
-	void	RenderBuffer(ID3D11DeviceContext * _DeviceContext);
-
-}MESH;
-
-struct AnimationChannel
-{
-	string Name;
-	vector<aiVectorKey> PositionKeys;
-	vector<aiQuatKey> RotationKeys;
-	vector<aiVectorKey> ScalingKeys;
-};
-
-struct AnimEvaluator
-{
-	AnimEvaluator() {}
-	AnimEvaluator(const aiAnimation* pAnim);
-	void Evaluate(float pTime, map<string, BONE*>& bones);
-	//void Save(ofstream& file);
-	//void Load(ifstream& file);
-
-	vector<XMFLOAT4X4>& GetTransforms(float dt);
-
-	unsigned int GetFrameIndexAt(float _time);
-
-	string Name;
-	vector<AnimationChannel> Channels;
-	bool PlayAnimationForward = true; // play forward == true, play backward == false
-	float LastTime = 0.f, TicksPerSecond = 0.f, Duration = 0.f;
-	vector<tuple<UINT, UINT, UINT> > LastPositions;
-	vector<vector<XMFLOAT4X4>> Transforms;//, QuatTransforms;/** Array to return transformations results inside. */
-
-};
-
-
-///////////////////////////////////////////////////////////
-
-
-void SplitString(vector<string>* result, string origin, string tok);
-void SplitString(vector<wstring>* result, wstring origin, wstring tok);
-
-bool StartsWith(string str, string comp);
-bool StartsWith(wstring str, wstring comp);
-
-bool Contain(string str, string comp);
-bool Contain(wstring str, wstring comp);
-
-void Replace(string* str, string comp, string rep);
-void Replace(wstring* str, wstring comp, wstring rep);
-
-wstring ToWString(string value);
-string ToString(wstring value);
-
-string Format(const string format, ...);
-wstring Format(const wstring format, ...);
-
-struct ModelVertex
-{
-	Vector3 Position;
-	Vector2 Uv;
-	Vector3 Normal;
-	Vector4 Tangent;
-	Vector4 Weights;
-	Vector4 Indices;
-};
-//typedef VertexPositionNormalTangentColorTextureSkinning ModelVertex;
-
 
 struct asBone
 {
@@ -263,5 +145,57 @@ public:
 	}
 };
 
+struct asKeyframeData
+{
+	float Time;
 
-void TransformMatrix(XMFLOAT4X4& out, const aiMatrix4x4& in);
+	Vector3 Scale;
+	Quaternion Rotation;
+	Vector3 Translation;
+};
+
+struct asKeyframe
+{
+	string BoneName;
+	vector<asKeyframeData> Transforms;
+};
+
+struct asClip
+{
+	string Name;
+
+	UINT FrameCount;
+	float FrameRate;
+	float Duration;
+
+	vector<asKeyframe *> Keyframes;
+};
+
+//aniNode의 원본 키프레임 저장
+struct asClipNode
+{
+	aiString Name;
+	vector<asKeyframeData> Keyframe;
+};
+
+
+///////////////////////////////////////////////////////////
+
+
+void SplitString(vector<string>* result, string origin, string tok);
+void SplitString(vector<wstring>* result, wstring origin, wstring tok);
+
+bool StartsWith(string str, string comp);
+bool StartsWith(wstring str, wstring comp);
+
+bool Contain(string str, string comp);
+bool Contain(wstring str, wstring comp);
+
+void Replace(string* str, string comp, string rep);
+void Replace(wstring* str, wstring comp, wstring rep);
+
+wstring ToWString(string value);
+string ToString(wstring value);
+
+string Format(const string format, ...);
+wstring Format(const wstring format, ...);

@@ -156,14 +156,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="AnimationController.h" />
     <ClInclude Include="AssimpConverter.h" />
-    <ClInclude Include="AssimpLoader.h" />
     <ClInclude Include="Base.h" />
     <ClInclude Include="BinaryFile.h" />
     <ClInclude Include="Bone.h" />
     <ClInclude Include="Camera.h" />
-    <ClInclude Include="DynamicModel.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GraphicDevice.h" />
@@ -187,14 +184,11 @@
     <ClInclude Include="Transform.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="AnimationController.cpp" />
     <ClCompile Include="AssimpConverter.cpp" />
-    <ClCompile Include="AssimpLoader.cpp" />
     <ClCompile Include="Base.cpp" />
     <ClCompile Include="BinaryFile.cpp" />
     <ClCompile Include="Bone.cpp" />
     <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="DynamicModel.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GraphicDevice.cpp" />

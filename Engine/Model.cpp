@@ -12,12 +12,13 @@
 
 Model::Model()
 {
-	//a = new AssimpConverter();
-	//a->ReadFile(L"Player/SK_CHR_Jack.FBX");
-	//a->ExportMesh(L"Player/SK_CHR_Jack.FBX");
+	a = new AssimpConverter();
+	a->ReadFile(L"Player/SK_CHR_Jack.FBX");
+	a->ExportMesh(L"Player/SK_CHR_Jack.FBX");
 	ReadMesh(L"Player/SK_CHR_Jack.FBX");
 	ReadMaterial();
 	shader = Shader::Create(L"../Engine/ModelVS.hlsl", L"../Engine/ModelPS.hlsl");
+	trans = XMMatrixIdentity();
 }
 
 Model::~Model()
@@ -139,7 +140,7 @@ shared_ptr<Texture> Model::MatchTexture(TEXTUREDESC& _texture)
 
 void Model::BindBone()
 {
-	Root = bones[1];
+	Root = bones[106];
 	for (auto& bone : bones)
 	{
 		if (bone->GetParentIndex() > -1)
@@ -168,6 +169,7 @@ void Model::UpdateTransform(shared_ptr<Bone> bone, const Matrix & matrix)
 	for (UINT i = 0; i < bones.size(); i++)
 	{
 		auto& bone = bones[i];
+
 		transforms[i] = *bone->GetTransform();
 	}
 
@@ -185,9 +187,12 @@ void Model::UpdateBones(shared_ptr<Bone> bone, const Matrix & matrix)
 		UpdateBones(bone, matrix);
 }
 
-int Model::Update()
+int Model::Update(float _timeDelta)
 {
-	UpdateTransform();
+	rad = sinf(100.f) * _timeDelta * 10.f;
+	trans = XMMatrixRotationRollPitchYaw(0.f, rad, 0.f);
+
+	UpdateTransform(/*Root, trans*/);
 
 	for (auto& mesh : meshes)
 		mesh->Update();

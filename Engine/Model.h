@@ -6,6 +6,7 @@
 class AssimpConverter;
 class Bone;
 class Mesh;
+class Texture;
 class Shader;
 
 class Model
@@ -25,7 +26,7 @@ public:
 	void						  UpdateBones(shared_ptr<Bone> bone, const Matrix& matrix);
 
 public:
-	int							  Update();
+	int							  Update(float _timeDelta);
 	void						  Render();
 
 private:
@@ -35,6 +36,8 @@ private:
 	vector<shared_ptr<Texture>>	  Textures;
 
 	shared_ptr<Shader>			  shader = nullptr;
+	Matrix trans;
+	float rad = 0;
 
 
 	Matrix transforms[MAX_MODEL_TRANSFORMS]; // Bone¿« ¿¸√º matrix

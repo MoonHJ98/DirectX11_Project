@@ -4,7 +4,6 @@
 #include "Path.h"
 #include "String.h"
 
-
 AssimpConverter::AssimpConverter()
 {
 	importer = new Assimp::Importer();
@@ -55,7 +54,9 @@ void AssimpConverter::ReadBoneData(aiNode * _Node, int _Index, int _Parent)
 
 
 	Matrix transform(_Node->mTransformation[0]);
-	bone->transform = XMMatrixTranspose(transform);
+	//bone->transform = XMMatrixTranspose(transform);
+	bone->transform = transform;
+
 	Matrix parentMatrix;
 
 	if (_Parent < 0)
@@ -81,11 +82,8 @@ void AssimpConverter::ReadMeshData(aiNode * _Node, int _Bone)
 		return;
 
 
-
-
 	for (UINT i = 0; i < _Node->mNumMeshes; ++i)
 	{
-
 		asMesh* mesh = new asMesh();
 		mesh->Name = _Node->mName.C_Str();
 		mesh->BoneIndex = _Bone;
@@ -101,7 +99,7 @@ void AssimpConverter::ReadMeshData(aiNode * _Node, int _Bone)
 		{
 			ModelVertex vertex;
 			memcpy(&vertex.Position, &srcMesh->mVertices[v], sizeof(Vector3));
-
+			srcMesh->mBones[0]->mName;
 			// 일반적으로 0으로 고정
 			if (srcMesh->HasTextureCoords(0))
 				memcpy(&vertex.Uv, &srcMesh->mTextureCoords[0][v], sizeof(Vector2));
@@ -123,6 +121,58 @@ void AssimpConverter::ReadMeshData(aiNode * _Node, int _Bone)
 
 	}
 
+}
+
+void AssimpConverter::ReadSkinData()
+{
+	for (UINT i = 0; i < scene->mNumMeshes; i++)
+	{
+		aiMesh* aiMesh = scene->mMeshes[i];
+		if (aiMesh->HasBones() == false)
+			continue;
+
+
+		asMesh* mesh = Meshes[i];
+
+		vector<asBoneWeights> boneWeights;
+		boneWeights.assign(mesh->Vertices.size(), asBoneWeights());
+
+		for (UINT b = 0; b < aiMesh->mNumBones; b++)
+		{
+			aiBone* aiMeshBone = aiMesh->mBones[b];
+
+			UINT boneIndex = 0;
+			for (asBone* bone : Bones)
+			{
+				if (bone->Name == (string)aiMeshBone->mName.C_Str())
+				{
+					boneIndex = bone->Index;
+
+					break;
+				}
+			}//for(bone)
+
+			for (UINT w = 0; w < aiMeshBone->mNumWeights; w++)
+			{
+				UINT index = aiMeshBone->mWeights[w].mVertexId;
+				float weight = aiMeshBone->mWeights[w].mWeight;
+
+				boneWeights[index].AddWeights(boneIndex, weight);
+			}
+		}//for(b)
+
+
+		for (UINT w = 0; w < boneWeights.size(); w++)
+		{
+			boneWeights[i].Normalize();
+
+			asBlendWeight blendWeight;
+			boneWeights[w].GetBlendWeights(blendWeight);
+
+			mesh->Vertices[w].BlendIndices = blendWeight.Indices;
+			mesh->Vertices[w].BlendWeights = blendWeight.Weights;
+		}
+	}
 }
 
 void AssimpConverter::WriteMeshData(wstring _SavePath)
