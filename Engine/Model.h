@@ -42,6 +42,5 @@ private:
 
 	Matrix transforms[MAX_MODEL_TRANSFORMS]; // Bone¿« ¿¸√º matrix
 
-	AssimpConverter* a;
 };
 

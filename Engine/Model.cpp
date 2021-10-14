@@ -12,10 +12,22 @@
 
 Model::Model()
 {
-	a = new AssimpConverter();
-	a->ReadFile(L"Player/SK_CHR_Jack.FBX");
-	a->ExportMesh(L"Player/SK_CHR_Jack.FBX");
-	ReadMesh(L"Player/SK_CHR_Jack.FBX");
+	AssimpConverter* converter = nullptr;;
+
+	converter = new AssimpConverter();
+	converter->ReadFile(L"Player/SK_CHR_Jack.FBX");
+	converter->ExportMesh(L"Player/SK_CHR_Jack");
+	SAFEDELETE(converter);
+
+	//converter = new AssimpConverter();
+	//converter->ReadFile(L"Player/Jack_CB_IDL_01_Lp.FBX");
+	//SAFEDELETE(converter);
+
+	//vector<wstring> b;
+	//converter->ClipList(&b);
+
+
+	ReadMesh(L"Player/SK_CHR_Jack");
 	ReadMaterial();
 	shader = Shader::Create(L"../Engine/ModelVS.hlsl", L"../Engine/ModelPS.hlsl");
 	trans = XMMatrixIdentity();

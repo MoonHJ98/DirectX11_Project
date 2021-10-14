@@ -86,6 +86,8 @@ private:
 public:
 	void AddWeights(UINT boneIndex, float boneWeights)
 	{
+		// boneWeights가 큰 값이 앞에 있도록 넣기. 3D모델의 규칙.
+
 		if (boneWeights <= 0.0f) return;
 
 		bool bInsert = false;
@@ -117,6 +119,7 @@ public:
 		}
 	}
 
+	// Weights 총합 1로 만들기
 	void Normalize()
 	{
 		float totalWeight = 0.0f;
@@ -145,6 +148,8 @@ public:
 	}
 };
 
+//실제로 파일로 저장될 데이터 **중요**
+//////////////////////////////////////////////////////////////
 struct asKeyframeData
 {
 	float Time;
@@ -154,12 +159,14 @@ struct asKeyframeData
 	Vector3 Translation;
 };
 
+
 struct asKeyframe
 {
 	string BoneName;
 	vector<asKeyframeData> Transforms;
 };
 
+// 애니메이션의 한 동작을 의미
 struct asClip
 {
 	string Name;
@@ -170,12 +177,17 @@ struct asClip
 
 	vector<asKeyframe *> Keyframes;
 };
+//////////////////////////////////////////////////////////////
 
-//aniNode의 원본 키프레임 저장
+
+//aniNode의 원본 키프레임 저장.
 struct asClipNode
 {
+	// Bone의 이름
 	aiString Name;
-	vector<asKeyframeData> Keyframe;
+
+	// 해당 본의 SRT값들
+	vector<asKeyframeData> Keyframe; 
 };
 
 
