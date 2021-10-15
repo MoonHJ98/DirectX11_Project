@@ -8,8 +8,8 @@ struct ModelVertex
 	Vector2 Uv;
 	Vector3 Normal;
 	Vector4 Tangent;
-	Vector4 BlendIndices;
 	Vector4 BlendWeights;
+	Vector4 BlendIndices;
 };
 
 typedef struct MatrixBufferType
@@ -232,17 +232,23 @@ struct ClipTransform
 	}
 };
 
-
+// 프레임 정보에 대한 구조체. 셰이더 쪽으로 넘겨줄 거임
 struct KeyframeDesc
 {
+	// 현재 플레이하려는 애니메이션의 번호.
 	int Clip = 0;
 
+	// 현재 프레임 번호.
 	UINT CurrFrame = 0;
+	// 현재 프레임의 다음 번호. CurrFrame의 +1
 	UINT NextFrame = 0;
 
+	// 현재 플레이중인 시간 0~1로 정규화 될 거임.
 	float Time = 0.0f;
+	// 애니메이션이 시작했을 때 부터의 시간.
 	float RunningTime = 0.0f;
 
+	// 애니메이션 속도.
 	float Speed = 1.0f;
 
 	Vector2 Padding;

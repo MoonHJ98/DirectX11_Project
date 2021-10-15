@@ -236,10 +236,12 @@ int Model::Update(float _timeDelta)
 
 void Model::Render()
 {
+	animator->Render();
 	shader->Render();
+
 	for (auto& mesh : meshes)
 		mesh->Render();
-	
+
 }
 
 shared_ptr<Model> Model::Create()

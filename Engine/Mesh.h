@@ -72,7 +72,7 @@ private:
 	shared_ptr<UINT> indices = nullptr;
 
 
-	ConstantBuffer<BoneDesc> BoneMatrixbuffer;
+	shared_ptr<ConstantBuffer<BoneDesc>> BoneMatrixbuffer;
 
 	ComPtr<ID3D11ShaderResourceView> transformsSRV = nullptr;
 

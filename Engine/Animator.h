@@ -36,16 +36,18 @@ public:
 	static shared_ptr<Animator>       Create(shared_ptr<Model> _model);
 
 private:
-	shared_ptr<GraphicDevice>         Graphic = nullptr;
-	weak_ptr<Model>					  model;
-	vector<shared_ptr<Clip>>          clips;
+	shared_ptr<GraphicDevice>					  Graphic = nullptr;
+	weak_ptr<Model>								  model;
+	vector<shared_ptr<Clip>>					  clips;
 
 	// 클립 여러개를 다루기 위해 동적할당 할것임.
-	shared_ptr<ClipTransform[]>	      clipTransforms = nullptr;
+	shared_ptr<ClipTransform[]>					  clipTransforms = nullptr;
 
-	ComPtr<ID3D11Texture2D>		      texture = nullptr;
-	ComPtr<ID3D11ShaderResourceView>  srv = nullptr;
+	ComPtr<ID3D11Texture2D>						  texture = nullptr;
+	ComPtr<ID3D11ShaderResourceView>			  srv = nullptr;
 
+	KeyframeDesc								  keyframeDesc;
+	shared_ptr<ConstantBuffer<KeyframeDesc>>	  keyframeBuffer;
 };
 
 /*

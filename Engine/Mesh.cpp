@@ -29,9 +29,9 @@ HRESULT Mesh::Initialize(wstring _name, int _boneIndex, wstring _materialName, v
 	CreateStaticBuffer(Graphic->GetDevice(), &_vertices[0], _vertices.size(), sizeof(ModelVertex), D3D11_BIND_VERTEX_BUFFER, vertexBuffer.GetAddressOf());
 	CreateStaticBuffer(Graphic->GetDevice(), &_indices[0], _indices.size(), sizeof(UINT), D3D11_BIND_INDEX_BUFFER, indexBuffer.GetAddressOf());
 
-
-
-	BoneMatrixbuffer.Create(Graphic->GetDevice());
+	shared_ptr<ConstantBuffer<BoneDesc>> temp(new ConstantBuffer<BoneDesc>());
+	BoneMatrixbuffer = temp;
+	BoneMatrixbuffer->Create(Graphic->GetDevice());
 
 	return S_OK;
 }
@@ -47,12 +47,16 @@ void Mesh::Render()
 	UINT stride;
 	UINT offset;
 
-	BoneMatrixbuffer.SetData(Graphic->GetDeviceContext(), boneDesc);
-	auto buffer = BoneMatrixbuffer.GetBuffer();
+	BoneMatrixbuffer->SetData(Graphic->GetDeviceContext(), boneDesc);
+	auto buffer = BoneMatrixbuffer->GetBuffer();
 	Graphic->GetDeviceContext()->VSSetConstantBuffers(1, 1, &buffer);
 
 	if(Diffuse)
 		Graphic->GetDeviceContext()->PSSetShaderResources(0, 1, Diffuse->GetTexture());
+
+	if (transformsSRV)
+		Graphic->GetDeviceContext()->VSSetShaderResources(0, 1, transformsSRV.GetAddressOf());
+
 
 	stride = sizeof(ModelVertex);
 	offset = 0;

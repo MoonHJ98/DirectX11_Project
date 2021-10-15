@@ -26,6 +26,9 @@ void Animator::Update()
 
 void Animator::Render()
 {
+	keyframeBuffer->SetData(Graphic->GetDeviceContext(), keyframeDesc);
+	auto buffer = keyframeBuffer->GetBuffer();
+	Graphic->GetDeviceContext()->VSSetConstantBuffers(2, 1, &buffer);
 }
 
 shared_ptr<Clip> Animator::ClipByName(wstring name)
@@ -165,13 +168,18 @@ void Animator::CreateTexture()
 	}
 
 
+	/*
+	셰이더 리소스 뷰
+	위에서 만든 데이터를 셰이더에서 어떻게 받아서 어떤 형식으로 받아서 사용할까를 결정해주는 것.
+	이 메모리 형식이 어떻게 돼있느냐를 셰이더에게 알려주기 위해 사용하는 것.
+	*/
 	//Create SRV
 	{
 		D3D11_SHADER_RESOURCE_VIEW_DESC desc;
 		ZeroMemory(&desc, sizeof(D3D11_SHADER_RESOURCE_VIEW_DESC));
 		desc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
-		desc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
-		desc.Texture2DArray.MipLevels = 1;
+		desc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DARRAY; // 리소스의 형식
+		desc.Texture2DArray.MipLevels = 1; // 디멘션과 맞는 desc의 멤버변수에 값을 넣어줘야함.
 		desc.Texture2DArray.ArraySize = clips.size();
 
 		Graphic->GetDevice()->CreateShaderResourceView(texture.Get(), &desc, &srv);
@@ -179,8 +187,6 @@ void Animator::CreateTexture()
 	auto tempModel = model.lock();
 	tempModel->SetTransformsSRV(srv);
 
-	//for (ModelMesh* mesh : model->Meshes())
-	//	mesh->TransformsSRV(srv);
 }
 
 void Animator::CreateClipTransform(UINT index)
@@ -190,7 +196,7 @@ void Animator::CreateClipTransform(UINT index)
 	auto tempModel = model.lock();
 
 	shared_ptr<Clip> clip = clips[index];
-	//Clip* clip = model->ClipByIndex(index);
+
 	for (UINT f = 0; f < clip->GetFrameCount(); f++)
 	{
 		for (UINT b = 0; b < tempModel->GetBoneCount(); b++)
@@ -201,7 +207,7 @@ void Animator::CreateClipTransform(UINT index)
 			Matrix parent;
 			Matrix invGlobal = *bone->GetTransform();
 			invGlobal = XMMatrixInverse(nullptr, invGlobal);
-			//D3DXMatrixInverse(&invGlobal, NULL, &invGlobal);
+
 
 			int parentIndex = bone->GetParentIndex();
 			if (parentIndex < 0)
@@ -221,17 +227,11 @@ void Animator::CreateClipTransform(UINT index)
 				S = XMMatrixScaling(data.Scale.x, data.Scale.y, data.Scale.z);
 				R = XMMatrixRotationQuaternion(data.Rotation);
 				T = XMMatrixTranslation(data.Translation.x, data.Translation.y, data.Translation.z);
-				//D3DXMatrixScaling(&S, data.Scale.x, data.Scale.y, data.Scale.z);
-				//D3DXMatrixRotationQuaternion(&R, &data.Rotation);
-				//D3DXMatrixTranslation(&T, data.Translation.x, data.Translation.y, data.Translation.z);
 
 				animation = S * R * T;
 			}
 			else
-			{
 				animation = XMMatrixIdentity();
-				//D3DXMatrixIdentity(&animation);
-			}
 
 			/*
 			animation 행렬 : 해당 프레임에 해당 본이 얼마만큼 움직일지 결정
@@ -263,6 +263,10 @@ HRESULT Animator::Initialize(shared_ptr<Model> _model)
 {
 	Graphic = GraphicDevice::GetInstance();
 	model = _model;
+	shared_ptr<ConstantBuffer<KeyframeDesc>> temp(new ConstantBuffer<KeyframeDesc>);
+	keyframeBuffer = temp;
+	keyframeBuffer->Create(Graphic->GetDevice());
+
 	return S_OK;
 }
 

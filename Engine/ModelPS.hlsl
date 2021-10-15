@@ -1,6 +1,7 @@
 // GLOBAL for Pixel Shader
-Texture2D ShaderTexture; // 받아온 텍스쳐
+Texture2D ShaderTexture : register(t0) ; // 받아온 텍스쳐 
 SamplerState SampleType; // 텍스쳐를 도형에 셰이딩 할때 사용
+
 
 struct VertexOutput
 {
