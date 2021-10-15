@@ -103,6 +103,15 @@
     <Filter Include="01. Utility\03. Component\05. Model\01. Bone">
       <UniqueIdentifier>{b450ccec-1a33-4216-b06f-d9e71cfb82ba}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Utility\03. Component\06. Animation">
+      <UniqueIdentifier>{af1c3c6e-64c4-4ca9-9e74-bef9ec045d4f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\03. Component\06. Animation\00. Clip">
+      <UniqueIdentifier>{6ce9ccd4-9b51-4245-9759-47a4711f7493}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\03. Component\06. Animation\01. Animator">
+      <UniqueIdentifier>{78abc40e-f605-46f5-b9d5-1a95cf067d6c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -183,6 +192,12 @@
     <ClInclude Include="Mesh.h">
       <Filter>01. Utility\03. Component\05. Model\00. Mesh</Filter>
     </ClInclude>
+    <ClInclude Include="Clip.h">
+      <Filter>01. Utility\03. Component\06. Animation\00. Clip</Filter>
+    </ClInclude>
+    <ClInclude Include="Animator.h">
+      <Filter>01. Utility\03. Component\06. Animation\01. Animator</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -259,6 +274,12 @@
     </ClCompile>
     <ClCompile Include="Mesh.cpp">
       <Filter>01. Utility\03. Component\05. Model\00. Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Clip.cpp">
+      <Filter>01. Utility\03. Component\06. Animation\00. Clip</Filter>
+    </ClCompile>
+    <ClCompile Include="Animator.cpp">
+      <Filter>01. Utility\03. Component\06. Animation\01. Animator</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

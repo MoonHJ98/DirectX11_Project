@@ -156,11 +156,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Animator.h" />
     <ClInclude Include="AssimpConverter.h" />
     <ClInclude Include="Base.h" />
     <ClInclude Include="BinaryFile.h" />
     <ClInclude Include="Bone.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Clip.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GraphicDevice.h" />
@@ -184,11 +186,13 @@
     <ClInclude Include="Transform.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Animator.cpp" />
     <ClCompile Include="AssimpConverter.cpp" />
     <ClCompile Include="Base.cpp" />
     <ClCompile Include="BinaryFile.cpp" />
     <ClCompile Include="Bone.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Clip.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GraphicDevice.cpp" />

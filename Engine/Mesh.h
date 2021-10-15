@@ -23,18 +23,20 @@ public:
 	void				Render();
 
 public:
-	wstring				GetName()								 { return name; }
-	wstring				GetMaterialName()						 { return materialName; }
-																 
-	int					GetBoneIndex()							 { return boneIndex; }
-	shared_ptr<Bone>	GetBone()								 { return bone; }
-	void				SetBone(shared_ptr<Bone> _bone)			 { bone = _bone; }
+	wstring				GetName()												{ return name; }
+	wstring				GetMaterialName()										{ return materialName; }
+																				
+	int					GetBoneIndex()											{ return boneIndex; }
+	shared_ptr<Bone>	GetBone()												{ return bone; }
+	void				SetBone(shared_ptr<Bone> _bone)							{ bone = _bone; }
 
-	void				SetDiffuse(shared_ptr<Texture> _Diffuse) { Diffuse = _Diffuse; }
-	void				SetNormal(shared_ptr<Texture> _Normal)	 { Normal = _Normal; }
-	
+	void				SetDiffuse(shared_ptr<Texture> _Diffuse)				{ Diffuse = _Diffuse; }
+	void				SetNormal(shared_ptr<Texture> _Normal)					{ Normal = _Normal; }
+	void				SetTransformsSRV(ComPtr<ID3D11ShaderResourceView> srv)	{ transformsSRV = srv; }
+
 
 	void				SetTransforms(Matrix* transforms);
+
 	//void GetTransforms(Matrix* transforms);
 	//void SetTransform(Transform* transform);
 
@@ -52,7 +54,10 @@ public:
 	static shared_ptr<Mesh> Create(wstring _name, int _boneIndex, wstring _materialName, vector<ModelVertex>& _vertices, vector<UINT>& _indices);
 
 private:
+	BoneDesc boneDesc;
+
 	shared_ptr<GraphicDevice> Graphic = nullptr;
+
 	wstring name;
 	wstring materialName = L"";
 	int boneIndex;
@@ -67,17 +72,14 @@ private:
 	shared_ptr<UINT> indices = nullptr;
 
 
-	BoneDesc boneDesc;
 	ConstantBuffer<BoneDesc> BoneMatrixbuffer;
+
+	ComPtr<ID3D11ShaderResourceView> transformsSRV = nullptr;
 
 	shared_ptr<Texture> Diffuse;
 	shared_ptr<Texture> Normal;
 
-	//Transform* transform = nullptr;
-	//Shader* shader;
-	//PerFrame* perFrame = NULL;
-	//ConstantBuffer* boneBuffer;
-	//ID3DX11EffectConstantBuffer* sBoneBuffer;
+
 
 
 };

@@ -148,6 +148,8 @@ public:
 	}
 };
 
+
+// For Assimp.
 //실제로 파일로 저장될 데이터 **중요**
 //////////////////////////////////////////////////////////////
 struct asKeyframeData
@@ -190,8 +192,61 @@ struct asClipNode
 	vector<asKeyframeData> Keyframe; 
 };
 
+// For Model.
+struct ModelKeyframeData
+{
+	float Time;
 
-///////////////////////////////////////////////////////////
+	Vector3 Scale;
+	Quaternion Rotation;
+	Vector3 Translation;
+};
+
+struct ModelKeyframe
+{
+	wstring BoneName;
+	vector<ModelKeyframeData> Transforms;
+};
+
+// 하나의 클립.
+struct ClipTransform
+{
+	Matrix** Transform;
+
+	ClipTransform()
+	{
+		// 행은 keyframe갯수 만큼 동적할당.
+		Transform = new Matrix*[MAX_MODEL_KEYFRAMES];
+
+		// 열 별로 동적할당.
+		for (UINT i = 0; i < MAX_MODEL_KEYFRAMES; i++)
+			Transform[i] = new Matrix[MAX_MODEL_TRANSFORMS];
+	}
+
+	~ClipTransform()
+	{
+		for (UINT i = 0; i < MAX_MODEL_KEYFRAMES; i++)
+			SAFEDELETEARRAY(Transform[i]);
+
+		SAFEDELETEARRAY(Transform);
+	}
+};
+
+
+struct KeyframeDesc
+{
+	int Clip = 0;
+
+	UINT CurrFrame = 0;
+	UINT NextFrame = 0;
+
+	float Time = 0.0f;
+	float RunningTime = 0.0f;
+
+	float Speed = 1.0f;
+
+	Vector2 Padding;
+};
 
 
 void SplitString(vector<string>* result, string origin, string tok);

@@ -4,6 +4,7 @@
 #include "GraphicDevice.h"
 #include "Bone.h"
 #include "Mesh.h"
+#include "Animator.h"
 #include "BinaryFile.h"
 #include "Shader.h"
 #include "Texture.h"
@@ -12,29 +13,41 @@
 
 Model::Model()
 {
-	AssimpConverter* converter = nullptr;;
+}
 
-	converter = new AssimpConverter();
-	converter->ReadFile(L"Player/SK_CHR_Jack.FBX");
-	converter->ExportMesh(L"Player/SK_CHR_Jack");
-	SAFEDELETE(converter);
-
-	//converter = new AssimpConverter();
-	//converter->ReadFile(L"Player/Jack_CB_IDL_01_Lp.FBX");
-	//SAFEDELETE(converter);
-
-	//vector<wstring> b;
-	//converter->ClipList(&b);
-
-
-	ReadMesh(L"Player/SK_CHR_Jack");
-	ReadMaterial();
-	shader = Shader::Create(L"../Engine/ModelVS.hlsl", L"../Engine/ModelPS.hlsl");
-	trans = XMMatrixIdentity();
+Model::Model(const Model & Rhs)
+{
 }
 
 Model::~Model()
 {
+}
+
+HRESULT Model::Initialize()
+{
+	AssimpConverter* converter = nullptr;;
+
+	//converter = new AssimpConverter();
+	//converter->ReadFile(L"Player/SK_CHR_Jack.FBX");
+	//converter->ExportMesh(L"Player/SK_CHR_Jack");
+	//SAFEDELETE(converter);
+
+	//converter = new AssimpConverter();
+	//converter->ReadFile(L"Player/Jack_CB_IDL_01_Lp.FBX");
+	//converter->ExportAnimClip(0, L"Player/Jack_CB_IDL_01_Lp");
+	//SAFEDELETE(converter);
+
+	ReadMesh(L"Player/SK_CHR_Jack");
+	ReadMaterial();
+	shader = Shader::Create(L"../Engine/ModelVS.hlsl", L"../Engine/ModelPS.hlsl");
+
+	animator = Animator::Create(shared_from_this());
+
+	animator->ReadClip(L"Player/Jack_CB_IDL_01_Lp");
+
+	trans = XMMatrixIdentity();
+
+	return S_OK;
 }
 
 void Model::ReadMesh(wstring filePath)
@@ -137,16 +150,17 @@ void Model::ReadMaterial()
 
 	}
 }
+
 shared_ptr<Texture> Model::MatchTexture(TEXTUREDESC& _texture)
 {
-	for (UINT i = 0; i < Textures.size(); ++i)
+	for (UINT i = 0; i < textures.size(); ++i)
 	{
-		if (Textures[i]->GetTextureDecs().Path == _texture.Path)
-			return Textures[i];
+		if (textures[i]->GetTextureDecs().Path == _texture.Path)
+			return textures[i];
 	}
 
 	auto tex = Texture::Create(GraphicDevice::GetInstance()->GetDevice(), &_texture);
-	Textures.push_back(tex);
+	textures.push_back(tex);
 	return tex;
 }
 
@@ -175,7 +189,7 @@ void Model::BindMesh()
 
 void Model::UpdateTransform(shared_ptr<Bone> bone, const Matrix & matrix)
 {
-	if (bone != NULL)
+	if (bone != nullptr)
 		UpdateBones(bone, matrix);
 
 	for (UINT i = 0; i < bones.size(); i++)
@@ -199,8 +213,16 @@ void Model::UpdateBones(shared_ptr<Bone> bone, const Matrix & matrix)
 		UpdateBones(bone, matrix);
 }
 
+void Model::SetTransformsSRV(ComPtr<ID3D11ShaderResourceView> srv)
+{
+	for (auto& mesh : meshes)
+		mesh->SetTransformsSRV(srv);
+}
+
 int Model::Update(float _timeDelta)
 {
+	animator->Update();
+
 	rad = sinf(100.f) * _timeDelta * 10.f;
 	trans = XMMatrixRotationRollPitchYaw(0.f, rad, 0.f);
 
@@ -218,4 +240,17 @@ void Model::Render()
 	for (auto& mesh : meshes)
 		mesh->Render();
 	
+}
+
+shared_ptr<Model> Model::Create()
+{
+	shared_ptr<Model> Instance(new Model());
+	
+
+	if (FAILED(Instance->Initialize()))
+	{
+		MSG_BOX("Failed to create Model.");
+		return nullptr;
+	}
+	return Instance;
 }

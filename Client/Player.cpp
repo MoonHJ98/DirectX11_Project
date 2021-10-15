@@ -32,7 +32,7 @@ void Player::Render()
 HRESULT Player::Initialize(ID3D11Device * _Device)
 {
 	transform = Transform::Create(Transform::TRANSDESC(10.f, 10.f));
-	model = new Model();
+	model = Model::Create();
 
 	return S_OK;
 }

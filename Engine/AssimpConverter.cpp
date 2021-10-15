@@ -57,8 +57,8 @@ void AssimpConverter::ReadBoneData(aiNode * _Node, int _Index, int _Parent)
 
 
 	Matrix transform(_Node->mTransformation[0]);
-	//bone->transform = XMMatrixTranspose(transform);
-	bone->transform = transform;
+	bone->transform = XMMatrixTranspose(transform);
+	//bone->transform = transform;
 
 	Matrix parentMatrix;
 
@@ -67,7 +67,15 @@ void AssimpConverter::ReadBoneData(aiNode * _Node, int _Index, int _Parent)
 	else
 		parentMatrix = Bones[_Parent]->transform;
 
+	// Global = Local(Relative) * Global
+	/*   50       20
+	  -------> A ---->    70
+	  50 : parent(global)
+	  20 : local(relative)
+	  70 : global
+	*/
 	bone->transform = bone->transform * parentMatrix; // 본을 자기를 기준으로 부모만큼 움직일 것임.
+
 
 	Bones.push_back(bone);
 
@@ -346,8 +354,9 @@ void AssimpConverter::ReadKeyframeData(asClip * clip, aiNode * node, vector<asCl
 
 	for (UINT i = 0; i < clip->FrameCount; i++)
 	{
-		asClipNode* asClipNode = NULL;
+		asClipNode* asClipNode = nullptr;
 
+		// 저장해 놓은 데이터중에 Bone이름이 같은 데이터 찾기
 		for (UINT n = 0; n < aiNodeInfos.size(); n++)
 		{
 			if (aiNodeInfos[n].Name == node->mName)
@@ -360,11 +369,12 @@ void AssimpConverter::ReadKeyframeData(asClip * clip, aiNode * node, vector<asCl
 
 
 		asKeyframeData frameData;
-		if (asClipNode == NULL)
+		if (asClipNode == nullptr)
 		{
 			Matrix transform(node->mTransformation[0]);
 			transform = XMMatrixTranspose(transform);
 
+			// i = 프레임 수
 			frameData.Time = (float)i;
 			
 			XMMatrixDecompose(&XMLoadFloat3(&frameData.Scale), &XMLoadFloat4(&frameData.Rotation), &XMLoadFloat3(&frameData.Translation), transform);

@@ -6,6 +6,7 @@
 #include <memory>
 #include <wrl.h>
 #include <map>
+#include <unordered_map>
 #include <vector>
 #include <list>
 #include <fstream>
@@ -56,7 +57,10 @@ using namespace PackedVector;
 			};																						
 
 #define SAFEDELETE(Instance) { if(Instance) {delete Instance; Instance = nullptr;}}
+#define SAFEDELETEARRAY(Instance){ if(Instance){ delete [] Instance; Instance = nullptr; } }
+
 #define MAX_MODEL_TRANSFORMS 250
-#define MAX_BONE_TRANSFORM 96
+#define MAX_MODEL_KEYFRAMES 500
+
 
 #include "Struct.h"

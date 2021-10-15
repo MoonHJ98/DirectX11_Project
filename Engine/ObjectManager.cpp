@@ -6,7 +6,7 @@
 int ObjectManager::Update(float _timeDelta)
 {
 	int Res = 0;
-	for (int i = 0; i < LayerCnt; ++i)
+	for (UINT i = 0; i < LayerCnt; ++i)
 	{
 		for (auto& Pair : LayerMap[i])
 		{

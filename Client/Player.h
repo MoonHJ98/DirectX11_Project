@@ -22,6 +22,6 @@ public:
 	static shared_ptr<Player> Create(ID3D11Device* _Device);
 
 private:
-	Model * model;
+	shared_ptr<Model> model;
 };
 
