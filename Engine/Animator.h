@@ -16,7 +16,7 @@ public:
 	~Animator();
 
 public:
-	void Update();
+	void Update(float _timeDelta);
 	void Render();
 
 public:
@@ -41,7 +41,7 @@ private:
 	vector<shared_ptr<Clip>>					  clips;
 
 	// 클립 여러개를 다루기 위해 동적할당 할것임.
-	shared_ptr<ClipTransform[]>					  clipTransforms = nullptr;
+	ClipTransform*				  clipTransforms = nullptr;
 
 	ComPtr<ID3D11Texture2D>						  texture = nullptr;
 	ComPtr<ID3D11ShaderResourceView>			  srv = nullptr;

@@ -18,10 +18,32 @@ Animator::~Animator()
 {
 }
 
-void Animator::Update()
+void Animator::Update(float _timeDelta)
 {
 	if (texture == nullptr)
 		CreateTexture();
+
+	KeyframeDesc& desc = keyframeDesc;
+	
+	// 현재 애니메이션.
+	{
+		auto& clip = clips[desc.clip];
+		desc.RunningTime += _timeDelta;
+	
+		// 시간 비율
+		float time = 1.f / clip->GetFrameRate() / desc.Speed;
+	
+		// desc.Time이 1보다 크거나 같으면 애니메이션의 다음 프레임
+		if (desc.Time >= 1.f)
+		{
+			desc.RunningTime = 0.f;
+	
+			// 루프. 한번만 플레이하고 싶다면 마지막 프레임에서 멈추면 됨
+			desc.CurrFrame = (desc.CurrFrame + 1) % clip->GetFrameCount();
+		}
+		desc.Time = desc.RunningTime / time;
+	
+	}
 }
 
 void Animator::Render()
@@ -73,7 +95,7 @@ void Animator::ReadClip(wstring file)
 			void* ptr = (void *)&keyframe->Transforms[0];
 			r->ReadByte(&ptr, sizeof(ModelKeyframeData) * size);
 		}
-
+		 
 		clip->SetKeyframe(keyframe->BoneName, keyframe);
 	}
 
@@ -93,9 +115,10 @@ void Animator::CreateTexture()
 	//Matrix matrix[MAX_MODEL_KEYFRAMES][MAX_MODEL_TRANSFORMS];
 
 	// 2차원 배열을 동작할당해서 3차원 배열로 만든다.
-	shared_ptr<ClipTransform[]> temp(new ClipTransform[clips.size()]);
-	clipTransforms = temp;
-	//clipTransforms = new ClipTransform[model->ClipCount()];
+	//shared_ptr<ClipTransform[]> temp(new ClipTransform[clips.size()]);
+	//clipTransforms = temp;
+	
+	clipTransforms = new ClipTransform[clips.size()];
 
 	// 클립별로 순회하면서 처리.
 	for (UINT i = 0; i < clips.size(); i++)
@@ -182,7 +205,7 @@ void Animator::CreateTexture()
 		desc.Texture2DArray.MipLevels = 1; // 디멘션과 맞는 desc의 멤버변수에 값을 넣어줘야함.
 		desc.Texture2DArray.ArraySize = clips.size();
 
-		Graphic->GetDevice()->CreateShaderResourceView(texture.Get(), &desc, &srv);
+		Graphic->GetDevice()->CreateShaderResourceView(texture.Get(), &desc, srv.GetAddressOf());
 	}
 	auto tempModel = model.lock();
 	tempModel->SetTransformsSRV(srv);

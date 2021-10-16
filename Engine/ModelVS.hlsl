@@ -1,5 +1,7 @@
 #define MAX_MODEL_TRANSFORMS 250
 #define MAX_MODEL_KEYFRAMES 500
+Texture2DArray TransformsMap : register(t0);
+
 
 struct VertexModel
 {
@@ -37,7 +39,6 @@ struct AnimationFrame
     float3 Padding;
 };
 
-Texture2DArray TransformsMap : register(t0);
 
 cbuffer MatrixBuffer : register(b0)
 {
@@ -122,7 +123,7 @@ VertexOutput main(VertexModel input)
     matrix animationWorld;
     SetAnimationWorld(animationWorld, WorldMatrix, input);
 
-   // Out.Tangent = mul(float4(input.Position, 1.f), animationWorld);
+    //Out.Tangent = mul(float4(input.Position, 1.f), animationWorld);
     Out.Position = mul(float4(input.Position, 1.f), animationWorld);
     Out.Position = mul(Out.Position, ViewMatrix);
     Out.Position = mul(Out.Position, ProjectionMatrix);

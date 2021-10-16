@@ -32,7 +32,7 @@ HRESULT Clip::Initialize(wstring _name, float _duration, float _frameRate, UINT 
 	name = _name;
 	duration = _duration;
 	frameRate = _frameRate;
-	_frameRate = _frameRate;
+	frameCount = _frameCount;
 
 	return S_OK;
 }

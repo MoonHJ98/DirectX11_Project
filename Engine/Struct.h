@@ -236,7 +236,7 @@ struct ClipTransform
 struct KeyframeDesc
 {
 	// 현재 플레이하려는 애니메이션의 번호.
-	int Clip = 0;
+	int clip = 0;
 
 	// 현재 프레임 번호.
 	UINT CurrFrame = 0;

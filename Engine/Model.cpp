@@ -32,18 +32,22 @@ HRESULT Model::Initialize()
 	//converter->ExportMesh(L"Player/SK_CHR_Jack");
 	//SAFEDELETE(converter);
 
-	//converter = new AssimpConverter();
-	//converter->ReadFile(L"Player/Jack_CB_IDL_01_Lp.FBX");
-	//converter->ExportAnimClip(0, L"Player/Jack_CB_IDL_01_Lp");
-	//SAFEDELETE(converter);
+	converter = new AssimpConverter();
+	converter->ReadFile(L"Player/Salsa Dancing.fbx");
+	converter->ExportAnimClip(0, L"Player/Salsa Dancing");
+	SAFEDELETE(converter);
 
-	ReadMesh(L"Player/SK_CHR_Jack");
-	ReadMaterial();
+	//Player/SK_CHR_Jack
+	//Player/Jack_CB_IDL_01_Lp
+	//Sword And Shield Idle
+
+	ReadMesh(L"Player/Mesh");
+	//ReadMaterial();
 	shader = Shader::Create(L"../Engine/ModelVS.hlsl", L"../Engine/ModelPS.hlsl");
 
 	animator = Animator::Create(shared_from_this());
 
-	animator->ReadClip(L"Player/Jack_CB_IDL_01_Lp");
+	animator->ReadClip(L"Player/Salsa Dancing");
 
 	trans = XMMatrixIdentity();
 
@@ -166,7 +170,7 @@ shared_ptr<Texture> Model::MatchTexture(TEXTUREDESC& _texture)
 
 void Model::BindBone()
 {
-	Root = bones[106];
+	Root = bones[0];
 	for (auto& bone : bones)
 	{
 		if (bone->GetParentIndex() > -1)
@@ -221,10 +225,10 @@ void Model::SetTransformsSRV(ComPtr<ID3D11ShaderResourceView> srv)
 
 int Model::Update(float _timeDelta)
 {
-	animator->Update();
+	animator->Update(_timeDelta);
 
-	rad = sinf(100.f) * _timeDelta * 10.f;
-	trans = XMMatrixRotationRollPitchYaw(0.f, rad, 0.f);
+	//rad = sinf(100.f) * _timeDelta * 10.f;
+	//trans = XMMatrixRotationRollPitchYaw(0.f, rad, 0.f);
 
 	UpdateTransform(/*Root, trans*/);
 
