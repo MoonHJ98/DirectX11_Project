@@ -27,23 +27,23 @@ HRESULT Model::Initialize()
 {
 	AssimpConverter* converter = nullptr;;
 
-	//converter = new AssimpConverter();
-	//converter->ReadFile(L"Player/SK_CHR_Jack.FBX");
-	//converter->ExportMesh(L"Player/SK_CHR_Jack");
-	//SAFEDELETE(converter);
-
 	converter = new AssimpConverter();
-	converter->ReadFile(L"Player/Salsa Dancing.fbx");
-	converter->ExportAnimClip(0, L"Player/Salsa Dancing");
+	converter->ReadFile(L"Player/PLA_Yaiba.FBX");
+	converter->ExportMesh(L"Player/PLA_Yaiba");
 	SAFEDELETE(converter);
 
-	ReadMesh(L"Player/Mesh");
+	converter = new AssimpConverter();
+	converter->ReadFile(L"Player/PLA_Yaiba_NAV_IdleLeft_01_Core.FBX");
+	converter->ExportAnimClip(0, L"Player/PLA_Yaiba_NAV_IdleLeft_01_Core");
+	SAFEDELETE(converter);
+
+	ReadMesh(L"Player/PLA_Yaiba");
 	//ReadMaterial();
 	shader = Shader::Create(L"../Engine/ModelVS.hlsl", L"../Engine/ModelPS.hlsl");
 
 	animator = Animator::Create(shared_from_this());
 
-	animator->ReadClip(L"Player/Salsa Dancing");
+	animator->ReadClip(L"Player/PLA_Yaiba_NAV_IdleLeft_01_Core");
 
 	trans = XMMatrixIdentity();
 
