@@ -37,10 +37,6 @@ HRESULT Model::Initialize()
 	converter->ExportAnimClip(0, L"Player/Salsa Dancing");
 	SAFEDELETE(converter);
 
-	//Player/SK_CHR_Jack
-	//Player/Jack_CB_IDL_01_Lp
-	//Sword And Shield Idle
-
 	ReadMesh(L"Player/Mesh");
 	//ReadMaterial();
 	shader = Shader::Create(L"../Engine/ModelVS.hlsl", L"../Engine/ModelPS.hlsl");

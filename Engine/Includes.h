@@ -1,4 +1,10 @@
 #pragma once
+
+#ifdef max
+#undef max
+#undef min
+#endif
+
 #include <d3d11.h>
 #include <DirectXMath.h>
 #include <d3dtypes.h>
@@ -32,7 +38,8 @@
 #pragma comment(lib, "dinput8.lib")
 #pragma comment(lib, "DirectXTK.lib")
 #pragma comment(lib, "DirectXTex.lib")
-#pragma comment(lib, "assimp-vc141-mtd.lib")
+//#pragma comment(lib, "assimp-vc141-mtd.lib")
+#pragma comment(lib, "assimp-vc140-mt.lib")
 
 
 

@@ -10,6 +10,11 @@
 // 여기에 미리 컴파일하려는 헤더 추가
 #include "framework.h"
 
+#ifdef max
+#undef max
+#undef min
+#endif
+
 enum SCENEID { STATIC, LOGO, SCENE_END };
 
 

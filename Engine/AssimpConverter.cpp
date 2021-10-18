@@ -4,6 +4,8 @@
 #include "Path.h"
 #include "String.h"
 
+
+
 #define D3DX_16F_EPSILON 4.8875809e-4f
 
 AssimpConverter::AssimpConverter()
@@ -11,7 +13,7 @@ AssimpConverter::AssimpConverter()
 	importer = new Assimp::Importer();
 }
 
-AssimpConverter::AssimpConverter(const AssimpConverter & Rhs)
+AssimpConverter::AssimpConverter(const AssimpConverter& Rhs)
 {
 }
 
@@ -28,9 +30,9 @@ void AssimpConverter::ReadFile(wstring _File)
 	(
 		ToString(this->File),
 		aiProcess_ConvertToLeftHanded |     // 왼손좌표계로
-		aiProcess_Triangulate		  |		// 삼각형으로 바꾸기
-		aiProcess_GenUVCoords		  |		// 모델 형식에 맞게 UV다시 계산
-		aiProcess_GenNormals		  |     // Normal Vector 다시 계산
+		aiProcess_Triangulate |		// 삼각형으로 바꾸기
+		aiProcess_GenUVCoords |		// 모델 형식에 맞게 UV다시 계산
+		aiProcess_GenNormals |     // Normal Vector 다시 계산
 		aiProcess_CalcTangentSpace          // 노말맵핑 할 때 사용
 	);
 
@@ -48,7 +50,7 @@ void AssimpConverter::ExportMesh(wstring _SavePath)
 	WriteMeshData(_SavePath);
 }
 
-void AssimpConverter::ReadBoneData(aiNode * _Node, int _Index, int _Parent)
+void AssimpConverter::ReadBoneData(aiNode* _Node, int _Index, int _Parent)
 {
 	asBone* bone = new asBone();
 	bone->Index = _Index;
@@ -87,7 +89,7 @@ void AssimpConverter::ReadBoneData(aiNode * _Node, int _Index, int _Parent)
 	}
 }
 
-void AssimpConverter::ReadMeshData(aiNode * _Node, int _Bone)
+void AssimpConverter::ReadMeshData(aiNode* _Node, int _Bone)
 {
 	if (_Node->mNumMeshes < 1)
 		return;
@@ -103,6 +105,8 @@ void AssimpConverter::ReadMeshData(aiNode * _Node, int _Bone)
 		aiMesh* srcMesh = scene->mMeshes[index];
 
 		aiMaterial* material = scene->mMaterials[srcMesh->mMaterialIndex];
+
+
 		mesh->MaterialName = material->GetName().C_Str();
 
 		UINT startVertex = mesh->Vertices.size(); // 메시가 여러개 이므로 정점을 계속 이어서 저장하기위해 이전의 쌓아놓은 크기를 저장.
@@ -115,7 +119,7 @@ void AssimpConverter::ReadMeshData(aiNode * _Node, int _Bone)
 			if (srcMesh->HasTextureCoords(0))
 				memcpy(&vertex.Uv, &srcMesh->mTextureCoords[0][v], sizeof(Vector2));
 
-			if(srcMesh->HasNormals())
+			if (srcMesh->HasNormals())
 				memcpy(&vertex.Normal, &srcMesh->mNormals[v], sizeof(Vector3));
 
 			mesh->Vertices.push_back(vertex);
@@ -192,7 +196,7 @@ void AssimpConverter::ReadSkinData()
 void AssimpConverter::WriteMeshData(wstring _SavePath)
 {
 	Path::CreateFolders(Path::GetDirectoryName(_SavePath));
-	
+
 	BinaryWriter* w = new BinaryWriter();
 
 	w->Open(_SavePath);
@@ -249,7 +253,7 @@ void AssimpConverter::ExportAnimClip(UINT index, wstring savePath)
 	WriteClipData(clip, savePath);
 }
 
-asClip * AssimpConverter::ReadClipData(aiAnimation * animation)
+asClip* AssimpConverter::ReadClipData(aiAnimation* animation)
 {
 	asClip* clip = new asClip();
 	clip->Name = animation->mName.C_Str();
@@ -347,7 +351,7 @@ asClip * AssimpConverter::ReadClipData(aiAnimation * animation)
 	return clip;
 }
 
-void AssimpConverter::ReadKeyframeData(asClip * clip, aiNode * node, vector<asClipNode>& aiNodeInfos)
+void AssimpConverter::ReadKeyframeData(asClip* clip, aiNode* node, vector<asClipNode>& aiNodeInfos)
 {
 	asKeyframe* keyframe = new asKeyframe();
 	keyframe->BoneName = node->mName.C_Str();
@@ -376,8 +380,16 @@ void AssimpConverter::ReadKeyframeData(asClip * clip, aiNode * node, vector<asCl
 
 			// i = 프레임 수
 			frameData.Time = (float)i;
-			
-			XMMatrixDecompose(&XMLoadFloat3(&frameData.Scale), &XMLoadFloat4(&frameData.Rotation), &XMLoadFloat3(&frameData.Translation), transform);
+
+			XMVECTOR Scale;
+			XMVECTOR Rot;
+			XMVECTOR Trans;
+
+			XMMatrixDecompose(&Scale, &Rot, &Trans, transform);
+			frameData.Scale = Scale;
+			frameData.Rotation = Rot;
+			frameData.Translation = Trans;
+
 		}
 		else
 		{
@@ -393,7 +405,7 @@ void AssimpConverter::ReadKeyframeData(asClip * clip, aiNode * node, vector<asCl
 		ReadKeyframeData(clip, node->mChildren[i], aiNodeInfos);
 }
 
-void AssimpConverter::WriteClipData(asClip * clip, wstring savePath)
+void AssimpConverter::WriteClipData(asClip* clip, wstring savePath)
 {
 	Path::CreateFolders(Path::GetDirectoryName(savePath));
 
