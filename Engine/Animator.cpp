@@ -242,6 +242,7 @@ void Animator::CreateClipTransform(UINT index)
 			Matrix animation;
 			shared_ptr<ModelKeyframe> frame = clip->GetKeyframe(bone->GetName());
 
+
 			if (frame != nullptr)
 			{
 				ModelKeyframeData& data = frame->Transforms[f];
