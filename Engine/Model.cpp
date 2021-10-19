@@ -27,23 +27,23 @@ HRESULT Model::Initialize()
 {
 	AssimpConverter* converter = nullptr;;
 
-	converter = new AssimpConverter();
-	converter->ReadFile(L"Player/SK_CHR_Jack.FBX");
-	converter->ExportMesh(L"Player/SK_CHR_Jack");
-	SAFEDELETE(converter);
+	//converter = new AssimpConverter();
+	//converter->ReadFile(L"Player/SK_WhiteKnight.FBX");
+	//converter->ExportMesh(L"Player/SK_WhiteKnight");
+	//SAFEDELETE(converter);
+	//
+	//converter = new AssimpConverter();
+	//converter->ReadFile(L"Player/AS_TWhiteKnight_TLSword_AttackForce01_N.FBX");
+	//converter->ExportAnimClip(0, L"Player/AS_TWhiteKnight_TLSword_AttackForce01_N");
+	//SAFEDELETE(converter);
 
-	converter = new AssimpConverter();
-	converter->ReadFile(L"Player/Jack_CB_IDL_01_Lp.FBX");
-	converter->ExportAnimClip(0, L"Player/Jack_CB_IDL_01_Lp");
-	SAFEDELETE(converter);
-
-	ReadMesh(L"Player/SK_CHR_Jack");
-	ReadMaterial();
+	ReadMesh(L"Player/SK_WhiteKnight");
+	//ReadMaterial();
 	shader = Shader::Create(L"../Engine/ModelVS.hlsl", L"../Engine/ModelPS.hlsl");
 
 	animator = Animator::Create(shared_from_this());
 
-	animator->ReadClip(L"Player/Jack_CB_IDL_01_Lp");
+	animator->ReadClip(L"Player/AS_TWhiteKnight_TLSword_AttackForce01_N");
 
 	trans = XMMatrixIdentity();
 
