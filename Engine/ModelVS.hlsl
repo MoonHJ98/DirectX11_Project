@@ -123,7 +123,6 @@ VertexOutput main(VertexModel input)
     matrix animationWorld;
     SetAnimationWorld(animationWorld, WorldMatrix, input);
 
-    //Out.Tangent = mul(float4(input.Position, 1.f), animationWorld);
     Out.Position = mul(float4(input.Position, 1.f), animationWorld);
     Out.Position = mul(Out.Position, ViewMatrix);
     Out.Position = mul(Out.Position, ProjectionMatrix);
