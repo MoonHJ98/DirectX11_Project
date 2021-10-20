@@ -37,13 +37,13 @@ HRESULT Model::Initialize()
 	//converter->ExportAnimClip(0, L"Player/AS_TWhiteKnight_TLSword_AttackForce01_N");
 	//SAFEDELETE(converter);
 
-	ReadMesh(L"Player/SK_WhiteKnight");
+	ReadMesh(L"Player/Mesh");
 	//ReadMaterial();
 	shader = Shader::Create(L"../Engine/ModelVS.hlsl", L"../Engine/ModelPS.hlsl");
 
 	animator = Animator::Create(shared_from_this());
 
-	animator->ReadClip(L"Player/AS_TWhiteKnight_TLSword_AttackForce01_N");
+	animator->ReadClip(L"Player/Salsa Dancing");
 
 	trans = XMMatrixIdentity();
 

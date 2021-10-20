@@ -163,6 +163,7 @@
     <ClInclude Include="Bone.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Clip.h" />
+    <ClInclude Include="FBXConverter.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GraphicDevice.h" />
@@ -194,6 +195,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Clip.cpp" />
     <ClCompile Include="Engine.cpp" />
+    <ClCompile Include="FBXConverter.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GraphicDevice.cpp" />
     <ClCompile Include="InputDevice.cpp" />

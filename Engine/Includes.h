@@ -23,10 +23,11 @@
 #include <DirectXTK/VertexTypes.h>
 #include "DirectXTex.h"
 
+
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
-
+#pragma comment(lib, "assimp-vc140-mt.lib")
 
 
 
@@ -39,7 +40,7 @@
 #pragma comment(lib, "DirectXTK.lib")
 #pragma comment(lib, "DirectXTex.lib")
 //#pragma comment(lib, "assimp-vc141-mtd.lib")
-#pragma comment(lib, "assimp-vc140-mt.lib")
+
 
 
 
