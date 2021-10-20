@@ -30,6 +30,8 @@
 #pragma comment(lib, "assimp-vc140-mt.lib")
 
 
+#include <fbxsdk.h>
+#pragma comment(lib, "libfbxsdk.lib")
 
 
 #pragma comment(lib, "d3d11.lib")

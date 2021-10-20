@@ -3,6 +3,32 @@
 
 #pragma warning(disable : 4996)
 
+
+
+bool CompareVector3WithEpsilon(const XMFLOAT3& lhs, const XMFLOAT3& rhs)
+{
+	return XMVector3NearEqual(XMLoadFloat3(&lhs), XMLoadFloat3(&rhs), XMLoadFloat3(&vector3Epsilon)) == TRUE;
+}
+
+bool CompareVector2WithEpsilon(const XMFLOAT2& lhs, const XMFLOAT2& rhs)
+{
+	return XMVector3NearEqual(XMLoadFloat2(&lhs), XMLoadFloat2(&rhs), XMLoadFloat2(&vector2Epsilon)) == TRUE;
+}
+
+FbxAMatrix GetGeometryTransformation(FbxNode * inNode)
+{
+	if (!inNode)
+	{
+		throw std::exception("Null for mesh geometry");
+	}
+
+	const FbxVector4 lT = inNode->GetGeometricTranslation(FbxNode::eSourcePivot);
+	const FbxVector4 lR = inNode->GetGeometricRotation(FbxNode::eSourcePivot);
+	const FbxVector4 lS = inNode->GetGeometricScaling(FbxNode::eSourcePivot);
+
+	return FbxAMatrix(lT, lR, lS);
+}
+
 //////////////////////////////////////////////////////////////////////////
 ///@brief 문자열 자르기
 ///@param orgin : 원본 문자열
