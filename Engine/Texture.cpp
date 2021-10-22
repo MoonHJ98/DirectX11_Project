@@ -33,8 +33,9 @@ ScratchImage Texture::LoadTextureFromFile()
 	else if (_wcsicmp(ext, L".tga") == 0)
 		LoadFromTGAFile(Path_W.c_str(), nullptr, image);
 	
-	else if (_wcsicmp(ext, L".wic") == 0)
+	else if (_wcsicmp(ext, L".png") == 0)
 		LoadFromWICFile(Path_W.c_str(), WIC_FLAGS_NONE, nullptr, image);
+
 	
 
 	return image;

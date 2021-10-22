@@ -4,6 +4,7 @@
 
 class Bone;
 class GraphicDevice;
+class Material;
 class Texture;
 
 class Mesh
@@ -32,6 +33,8 @@ public:
 
 	void				SetDiffuse(shared_ptr<Texture> _Diffuse)				{ Diffuse = _Diffuse; }
 	void				SetNormal(shared_ptr<Texture> _Normal)					{ Normal = _Normal; }
+	void				SetMaterial(shared_ptr<Material> _material) { material = _material; }
+
 	void				SetTransformsSRV(ComPtr<ID3D11ShaderResourceView> srv)	{ transformsSRV = srv; }
 
 
@@ -71,11 +74,10 @@ private:
 	shared_ptr<ModelVertex> vertices = nullptr;
 	shared_ptr<UINT> indices = nullptr;
 
-
 	shared_ptr<ConstantBuffer<BoneDesc>> BoneMatrixbuffer;
-
 	ComPtr<ID3D11ShaderResourceView> transformsSRV = nullptr;
 
+	shared_ptr<Material> material;
 	shared_ptr<Texture> Diffuse;
 	shared_ptr<Texture> Normal;
 

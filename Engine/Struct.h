@@ -3,31 +3,6 @@
 #include "Includes.h"
 
 
-static const XMFLOAT3 vector3Epsilon = XMFLOAT3(0.00001f, 0.00001f, 0.00001f); 
-static const XMFLOAT2 vector2Epsilon = XMFLOAT2(0.00001f, 0.00001f);
-static const XMFLOAT3 vector3True;
-static const XMFLOAT2 vector2True;
-
-bool CompareVector2WithEpsilon(const XMFLOAT2& lhs, const XMFLOAT2& rhs);
-bool CompareVector3WithEpsilon(const XMFLOAT3& lhs, const XMFLOAT3& rhs);
-FbxAMatrix GetGeometryTransformation(FbxNode* inNode);
-
-struct VertexBlendingInfo
-{
-	unsigned int mBlendingIndex;
-	double mBlendingWeight;
-
-	VertexBlendingInfo() :
-		mBlendingIndex(0),
-		mBlendingWeight(0.0)
-	{}
-
-	bool operator < (const VertexBlendingInfo& rhs)
-	{
-		return (mBlendingWeight > rhs.mBlendingWeight);
-	}
-};
-
 struct ModelVertex
 {
 	Vector3 Position;
@@ -36,45 +11,6 @@ struct ModelVertex
 	Vector4 Tangent;
 	Vector4 BlendWeights;
 	Vector4 BlendIndices;
-};
-
-struct PNTIWVertex
-{
-	XMFLOAT3 mPosition;
-	XMFLOAT3 mNormal;
-	XMFLOAT2 mUV;
-	std::vector<VertexBlendingInfo> mVertexBlendingInfos;
-
-	void SortBlendingInfoByWeight()
-	{
-		std::sort(mVertexBlendingInfos.begin(), mVertexBlendingInfos.end());
-	}
-
-	bool operator==(const PNTIWVertex& rhs) const
-	{
-		bool sameBlendingInfo = true;
-
-		// We only compare the blending info when there is blending info
-		if (!(mVertexBlendingInfos.empty() && rhs.mVertexBlendingInfos.empty()))
-		{
-			// Each vertex should only have 4 index-weight blending info pairs
-			for (unsigned int i = 0; i < 4; ++i)
-			{
-				if (mVertexBlendingInfos[i].mBlendingIndex != rhs.mVertexBlendingInfos[i].mBlendingIndex ||
-					abs(mVertexBlendingInfos[i].mBlendingWeight - rhs.mVertexBlendingInfos[i].mBlendingWeight) > 0.001)
-				{
-					sameBlendingInfo = false;
-					break;
-				}
-			}
-		}
-
-		bool result1 = CompareVector3WithEpsilon(mPosition, rhs.mPosition);
-		bool result2 = CompareVector3WithEpsilon(mNormal, rhs.mNormal);
-		bool result3 = CompareVector2WithEpsilon(mUV, rhs.mUV);
-
-		return result1 && result2 && result3 && sameBlendingInfo;
-	}
 };
 
 typedef struct MatrixBufferType
@@ -99,6 +35,21 @@ typedef struct tagTexture
 	wstring	Path;	// 다른 첵스쳐와 비교하기 위해 경로 저장.
 }TEXTUREDESC;
 
+typedef struct tagMaterial
+{
+	wstring name;
+	Color Ambient = Color();
+	Color Diffuse = Color();
+	Color Specular = Color();
+	Color Emissive = Color();
+
+	wstring DiffuseMap;
+	wstring SpecularMap;
+	wstring NormalMap;
+
+
+}MATERIALDESC;
+
 struct asBone
 {
 	int Index;
@@ -119,6 +70,20 @@ struct asMesh
 
 	vector<ModelVertex> Vertices;
 	vector<UINT> Indices;
+};
+
+struct asMaterial
+{
+	string Name;
+
+	Color Ambient;
+	Color Diffuse;
+	Color Specular;
+	Color Emissive;
+
+	string DiffuseFile;
+	string SpecularFile;
+	string NormalFile;
 };
 
 struct asBlendWeight
@@ -330,87 +295,6 @@ struct BlendingIndexWeightPair
 		mBlendingWeight(0)
 	{}
 };
-
-// Each Control Point in FBX is basically a vertex
-// in the physical world. For example, a cube has 8
-// vertices(Control Points) in FBX
-// Joints are associated with Control Points in FBX
-// The mapping is one joint corresponding to 4
-// Control Points(Reverse of what is done in a game engine)
-// As a result, this struct stores a XMFLOAT3 and a 
-// vector of joint indices
-struct CtrlPoint
-{
-	XMFLOAT3 mPosition;
-	std::vector<BlendingIndexWeightPair> mBlendingInfo;
-
-	CtrlPoint()
-	{
-		mBlendingInfo.reserve(4);
-	}
-};
-
-
-// This stores the information of each key frame of each joint
-// This is a linked list and each node is a snapshot of the
-// global transformation of the joint at a certain frame
-struct Keyframe
-{
-	FbxLongLong mFrameNum;
-	FbxAMatrix mGlobalTransform;
-	Keyframe* mNext;
-
-	Keyframe() :
-		mNext(nullptr)
-	{}
-};
-
-// This is the actual representation of a joint in a game engine
-struct Joint
-{
-	string mName;
-	int mParentIndex;
-	FbxAMatrix mGlobalBindposeInverse;
-	Keyframe* mAnimation;
-	FbxNode* mNode;
-
-	Joint() :
-		mNode(nullptr),
-		mAnimation(nullptr)
-	{
-		mGlobalBindposeInverse.SetIdentity();
-		mParentIndex = -1;
-	}
-
-	~Joint()
-	{
-		while (mAnimation)
-		{
-			Keyframe* temp = mAnimation->mNext;
-			delete mAnimation;
-			mAnimation = temp;
-		}
-	}
-};
-
-typedef struct tagSkeleton
-{
-	vector<Joint> Joints;
-}SEKELETON;
-
-typedef struct tagTriangle
-{
-	vector<unsigned int> mIndices;
-	string mMaterialName;
-	UINT mMaterialIndex;
-
-	bool operator<(const tagTriangle& rhs)
-	{
-		return mMaterialIndex < rhs.mMaterialIndex;
-	}
-}TRIANGLE;
-
-
 
 void SplitString(vector<string>* result, string origin, string tok);
 void SplitString(vector<wstring>* result, wstring origin, wstring tok);

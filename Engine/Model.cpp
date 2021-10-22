@@ -10,6 +10,9 @@
 #include "Texture.h"
 #include "Transform.h"
 #include "Management.h"
+#include "Material.h"
+#include "Path.h"
+
 
 Model::Model()
 {
@@ -25,20 +28,22 @@ Model::~Model()
 
 HRESULT Model::Initialize()
 {
-	AssimpConverter* converter = nullptr;;
+	AssimpConverter* converter = nullptr;
 
-	//converter = new AssimpConverter();
-	//converter->ReadFile(L"Player/SK_WhiteKnight.FBX");
-	//converter->ExportMesh(L"Player/SK_WhiteKnight");
-	//SAFEDELETE(converter);
-	//
+
+	converter = new AssimpConverter();
+	converter->ReadFile(L"Player/Mesh.fbx");
+	converter->ExportMesh(L"Player/Mesh");
+	converter->ExportMaterial(L"Player/Mesh");
+	SAFEDELETE(converter);
+	
 	//converter = new AssimpConverter();
 	//converter->ReadFile(L"Player/AS_TWhiteKnight_TLSword_AttackForce01_N.FBX");
 	//converter->ExportAnimClip(0, L"Player/AS_TWhiteKnight_TLSword_AttackForce01_N");
 	//SAFEDELETE(converter);
 
 	ReadMesh(L"Player/Mesh");
-	//ReadMaterial();
+	ReadMaterial(L"Player/Mesh");
 	shader = Shader::Create(L"../Engine/ModelVS.hlsl", L"../Engine/ModelPS.hlsl");
 
 	animator = Animator::Create(shared_from_this());
@@ -103,10 +108,45 @@ void Model::ReadMesh(wstring filePath)
 	r->Close();
 	SAFEDELETE(r);
 
+}
+
+void Model::ReadMaterial(wstring filePath)
+{
+	BinaryReader* r = new BinaryReader();
+	filePath = L"../Resources/" + filePath + L".material";
+	
+	wstring folder = Path::GetDirectoryName(filePath);
+
+	r->Open(filePath);
+
+	UINT MaterialCnt = 0;
+
+	MaterialCnt = r->ReadUInt();
+
+	for (UINT i = 0; i < MaterialCnt; ++i)
+	{
+		MATERIALDESC matDesc;
+
+		matDesc.name = ToWString(r->ReadString());
+		matDesc.Ambient = r->ReadVector4();
+		matDesc.Diffuse = r->ReadVector4();
+		matDesc.Specular = r->ReadVector4();
+		matDesc.Emissive = r->ReadVector4();
+
+		matDesc.DiffuseMap = folder + ToWString(r->ReadString());
+		matDesc.SpecularMap = folder + ToWString(r->ReadString());
+		matDesc.NormalMap = folder + ToWString(r->ReadString());
+
+		materials.push_back(Material::Create(matDesc));
+	}
+
+	r->Close();
+	SAFEDELETE(r);
+
 	BindBone();
 	BindMesh();
-	
 }
+
 
 void Model::ReadMaterial()
 {
@@ -151,6 +191,7 @@ void Model::ReadMaterial()
 	}
 }
 
+
 shared_ptr<Texture> Model::MatchTexture(TEXTUREDESC& _texture)
 {
 	for (UINT i = 0; i < textures.size(); ++i)
@@ -184,6 +225,11 @@ void Model::BindMesh()
 	for (auto& mesh : meshes)
 	{
 		mesh->SetBone(bones[mesh->GetBoneIndex()]);
+		for (auto& material : materials)
+		{
+			if (mesh->GetMaterialName() == material->GetName())
+				mesh->SetMaterial(material);
+		}
 	}
 }
 

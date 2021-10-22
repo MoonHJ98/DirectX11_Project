@@ -10,6 +10,7 @@ class Clip;
 class Texture;
 class Shader;
 class Animator;
+class Material;
 
 class Model : public enable_shared_from_this<Model>
 {
@@ -29,6 +30,7 @@ public:
 
 public:
 	void						  ReadMesh(wstring filePath);
+	void						  ReadMaterial(wstring filePath);
 	void						  ReadMaterial();
 
 	shared_ptr<Texture>			  MatchTexture(TEXTUREDESC& _texture);
@@ -54,6 +56,7 @@ private:
 	vector<shared_ptr<Bone>>	  bones;
 	vector<shared_ptr<Mesh>>	  meshes;
 	vector<shared_ptr<Texture>>	  textures;
+	vector<shared_ptr<Material>>  materials;
 
 	shared_ptr<Shader>			  shader = nullptr;
 	Matrix trans;

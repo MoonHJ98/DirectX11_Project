@@ -18,7 +18,7 @@
 enum SCENEID { STATIC, LOGO, SCENE_END };
 
 
-#pragma comment(lib, "Engine.lib")
+//#pragma comment(lib, "Engine.lib")
 
 extern HINSTANCE GInstance;
 extern HWND GhWnd;

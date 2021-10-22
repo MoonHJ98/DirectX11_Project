@@ -198,7 +198,7 @@
     <ClInclude Include="Animator.h">
       <Filter>01. Utility\03. Component\06. Animation\01. Animator</Filter>
     </ClInclude>
-    <ClInclude Include="FBXConverter.h" />
+    <ClInclude Include="Material.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -282,7 +282,7 @@
     <ClCompile Include="Animator.cpp">
       <Filter>01. Utility\03. Component\06. Animation\01. Animator</Filter>
     </ClCompile>
-    <ClCompile Include="FBXConverter.cpp" />
+    <ClCompile Include="Material.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="SkinnedMeshPS.hlsl">

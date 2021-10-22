@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "Mesh.h"
-#include "Texture.h"
+#include "Material.h"
 #include "GraphicDevice.h"
 
 Mesh::Mesh()
@@ -51,9 +51,9 @@ void Mesh::Render()
 	auto buffer = BoneMatrixbuffer->GetBuffer();
 	Graphic->GetDeviceContext()->VSSetConstantBuffers(1, 1, &buffer);
 
-	if(Diffuse)
-		Graphic->GetDeviceContext()->PSSetShaderResources(0, 1, Diffuse->GetTexture());
-
+	if (material)
+		material->Render();
+		
 	if (transformsSRV)
 		Graphic->GetDeviceContext()->VSSetShaderResources(0, 1, transformsSRV.GetAddressOf());
 

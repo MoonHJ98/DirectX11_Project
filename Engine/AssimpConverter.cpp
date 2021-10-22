@@ -2,7 +2,7 @@
 #include "AssimpConverter.h"
 #include "BinaryFile.h"
 #include "Path.h"
-#include "String.h"
+#include "GraphicDevice.h"
 
 
 
@@ -30,9 +30,9 @@ void AssimpConverter::ReadFile(wstring _File)
 	(
 		ToString(this->File),
 		aiProcess_ConvertToLeftHanded |     // 왼손좌표계로
-		aiProcess_Triangulate |		// 삼각형으로 바꾸기
-		aiProcess_GenUVCoords |		// 모델 형식에 맞게 UV다시 계산
-		aiProcess_GenNormals |     // Normal Vector 다시 계산
+		aiProcess_Triangulate |				// 삼각형으로 바꾸기
+		aiProcess_GenUVCoords |				// 모델 형식에 맞게 UV다시 계산
+		aiProcess_GenNormals |				// Normal Vector 다시 계산
 		aiProcess_CalcTangentSpace          // 노말맵핑 할 때 사용
 	);
 
@@ -48,6 +48,15 @@ void AssimpConverter::ExportMesh(wstring _SavePath)
 	ReadBoneData(scene->mRootNode, -1, -1);
 	ReadSkinData();
 	WriteMeshData(_SavePath);
+}
+
+void AssimpConverter::ExportMaterial(wstring _SavePath)
+{
+	_SavePath = L"../Resources/" + _SavePath + L".material";
+
+	ReadMaterialData();
+	WriteMaterialData(_SavePath);
+
 }
 
 void AssimpConverter::ReadBoneData(aiNode* _Node, int _Index, int _Parent)
@@ -231,6 +240,172 @@ void AssimpConverter::WriteMeshData(wstring _SavePath)
 
 	w->Close();
 	SAFEDELETE(w);
+}
+
+void AssimpConverter::ReadMaterialData()
+{
+	for (UINT i = 0; i < scene->mNumMaterials; i++)
+	{
+		aiMaterial* srcMaterial = scene->mMaterials[i];
+		asMaterial* material = new asMaterial();
+
+		material->Name = srcMaterial->GetName().C_Str();
+
+		//aiColor3D에는 R, G, B 값만 있음
+		aiColor3D color;
+
+		srcMaterial->Get(AI_MATKEY_COLOR_AMBIENT, color);
+		// 빛에 반투명은 없기에 알파값은 1.f. 빛의 강도를 대신 넣는 경우가 많다.
+		material->Ambient = Color(color.r, color.g, color.b, 1.f);
+
+		srcMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, color);
+		material->Diffuse = Color(color.r, color.g, color.b, 1.f);
+
+		srcMaterial->Get(AI_MATKEY_COLOR_SPECULAR, color);
+		material->Specular = Color(color.r, color.g, color.b, 1.f);
+
+		// AI_MATKEY_SHININESS : specular의 강도
+		srcMaterial->Get(AI_MATKEY_SHININESS, material->Specular.w);
+
+		srcMaterial->Get(AI_MATKEY_COLOR_EMISSIVE, color);
+		material->Emissive = Color(color.r, color.g, color.b, 1.f);
+
+
+		aiString file;
+
+		srcMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &file);
+		material->DiffuseFile = file.C_Str();
+
+		srcMaterial->GetTexture(aiTextureType_SPECULAR, 0, &file);
+		material->SpecularFile = file.C_Str();
+
+		srcMaterial->GetTexture(aiTextureType_NORMALS, 0, &file);
+		material->NormalFile = file.C_Str();
+
+
+		Materials.push_back(material);
+	}
+}
+
+void AssimpConverter::WriteMaterialData(wstring _SavePath)
+{
+	string folder = ToString(Path::GetDirectoryName(_SavePath));
+	string file = ToString(Path::GetFileName(_SavePath));
+
+	//Path::CreateFolders(folder);
+	Path::CreateFolders(Path::GetDirectoryName(_SavePath));
+
+	BinaryWriter* w = new BinaryWriter();
+
+	w->Open(_SavePath);
+
+	UINT MaterialCnt = Materials.size();
+	w->WriteUInt(MaterialCnt);
+
+	for (UINT i = 0; i < MaterialCnt; ++i)
+	{
+		w->WriteString(Materials[i]->Name);
+
+		w->WriteVector4(Materials[i]->Ambient);
+		w->WriteVector4(Materials[i]->Diffuse);
+		w->WriteVector4(Materials[i]->Specular);
+		w->WriteVector4(Materials[i]->Emissive);
+
+		w->WriteString(WriteTexture(folder, Materials[i]->DiffuseFile));
+		w->WriteString(WriteTexture(folder, Materials[i]->SpecularFile));
+		w->WriteString(WriteTexture(folder, Materials[i]->NormalFile));
+
+		SAFEDELETE(Materials[i]);
+	}
+
+	Materials.clear();
+
+	w->Close();
+	SAFEDELETE(w);
+
+}
+
+string AssimpConverter::WriteTexture(string _SaveFolder, string _file)
+{
+	if (_file.length() < 1)
+		return "";
+
+	string fileName = Path::GetFileName(_file);
+
+	// 경로에 텍스쳐 정보가 있다면 텍스쳐 리턴
+	const aiTexture* texture = scene->GetEmbeddedTexture(_file.c_str());
+
+	string path = "";
+
+	if (texture != NULL)
+	{
+		// 내장 텍스쳐가 있는 상황.(fbx에 텍스쳐 정보를 저장 시켜 놓음.)
+
+		path = _SaveFolder + fileName;
+
+		if (texture->mHeight < 1)
+		{
+			/*
+			텍스쳐 높이가 0인 경우
+			데이터가 한줄로 바이트 형식으로 써져있다.
+			즉 그대로 저장하면 이미지 파일이 된다.
+			*/
+			
+			BinaryWriter w;
+			w.Open(ToWString(path));
+			w.WriteByte(texture->pcData, texture->mWidth);
+			w.Close();
+		}
+		else
+		{
+			D3D11_TEXTURE2D_DESC destDesc;
+			ZeroMemory(&destDesc, sizeof(D3D11_TEXTURE2D_DESC));
+			destDesc.Width = texture->mWidth;
+			destDesc.Height = texture->mHeight;
+			destDesc.MipLevels = 1;
+			destDesc.ArraySize = 1;
+			destDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+			destDesc.SampleDesc.Count = 1;
+			destDesc.SampleDesc.Quality = 0;
+			destDesc.Usage = D3D11_USAGE_IMMUTABLE;
+
+			D3D11_SUBRESOURCE_DATA subResource = { 0 };
+			subResource.pSysMem = texture->pcData;
+
+
+			ID3D11Texture2D* dest;
+			
+			HRESULT hr;
+			hr = GraphicDevice::GetInstance()->GetDevice()->CreateTexture2D(&destDesc, &subResource, &dest);
+			assert(SUCCEEDED(hr));
+
+			ScratchImage image;
+			hr = CaptureTexture(GraphicDevice::GetInstance()->GetDevice(), GraphicDevice::GetInstance()->GetDeviceContext(), dest, image);
+			assert(SUCCEEDED(hr));
+
+			
+			SaveToWICFile(image.GetImages(), image.GetImageCount(), WIC_FLAGS_NONE, GetWICCodec(WIC_CODEC_PNG), ToWString(path).c_str(), nullptr);
+
+		}
+	}
+	else
+	{
+		// 텍스쳐 파일이 별도로 있는 상황
+
+		string directory = Path::GetDirectoryName(ToString(this->File));
+		string origin = directory + _file;
+		Replace(&origin, "\\", "/");
+
+		if (Path::ExistFile(origin) == false)
+			return "";
+
+		path = _SaveFolder + fileName;
+		CopyFileA(origin.c_str(), path.c_str(), FALSE);
+
+		Replace(&path, "../Resources/", "");
+	}
+
+	return Path::GetFileName(path);
 }
 
 void AssimpConverter::ClipList(vector<wstring>* list)

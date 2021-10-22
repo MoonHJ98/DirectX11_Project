@@ -253,6 +253,7 @@ void Animator::CreateClipTransform(UINT index)
 				T = XMMatrixTranslation(data.Translation.x, data.Translation.y, data.Translation.z);
 
 				animation = S * R * T;
+				//animation = XMMatrixTranspose(animation);
 			}
 			else
 				animation = XMMatrixIdentity();
