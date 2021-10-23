@@ -55,9 +55,6 @@
     <Filter Include="01. Utility\03. Component\01. Buffer">
       <UniqueIdentifier>{7c521d6e-f379-4f25-a5ff-de114da26a16}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Utility\03. Component\01. Texture">
-      <UniqueIdentifier>{8a1fc8fd-a5ae-4bb2-992f-4cb513b11873}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01. Utility\03. Component\02. Shader">
       <UniqueIdentifier>{eb73d1d2-c7eb-40a5-b4ac-2c44adb9d907}</UniqueIdentifier>
     </Filter>
@@ -112,6 +109,18 @@
     <Filter Include="01. Utility\03. Component\06. Animation\01. Animator">
       <UniqueIdentifier>{78abc40e-f605-46f5-b9d5-1a95cf067d6c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Utility\03. Component\07. Light">
+      <UniqueIdentifier>{fcf7298b-b15e-45d1-93ca-026cb744b5c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\03. Component\07. Light\00. LightManager">
+      <UniqueIdentifier>{3e9f663d-33ac-4f2e-9845-420f2ac6b3df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\03. Component\01. Material">
+      <UniqueIdentifier>{2a702cd8-24cb-42ca-8fe6-5943743dbd67}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\03. Component\01. Material\00. Texture">
+      <UniqueIdentifier>{8a1fc8fd-a5ae-4bb2-992f-4cb513b11873}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -136,7 +145,7 @@
       <Filter>00. System\00. Device\01. Input</Filter>
     </ClInclude>
     <ClInclude Include="Texture.h">
-      <Filter>01. Utility\03. Component\01. Texture</Filter>
+      <Filter>01. Utility\03. Component\01. Material\00. Texture</Filter>
     </ClInclude>
     <ClInclude Include="Transform.h">
       <Filter>01. Utility\03. Component\04. Transform</Filter>
@@ -198,9 +207,15 @@
     <ClInclude Include="Animator.h">
       <Filter>01. Utility\03. Component\06. Animation\01. Animator</Filter>
     </ClInclude>
-    <ClInclude Include="Material.h" />
-    <ClInclude Include="Light.h" />
-    <ClInclude Include="LightManager.h" />
+    <ClInclude Include="Light.h">
+      <Filter>01. Utility\03. Component\07. Light</Filter>
+    </ClInclude>
+    <ClInclude Include="LightManager.h">
+      <Filter>01. Utility\03. Component\07. Light\00. LightManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>01. Utility\03. Component\01. Material</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -225,7 +240,7 @@
       <Filter>00. System\00. Device\01. Input</Filter>
     </ClCompile>
     <ClCompile Include="Texture.cpp">
-      <Filter>01. Utility\03. Component\01. Texture</Filter>
+      <Filter>01. Utility\03. Component\01. Material\00. Texture</Filter>
     </ClCompile>
     <ClCompile Include="Transform.cpp">
       <Filter>01. Utility\03. Component\04. Transform</Filter>
@@ -284,9 +299,15 @@
     <ClCompile Include="Animator.cpp">
       <Filter>01. Utility\03. Component\06. Animation\01. Animator</Filter>
     </ClCompile>
-    <ClCompile Include="Material.cpp" />
-    <ClCompile Include="Light.cpp" />
-    <ClCompile Include="LightManager.cpp" />
+    <ClCompile Include="Light.cpp">
+      <Filter>01. Utility\03. Component\07. Light</Filter>
+    </ClCompile>
+    <ClCompile Include="LightManager.cpp">
+      <Filter>01. Utility\03. Component\07. Light\00. LightManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>01. Utility\03. Component\01. Material</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="SkinnedMeshPS.hlsl">

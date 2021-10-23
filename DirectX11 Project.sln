@@ -8,10 +8,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01. Client", "01. Client", "{A14315DE-9A69-47D3-A22E-4D54D186BDC9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02. Engine", "02. Engine", "{BE1595C7-575E-4698-8F19-C1F3DB8F4923}"
-	ProjectSection(SolutionItems) = preProject
-		Engine\Material.cpp = Engine\Material.cpp
-		Engine\Material.h = Engine\Material.h
-	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Engine", "Engine\Engine.vcxproj", "{9B2A60F0-B14B-4C45-A81A-70D18939250F}"
 EndProject
