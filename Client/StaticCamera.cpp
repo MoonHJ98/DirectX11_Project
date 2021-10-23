@@ -2,6 +2,7 @@
 #include "StaticCamera.h"
 #include "Management.h"
 #include "Transform.h"
+#include "GraphicDevice.h"
 
 StaticCamera::StaticCamera()
 {
@@ -69,6 +70,17 @@ HRESULT StaticCamera::MouseInput(float _TimeDelta)
 	return S_OK;
 }
 
+HRESULT StaticCamera::Initialize(CAMERADECS _Decs)
+{
+	__super::Initialize(_Decs);
+
+	shared_ptr<ConstantBuffer<CameraBufferType>> temp(new ConstantBuffer<CameraBufferType>());
+	CameraBuffer = temp;
+	CameraBuffer->Create(Graphic->GetDevice());
+
+	return S_OK;
+}
+
 int StaticCamera::Update(float _TimeDelta)
 {
 	KeyInput(_TimeDelta);
@@ -90,14 +102,16 @@ int StaticCamera::Update(float _TimeDelta)
 
 	UpdateViewMatrix(positionVector, lookAtVector, upVector);
 
-	XMFLOAT3 a = GetPosition();
-
+	CameraBufferDesc.CameraPosition = positionVector;
 
 	return 0;
 }
 
 void StaticCamera::Render()
 {
+	CameraBuffer->SetData(Graphic->GetDeviceContext(), CameraBufferDesc);
+	auto buffer = CameraBuffer->GetBuffer();
+	Graphic->GetDeviceContext()->VSSetConstantBuffers(3, 1, &buffer);
 }
 
 shared_ptr<StaticCamera> StaticCamera::Create(CAMERADECS _Decs)

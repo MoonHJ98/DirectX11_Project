@@ -12,6 +12,8 @@ class Shader;
 class Animator;
 class Material;
 
+class Light;
+
 class Model : public enable_shared_from_this<Model>
 {
 private:
@@ -59,8 +61,7 @@ private:
 	vector<shared_ptr<Material>>  materials;
 
 	shared_ptr<Shader>			  shader = nullptr;
-	Matrix trans;
-	float rad = 0;
+
 
 
 	Matrix transforms[MAX_MODEL_TRANSFORMS]; // Bone¿« ¿¸√º matrix

@@ -169,6 +169,8 @@
     <ClInclude Include="Includes.h" />
     <ClInclude Include="InputDevice.h" />
     <ClInclude Include="Layer.h" />
+    <ClInclude Include="Light.h" />
+    <ClInclude Include="LightManager.h" />
     <ClInclude Include="Management.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Mesh.h" />
@@ -199,6 +201,8 @@
     <ClCompile Include="GraphicDevice.cpp" />
     <ClCompile Include="InputDevice.cpp" />
     <ClCompile Include="Layer.cpp" />
+    <ClCompile Include="Light.cpp" />
+    <ClCompile Include="LightManager.cpp" />
     <ClCompile Include="Management.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Mesh.cpp" />

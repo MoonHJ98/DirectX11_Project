@@ -1,8 +1,8 @@
 #include "pch.h"
 #include "Camera.h"
 #include "PipeLine.h"
-//#include "Management.h"
 #include "Transform.h"
+#include "GraphicDevice.h"
 
 
 Camera::Camera()
@@ -61,7 +61,7 @@ HRESULT Camera::Initialize(CAMERADECS _Decs)
 	Decs = _Decs;
 	pipeline = PipeLine::GetInstance();
 	pipeline->Initialize();
-
+	Graphic = GraphicDevice::GetInstance();
 	transform = Transform::Create(Transform::TRANSDESC(50.f, 5.f));
 
 	UpdateProjectionMatrix(Decs.FiedOfView, Decs.ScreenAspect, Decs.Near, Decs.Far);

@@ -8,7 +8,8 @@ struct ModelVertex
 	Vector3 Position;
 	Vector2 Uv;
 	Vector3 Normal;
-	Vector4 Tangent;
+	Vector3 Tangent;
+	Vector3 BiTangent;
 	Vector4 BlendWeights;
 	Vector4 BlendIndices;
 };
@@ -295,6 +296,23 @@ struct BlendingIndexWeightPair
 		mBlendingWeight(0)
 	{}
 };
+
+typedef struct LightDesc {
+	D3DLIGHTTYPE    Type;						  /* Type of light source */
+	Color			Diffuse = Color();			  /* Diffuse color of light */
+	Color			Specular = Color();			  /* Specular color of light */
+	Color			Ambient = Color();			  /* Ambient color of light */
+	Vector3         Position = Vector3();         /* Position in world space */
+	Vector3         Direction = Vector3();        /* Direction in world space */
+	D3DVALUE        SpecularPower = 0.f;          /* Specular Power */
+	D3DVALUE        Range = 0.f;				  /* Cutoff range */
+	D3DVALUE        dvFalloff = 0.f;			  /* Falloff */
+	D3DVALUE        dvAttenuation0 = 0.f;		  /* Constant attenuation */
+	D3DVALUE        dvAttenuation1 = 0.f;		  /* Linear attenuation */
+	D3DVALUE        dvAttenuation2 = 0.f;		  /* Quadratic attenuation */
+	D3DVALUE        dvTheta = 0.f;				  /* Inner angle of spotlight cone */
+	D3DVALUE        dvPhi = 0.f;				  /* Outer angle of spotlight cone */
+}LIGHTDESC;
 
 void SplitString(vector<string>* result, string origin, string tok);
 void SplitString(vector<wstring>* result, wstring origin, wstring tok);

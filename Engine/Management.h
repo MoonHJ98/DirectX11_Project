@@ -10,6 +10,8 @@ class PipeLine;
 class GameObject;
 class SceneManager;
 class ObjectManager;
+class LightManager;
+class Light;
 class Scene;
 
 class Management : public Base
@@ -37,6 +39,11 @@ public:
 	// Scene
 	HRESULT					SetScene(shared_ptr<Scene> scene);
 
+	// Light
+	HRESULT					AddLight(LIGHTDESC _LightInfo, wstring _LightTag);
+	shared_ptr<Light>		FindLight(wstring _LightTag, UINT _Index);
+
+
 public:
 	void					Initialize(HINSTANCE hInst, HWND hWnd, int SceneCnt, int screenWidth, int screenHeight, bool vsync, bool fullscreen, float screenDepth, float screenNear);
 
@@ -44,6 +51,7 @@ private:
 	shared_ptr<SceneManager>		SceneMgr = nullptr;
 	shared_ptr<ObjectManager>		ObjectMgr = nullptr;
 	shared_ptr<PipeLine>			Pipeline = nullptr;
+	shared_ptr<LightManager>        LightMgr = nullptr;
 
 };
 

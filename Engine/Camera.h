@@ -4,6 +4,7 @@
 
 class PipeLine;
 class Transform;
+class GraphicDevice;
 
 class Camera : public GameObject
 {
@@ -40,8 +41,8 @@ protected:
 
 
 protected:
+	shared_ptr<GraphicDevice>       Graphic = nullptr;
 	CAMERADECS						Decs;
 	XMFLOAT3						Rotation = {};
-
 	shared_ptr<PipeLine>		    pipeline = nullptr;
 };

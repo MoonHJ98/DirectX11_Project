@@ -42,6 +42,18 @@ HRESULT MainApp::Initialize()
 	auto player = Player::Create(GraphicDev->GetDevice());
 	Manage->AddLayer(SCENEID::STATIC, L"Player", player);
 
+	//Light
+	LIGHTDESC lightDesc;
+	lightDesc.Type = D3DLIGHT_DIRECTIONAL;
+	lightDesc.Diffuse = Color(1.f, 1.f, 1.f, 1.f);
+	lightDesc.Specular = Color(1.f, 1.f, 1.f, 1.f);
+	lightDesc.Ambient = Color(0.3f, 0.3f, 0.3f, 1.f);
+	lightDesc.Direction = Vector3(1.f, 0.5f, 1.f);
+	lightDesc.SpecularPower = 35.f;
+
+
+	Manage->AddLight(lightDesc, L"DirectionalLight");
+
 	if (FAILED(ReadyScene(LOGO)))
 	{
 		MSG_BOX("Failed to create Scene.");

@@ -13,6 +13,8 @@
 #include "Material.h"
 #include "Path.h"
 
+#include "Light.h"
+
 
 Model::Model()
 {
@@ -49,8 +51,6 @@ HRESULT Model::Initialize()
 	animator = Animator::Create(shared_from_this());
 
 	animator->ReadClip(L"Player/Salsa Dancing");
-
-	trans = XMMatrixIdentity();
 
 	return S_OK;
 }
@@ -269,10 +269,7 @@ int Model::Update(float _timeDelta)
 {
 	animator->Update(_timeDelta);
 
-	//rad = sinf(100.f) * _timeDelta * 10.f;
-	//trans = XMMatrixRotationRollPitchYaw(0.f, rad, 0.f);
-
-	UpdateTransform(/*Root, trans*/);
+	UpdateTransform();
 
 	for (auto& mesh : meshes)
 		mesh->Update();
@@ -282,6 +279,11 @@ int Model::Update(float _timeDelta)
 
 void Model::Render()
 {
+
+	auto light = Management::GetInstance()->FindLight(L"DirectionalLight", 0);
+
+	light->Render();
+	
 	animator->Render();
 	shader->Render();
 

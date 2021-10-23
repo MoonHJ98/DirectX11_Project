@@ -199,6 +199,8 @@
       <Filter>01. Utility\03. Component\06. Animation\01. Animator</Filter>
     </ClInclude>
     <ClInclude Include="Material.h" />
+    <ClInclude Include="Light.h" />
+    <ClInclude Include="LightManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -283,6 +285,8 @@
       <Filter>01. Utility\03. Component\06. Animation\01. Animator</Filter>
     </ClCompile>
     <ClCompile Include="Material.cpp" />
+    <ClCompile Include="Light.cpp" />
+    <ClCompile Include="LightManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="SkinnedMeshPS.hlsl">

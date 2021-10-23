@@ -6,6 +6,7 @@
 #include "PipeLine.h"
 #include "GameObject.h"
 #include "Scene.h"
+#include "LightManager.h"
 
 int Management::Update(float _timeDelta)
 {
@@ -62,11 +63,22 @@ HRESULT Management::SetScene(shared_ptr<Scene> scene)
 	return SceneMgr->SetScene(scene);
 }
 
+HRESULT Management::AddLight(LIGHTDESC _LightInfo, wstring _LightTag)
+{
+	return LightMgr->AddLight(_LightInfo, _LightTag);
+}
+
+shared_ptr<Light> Management::FindLight(wstring _LightTag, UINT _Index)
+{
+	return LightMgr->FindLight(_LightTag, _Index);
+}
+
 void Management::Initialize(HINSTANCE hInst, HWND hWnd, int SceneCnt, int screenWidth, int screenHeight, bool vsync, bool fullscreen, float screenDepth, float screenNear)
 {
 	SceneMgr = SceneManager::GetInstance();
 	ObjectMgr = ObjectManager::GetInstance();
 	Pipeline = PipeLine::GetInstance();
+	LightMgr = LightManager::GetInstance();
 
 	GraphicDevice::GetInstance()->Initialize(screenWidth, screenHeight, vsync, hWnd, fullscreen, screenDepth, screenNear);
 	InputDevice::GetInstance()->Initialize(hInst, hWnd, screenWidth, screenHeight);

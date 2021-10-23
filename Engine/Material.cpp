@@ -76,24 +76,10 @@ void Material::Render()
 {
 	if(diffuseMap)
 		Graphic->GetDeviceContext()->PSSetShaderResources(0, 1, diffuseMap->GetTexture());
-	//buffer->Render();
-	//sBuffer->SetConstantBuffer(buffer->Buffer());
 
+	if (normalMap)
+		Graphic->GetDeviceContext()->PSSetShaderResources(1, 1, normalMap->GetTexture());
 
-	//if (diffuseMap != nullptr)
-	//	sDiffuseMap->SetResource(diffuseMap->SRV());
-	//else
-	//	sDiffuseMap->SetResource(nullptr);
-	//
-	//if (specularMap != nullptr)
-	//	sSpecularMap->SetResource(specularMap->SRV());
-	//else
-	//	sSpecularMap->SetResource(nullptr);
-	//
-	//if (normalMap != nullptr)
-	//	sNormalMap->SetResource(normalMap->SRV());
-	//else
-	//	sNormalMap->SetResource(nullptr);
 }
 
 shared_ptr<Material> Material::Create(MATERIALDESC& desc)
