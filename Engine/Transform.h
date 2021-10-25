@@ -37,7 +37,7 @@ public:
 	Matrix*						GetWorldMatrix();
 
 public:
-	void						Update();
+	void						Update(bool isOrtho = false);
 
 public:
 	HRESULT						GoForward(float _Frametime);

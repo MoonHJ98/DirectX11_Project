@@ -14,7 +14,7 @@ Shader::~Shader()
 {
 }
 
-HRESULT Shader::Initialize(wstring _VSPath, wstring _PSPath)
+HRESULT Shader::Initialize(D3D11_INPUT_ELEMENT_DESC InputlayoutDesc[], UINT layoutSize, wstring _VSPath, wstring _PSPath)
 {
 	Graphic = GraphicDevice::GetInstance();
 	ID3D10Blob* vertexShaderBuffer;
@@ -59,23 +59,11 @@ HRESULT Shader::Initialize(wstring _VSPath, wstring _PSPath)
 		return E_FAIL;
 	}
 
-	// Create the vertex input layout description.
-	D3D11_INPUT_ELEMENT_DESC polygonLayout[] =
-	{
-		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "BITANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "BLENDWEIGHTS", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "BLENDINDICES", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }
-	};
 
-
-	numElements = ARRAYSIZE(polygonLayout);
+	numElements = layoutSize / sizeof(D3D11_INPUT_ELEMENT_DESC);
 
 	// Create the vertex input layout.
-	if (FAILED(Graphic->GetDevice()->CreateInputLayout(polygonLayout, numElements, vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), Layout.GetAddressOf())))
+	if (FAILED(Graphic->GetDevice()->CreateInputLayout(InputlayoutDesc, numElements, vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), Layout.GetAddressOf())))
 	{
 		MSG_BOX("Failed to create vertex input layout.");
 		return E_FAIL;
@@ -125,11 +113,11 @@ void Shader::Render()
 
 }
 
-shared_ptr<Shader> Shader::Create(wstring _VSPath, wstring _PSPath)
+shared_ptr<Shader> Shader::Create(D3D11_INPUT_ELEMENT_DESC InputlayoutDesc[], UINT layoutSize, wstring _VSPath, wstring _PSPath)
 {
 	shared_ptr<Shader> Instance(new Shader());
 
-	if (FAILED(Instance->Initialize(_VSPath, _PSPath)))
+	if (FAILED(Instance->Initialize(InputlayoutDesc, layoutSize, _VSPath, _PSPath)))
 	{
 		MSG_BOX("Failed to create Shader.");
 		return nullptr;

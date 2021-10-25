@@ -35,6 +35,8 @@ HRESULT MainApp::Initialize()
 	_decs.Near = SCREENNEAR;
 	_decs.FiedOfView = FoV;
 	_decs.ScreenAspect = (float)GX / (float)GY;
+	_decs.ScreenWidth = GX;
+	_decs.ScreenHeight = GY;
 
 	auto camera = StaticCamera::Create(_decs);
 	Manage->AddLayer(SCENEID::STATIC, L"Camera", camera);
@@ -49,7 +51,7 @@ HRESULT MainApp::Initialize()
 	lightDesc.Specular = Color(1.f, 1.f, 1.f, 1.f);
 	lightDesc.Ambient = Color(0.3f, 0.3f, 0.3f, 1.f);
 	lightDesc.Direction = Vector3(1.f, 0.5f, 1.f);
-	lightDesc.SpecularPower = 35.f;
+	lightDesc.SpecularPower = 10.f;
 
 
 	Manage->AddLight(lightDesc, L"DirectionalLight");
@@ -59,6 +61,8 @@ HRESULT MainApp::Initialize()
 		MSG_BOX("Failed to create Scene.");
 		return E_FAIL;
 	}
+
+	renderTaraget = RenderTarget::Create(GX, GY, 100, 100);
 
 	return S_OK;
 }
@@ -99,9 +103,19 @@ int MainApp::Update(float _timeDelta)
 
 void MainApp::Render()
 {
+	renderTaraget->Render();
+
 	GraphicDev->BeginScene(0.f, 0.f, 1.f, 1.f);
 
 	Manage->Render();
+
+	// 모든 2D 렌더링을 시작하려면 Z 버퍼를 끕니다.
+	GraphicDev->TurnZBufferOff();
+
+	renderTaraget->PostRender();
+
+	// 모든 2D 렌더링이 완료되었으므로 Z 버퍼를 다시 켜십시오.
+	GraphicDev->TurnZBufferOn();
 
 	GraphicDev->EndScene();
 }

@@ -80,6 +80,9 @@ void Material::Render()
 	if (normalMap)
 		Graphic->GetDeviceContext()->PSSetShaderResources(1, 1, normalMap->GetTexture());
 
+	if (specularMap)
+		Graphic->GetDeviceContext()->PSSetShaderResources(2, 1, specularMap->GetTexture());
+
 }
 
 shared_ptr<Material> Material::Create(MATERIALDESC& desc)

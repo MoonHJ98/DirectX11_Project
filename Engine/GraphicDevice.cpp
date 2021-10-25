@@ -290,19 +290,29 @@ bool GraphicDevice::Initialize(int screenWidth, int screenHeight, bool vsync, HW
 	// 뷰포트를 생성합니다
 	m_deviceContext->RSSetViewports(1, &viewport);
 
-	// 투영 행렬을 설정합니다
-	//float fieldOfView = 3.141592654f / 4.0f;
-	//float screenAspect = (float)screenWidth / (float)screenHeight;
+	D3D11_DEPTH_STENCIL_DESC depthDisabledStencilDesc;
+	ZeroMemory(&depthDisabledStencilDesc, sizeof(depthDisabledStencilDesc));
 
-	// 3D 렌더링을위한 투영 행렬을 만듭니다
-	//m_projectionMatrix = XMMatrixPerspectiveFovLH(fieldOfView, screenAspect, screenNear, screenDepth);
+	depthDisabledStencilDesc.DepthEnable = false;
+	depthDisabledStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+	depthDisabledStencilDesc.DepthFunc = D3D11_COMPARISON_LESS;
+	depthDisabledStencilDesc.StencilEnable = true;
+	depthDisabledStencilDesc.StencilReadMask = 0xFF;
+	depthDisabledStencilDesc.StencilWriteMask = 0xFF;
+	depthDisabledStencilDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+	depthDisabledStencilDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_INCR;
+	depthDisabledStencilDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+	depthDisabledStencilDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+	depthDisabledStencilDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+	depthDisabledStencilDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;
+	depthDisabledStencilDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+	depthDisabledStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
 
-	// 세계 행렬을 항등 행렬로 초기화합니다
-	//m_worldMatrix = XMMatrixIdentity();
-
-	// 2D 렌더링을위한 직교 투영 행렬을 만듭니다
-	m_orthoMatrix = XMMatrixOrthographicLH((float)screenWidth, (float)screenHeight, screenNear, screenDepth);
-
+	// 장치를 사용하여 상태를 만듭니다.
+	if (FAILED(m_device->CreateDepthStencilState(&depthDisabledStencilDesc, &m_depthDisabledStencilState)))
+	{
+		return false;
+	}
 	
 
 	return true;
@@ -364,7 +374,7 @@ void GraphicDevice::GetWorldMatrix(XMMATRIX& worldMatrix)
 
 void GraphicDevice::GetOrthoMatrix(XMMATRIX& orthoMatrix)
 {
-	orthoMatrix = m_orthoMatrix;
+	//orthoMatrix = m_orthoMatrix;
 }
 
 
@@ -372,5 +382,26 @@ void GraphicDevice::GetVideoCardInfo(char* cardName, int& memory)
 {
 	strcpy_s(cardName, 128, m_videoCardDescription);
 	memory = m_videoCardMemory;
+}
+
+void GraphicDevice::TurnZBufferOn()
+{
+	m_deviceContext->OMSetDepthStencilState(m_depthStencilState.Get(), 1);
+}
+
+void GraphicDevice::TurnZBufferOff()
+{
+	m_deviceContext->OMSetDepthStencilState(m_depthDisabledStencilState.Get(), 1);
+}
+
+ID3D11DepthStencilView * GraphicDevice::GetDepthStencilView()
+{
+	return m_depthStencilView.Get();
+}
+
+void GraphicDevice::SetBackBufferRenderTarget()
+{
+	// 렌더링 대상 뷰와 깊이 스텐실 버퍼를 출력 렌더 파이프 라인에 바인딩합니다.
+	m_deviceContext->OMSetRenderTargets(1, m_renderTargetView.GetAddressOf(), m_depthStencilView.Get());
 }
 

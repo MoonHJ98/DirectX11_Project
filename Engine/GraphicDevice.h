@@ -21,6 +21,11 @@ public:
 
 	void						GetVideoCardInfo(char* cardName, int& memory);
 
+	void						TurnZBufferOn();
+	void						TurnZBufferOff();
+
+	ID3D11DepthStencilView*     GetDepthStencilView();
+	void                        SetBackBufferRenderTarget();
 private:
 	bool								m_vsync_enabled = false;
 	int									m_videoCardMemory = 0;
@@ -31,10 +36,10 @@ private:
 	ComPtr<ID3D11RenderTargetView>		m_renderTargetView = nullptr;
 	ComPtr<ID3D11Texture2D>				m_depthStencilBuffer = nullptr;
 	ComPtr<ID3D11DepthStencilState>		m_depthStencilState = nullptr;
+	ComPtr<ID3D11DepthStencilState>		m_depthDisabledStencilState = nullptr;
+
 	ComPtr<ID3D11DepthStencilView>		m_depthStencilView = nullptr;
 	ComPtr<ID3D11RasterizerState>		m_rasterState = nullptr;
-	//XMMATRIX					m_projectionMatrix = {};
-	//XMMATRIX					m_worldMatrix = {};
-	Matrix								m_orthoMatrix = {};
+
 };
 

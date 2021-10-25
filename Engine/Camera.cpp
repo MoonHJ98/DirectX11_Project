@@ -51,9 +51,9 @@ HRESULT Camera::UpdateViewMatrix(XMVECTOR _Position, XMVECTOR _LookAt, XMVECTOR 
 	return pipeline->UpdateViewMatrix(_Position, _LookAt, _Up);
 }
 
-HRESULT Camera::UpdateProjectionMatrix(float _FovY, float _Aspect, float _Near, float _Far)
+HRESULT Camera::UpdateProjectionMatrix(float screenWidth, float screenHeight, float _FovY, float _Aspect, float _Near, float _Far)
 {
-	return pipeline->UpdateProjectionMatrix(_FovY, _Aspect, _Near, _Far);
+	return pipeline->UpdateProjectionMatrix(screenWidth, screenHeight, _FovY, _Aspect, _Near, _Far);
 }
 
 HRESULT Camera::Initialize(CAMERADECS _Decs)
@@ -64,7 +64,7 @@ HRESULT Camera::Initialize(CAMERADECS _Decs)
 	Graphic = GraphicDevice::GetInstance();
 	transform = Transform::Create(Transform::TRANSDESC(50.f, 5.f));
 
-	UpdateProjectionMatrix(Decs.FiedOfView, Decs.ScreenAspect, Decs.Near, Decs.Far);
+	UpdateProjectionMatrix(Decs.ScreenWidth, Decs.ScreenHeight, Decs.FiedOfView, Decs.ScreenAspect, Decs.Near, Decs.Far);
 
 
 	return S_OK;

@@ -14,13 +14,13 @@ public:
 	~Shader();
 
 private:
-	HRESULT Initialize(wstring _VSPath, wstring _PSPath);
+	HRESULT Initialize(D3D11_INPUT_ELEMENT_DESC InputlayoutDesc[], UINT layoutSize, wstring _VSPath, wstring _PSPath);
 
 public:
 	void    Render();
 
 public:
-	static shared_ptr<Shader> Create(wstring _VSPath, wstring _PSPath);
+	static shared_ptr<Shader> Create(D3D11_INPUT_ELEMENT_DESC InputlayoutDesc[], UINT layoutSize, wstring _VSPath, wstring _PSPath);
 
 private:
 	ComPtr<ID3D11VertexShader>			VertexShader = nullptr;

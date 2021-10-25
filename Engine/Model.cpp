@@ -38,7 +38,7 @@ HRESULT Model::Initialize()
 	converter->ExportMesh(L"Player/Mesh");
 	converter->ExportMaterial(L"Player/Mesh");
 	SAFEDELETE(converter);
-	
+
 	//converter = new AssimpConverter();
 	//converter->ReadFile(L"Player/AS_TWhiteKnight_TLSword_AttackForce01_N.FBX");
 	//converter->ExportAnimClip(0, L"Player/AS_TWhiteKnight_TLSword_AttackForce01_N");
@@ -46,7 +46,19 @@ HRESULT Model::Initialize()
 
 	ReadMesh(L"Player/Mesh");
 	ReadMaterial(L"Player/Mesh");
-	shader = Shader::Create(L"../Engine/ModelVS.hlsl", L"../Engine/ModelPS.hlsl");
+
+	D3D11_INPUT_ELEMENT_DESC InputLayout[] =
+	{
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "BITANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "BLENDWEIGHTS", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "BLENDINDICES", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+	};
+
+	shader = Shader::Create(InputLayout, sizeof(InputLayout), L"../Engine/ModelVS.hlsl", L"../Engine/ModelPS.hlsl");
 
 	animator = Animator::Create(shared_from_this());
 
@@ -61,9 +73,9 @@ void Model::ReadMesh(wstring filePath)
 
 	BinaryReader* r = new BinaryReader();
 	r->Open(filePath);
-	
+
 	UINT count = 0;
-	
+
 	// Bone.
 	count = r->ReadUInt();
 	for (UINT i = 0; i < count; ++i)
@@ -87,16 +99,16 @@ void Model::ReadMesh(wstring filePath)
 		// Vertex.
 		{
 			UINT count = r->ReadUInt();
-			
+
 			vertices.assign(count, ModelVertex());
-	
+
 			void* ptr = (void*)&(vertices[0]);
 			r->ReadByte(&ptr, sizeof(ModelVertex)* count);
 		}
 		// Index
 		{
 			UINT count = r->ReadUInt();
-			
+
 			indices.assign(count, UINT());
 
 			void* ptr = (void*)&(indices[0]);
@@ -114,7 +126,7 @@ void Model::ReadMaterial(wstring filePath)
 {
 	BinaryReader* r = new BinaryReader();
 	filePath = L"../Resources/" + filePath + L".material";
-	
+
 	wstring folder = Path::GetDirectoryName(filePath);
 
 	r->Open(filePath);
@@ -155,7 +167,7 @@ void Model::ReadMaterial()
 		wstring MaterialPath = L"../Resources/Player/" + meshes[i]->GetMaterialName() + L".mat";
 		wfstream file;
 		file.open(MaterialPath.c_str(), ios::in);
-		
+
 		if (!file.is_open())
 			continue;
 
@@ -283,7 +295,7 @@ void Model::Render()
 	auto light = Management::GetInstance()->FindLight(L"DirectionalLight", 0);
 
 	light->Render();
-	
+
 	animator->Render();
 	shader->Render();
 
@@ -295,7 +307,7 @@ void Model::Render()
 shared_ptr<Model> Model::Create()
 {
 	shared_ptr<Model> Instance(new Model());
-	
+
 
 	if (FAILED(Instance->Initialize()))
 	{

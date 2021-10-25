@@ -1,6 +1,8 @@
 // GLOBAL for Pixel Shader
 Texture2D ShaderTexture : register(t0); // 받아온 텍스쳐 
 Texture2D NormalTexture : register(t1); 
+Texture2D SpecularTexture : register(t2);
+
 
 SamplerState SampleType; // 텍스쳐를 도형에 셰이딩 할때 사용
 
@@ -34,11 +36,12 @@ float4 main(VertexOutput input) : SV_TARGET
     float4 specular = float4(0.f, 0.f, 0.f, 0.f);
     float4 normalMap;
     float3 normal;
-    
+    float4 specularIntensity; // for Specular Mapping
+
     textureColor = ShaderTexture.Sample(SampleType, input.Uv);
     normalMap = NormalTexture.Sample(SampleType, input.Uv);
     
-    // 정상 값의 범위를 0~1에서 -1 ~ 1로 확장
+    // 정상 값의 범위를 0~1에서 -1 ~ 1로 확장. For Normal Mapping
     normalMap = (normalMap * 2.f) - 1.f;
     
     normal = (normalMap.x * input.Tangent) + (normalMap.y * input.BiTangent) + (normalMap.z * input.Normal);
@@ -62,8 +65,13 @@ float4 main(VertexOutput input) : SV_TARGET
         
         // for Specular
         {
+            specularIntensity = SpecularTexture.Sample(SampleType, input.Uv); // For Specular Mapping
+
             reflection = normalize(2 * lightIntensity * normal - lightDir);
             specular = DiffuseColor * pow(saturate(dot(reflection, input.ViewDirection)), SpecularPower);
+
+            specular = specular * specularIntensity; // For Specular Mapping
+
         }
     }
     // 최종 색생 결정(for Directinal Light)

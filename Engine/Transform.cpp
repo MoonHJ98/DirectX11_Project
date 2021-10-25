@@ -51,12 +51,16 @@ Matrix* Transform::GetWorldMatrix()
 	return &WorldMatrix;
 }
 
-void Transform::Update()
+void Transform::Update(bool isOrtho)
 {
 	MATRIXBUFFERTYPE desc;
-	desc.World = WorldMatrix;
+	desc.World = XMMatrixTranspose(WorldMatrix);
 	desc.View = XMMatrixTranspose(*Manage->GetTransform(D3DTRANSFORMSTATE_VIEW));
-	desc.Projection = XMMatrixTranspose(*Manage->GetTransform(D3DTRANSFORMSTATE_PROJECTION));
+
+	if(isOrtho)
+		desc.Projection = XMMatrixTranspose(*Manage->GetTransform(D3DTRANSFORMSTATE_TEXTURE0));
+	else
+		desc.Projection = XMMatrixTranspose(*Manage->GetTransform(D3DTRANSFORMSTATE_PROJECTION));
 
 
 	MatrixBuffer.SetData(Graphic->GetDeviceContext(), desc);

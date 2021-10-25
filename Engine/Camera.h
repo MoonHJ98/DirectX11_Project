@@ -15,6 +15,8 @@ public:
 		float Near = 0.f;
 		float Far = 0.f;
 		float ScreenAspect = 0.f;
+		float ScreenWidth = 0.f;
+		float ScreenHeight = 0.f;
 	}CAMERADECS;
 public:
 	Camera();
@@ -34,7 +36,7 @@ public:
 	XMFLOAT3						GetRotation();
 
 	HRESULT							UpdateViewMatrix(XMVECTOR _Position, XMVECTOR _LookAt, XMVECTOR _Up);
-	HRESULT							UpdateProjectionMatrix(float _FovY, float _Aspect, float _Near, float _Far);
+	HRESULT							UpdateProjectionMatrix(float screenWidth, float screenHeight, float _FovY, float _Aspect, float _Near, float _Far);
 
 protected:
 	HRESULT							Initialize(CAMERADECS _Decs);
