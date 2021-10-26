@@ -40,6 +40,18 @@ void Layer::AddGameObject(shared_ptr<GameObject> _GameObject)
 	GameObjects.push_back(_GameObject);
 }
 
+shared_ptr<GameObject> Layer::FindGameObject(int _ObjectIndex)
+{
+	auto iter = GameObjects.begin();
+
+	for (int i = 0; i < _ObjectIndex; ++i)
+	{
+		++iter;
+	}
+
+	return *iter;
+}
+
 shared_ptr<Layer> Layer::Create()
 {
 	shared_ptr<Layer> Instance(new Layer());

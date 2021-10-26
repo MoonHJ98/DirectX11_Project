@@ -143,8 +143,9 @@ void RenderTarget::Render()
 
 void RenderTarget::PostRender()
 {
-	debugWindow->Render(50, 50);
 	transform->Update(true);
+
+	debugWindow->Render(50, 50);
 	shader->Render();
 
 	Graphic->GetDeviceContext()->PSSetShaderResources(0, 1, ShaderResourceView.GetAddressOf());

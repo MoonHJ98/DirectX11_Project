@@ -37,7 +37,7 @@ public:
 	Matrix*						GetWorldMatrix();
 
 public:
-	void						Update(bool isOrtho = false);
+	void						Update(bool isOrtho = false, bool isBillboard = false);
 
 public:
 	HRESULT						GoForward(float _Frametime);

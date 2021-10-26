@@ -51,7 +51,7 @@ Matrix* Transform::GetWorldMatrix()
 	return &WorldMatrix;
 }
 
-void Transform::Update(bool isOrtho)
+void Transform::Update(bool isOrtho, bool isBillboard)
 {
 	MATRIXBUFFERTYPE desc;
 	desc.World = XMMatrixTranspose(WorldMatrix);

@@ -73,6 +73,16 @@ shared_ptr<Light> Management::FindLight(wstring _LightTag, UINT _Index)
 	return LightMgr->FindLight(_LightTag, _Index);
 }
 
+list<shared_ptr<GameObject>>* Management::FindGameObjectList(int _Index, wstring _LayerKey)
+{
+	return ObjectMgr->FindGameObjectList(_Index, _LayerKey);
+}
+
+shared_ptr<GameObject> Management::FindGameObject(int _SceneIndex, wstring _LayerKey, int _ObjectIndex)
+{
+	return ObjectMgr->FindGameObject(_SceneIndex, _LayerKey, _ObjectIndex);
+}
+
 void Management::Initialize(HINSTANCE hInst, HWND hWnd, int SceneCnt, int screenWidth, int screenHeight, bool vsync, bool fullscreen, float screenDepth, float screenNear)
 {
 	SceneMgr = SceneManager::GetInstance();

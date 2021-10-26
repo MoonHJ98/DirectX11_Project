@@ -31,7 +31,7 @@ public:
 	LONG					GetDIMouseMove(InputDevice::MOUSEMOVESTATE _MouseState);
 
 	// Pipeline
-	Matrix*				GetTransform(_D3DTRANSFORMSTATETYPE _Type);
+	Matrix*					GetTransform(_D3DTRANSFORMSTATETYPE _Type);
 
 	// Layer
 	void					AddLayer(int _Index, wstring _LayerKey, shared_ptr<GameObject> _Object);
@@ -42,6 +42,10 @@ public:
 	// Light
 	HRESULT					AddLight(LIGHTDESC _LightInfo, wstring _LightTag);
 	shared_ptr<Light>		FindLight(wstring _LightTag, UINT _Index);
+
+	// Object
+	list<shared_ptr<GameObject>>*  FindGameObjectList(int _Index, wstring _LayerKey);
+	shared_ptr<GameObject>         FindGameObject(int _SceneIndex, wstring _LayerKey, int _ObjectIndex = 0);
 
 
 public:

@@ -68,7 +68,7 @@ float4 main(VertexOutput input) : SV_TARGET
             specularIntensity = SpecularTexture.Sample(SampleType, input.Uv); // For Specular Mapping
 
             reflection = normalize(2 * lightIntensity * normal - lightDir);
-            specular = DiffuseColor * pow(saturate(dot(reflection, input.ViewDirection)), SpecularPower);
+            specular = SpecularColor * pow(saturate(dot(reflection, input.ViewDirection)), SpecularPower);
 
             specular = specular * specularIntensity; // For Specular Mapping
 

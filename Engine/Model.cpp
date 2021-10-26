@@ -12,8 +12,8 @@
 #include "Management.h"
 #include "Material.h"
 #include "Path.h"
-
 #include "Light.h"
+#include "Management.h"
 
 
 Model::Model()
@@ -291,7 +291,6 @@ int Model::Update(float _timeDelta)
 
 void Model::Render()
 {
-
 	auto light = Management::GetInstance()->FindLight(L"DirectionalLight", 0);
 
 	light->Render();

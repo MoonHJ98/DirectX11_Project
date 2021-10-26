@@ -60,3 +60,25 @@ shared_ptr<Layer> ObjectManager::FindLayer(int _Index, wstring _LayerKey)
 
 	return iter->second;
 }
+
+list<shared_ptr<GameObject>>* ObjectManager::FindGameObjectList(int _SceneIndex, wstring _LayerKey)
+{
+	auto layer = FindLayer(_SceneIndex, _LayerKey);
+	if (nullptr == layer)
+	{
+		MSG_BOX("Failed to find Layer.");
+		return nullptr;
+	}
+	return layer->FindGameObjectList();
+}
+
+shared_ptr<GameObject> ObjectManager::FindGameObject(int _SceneIndex, wstring _LayerKey, int _Objectindex)
+{
+	auto layer = FindLayer(_SceneIndex, _LayerKey);
+	if (nullptr == layer)
+	{
+		MSG_BOX("Failed to find layer.");
+		return nullptr;
+	}
+	return layer->FindGameObject(_Objectindex);
+}

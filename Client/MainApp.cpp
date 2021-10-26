@@ -7,6 +7,9 @@
 #include "Scene.h"
 #include "Stage.h"
 
+extern SCENEID GSceneID;
+
+
 MainApp::MainApp()
 {
 }
@@ -35,8 +38,8 @@ HRESULT MainApp::Initialize()
 	_decs.Near = SCREENNEAR;
 	_decs.FiedOfView = FoV;
 	_decs.ScreenAspect = (float)GX / (float)GY;
-	_decs.ScreenWidth = GX;
-	_decs.ScreenHeight = GY;
+	_decs.ScreenWidth = (float)GX;
+	_decs.ScreenHeight = (float)GY;
 
 	auto camera = StaticCamera::Create(_decs);
 	Manage->AddLayer(SCENEID::STATIC, L"Camera", camera);

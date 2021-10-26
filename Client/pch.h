@@ -15,10 +15,11 @@
 #undef min
 #endif
 
-enum SCENEID { STATIC, LOGO, SCENE_END };
 
 
 //#pragma comment(lib, "Engine.lib")
+
+enum SCENEID { STATIC, LOGO, SCENE_END };
 
 extern HINSTANCE GInstance;
 extern HWND GhWnd;
