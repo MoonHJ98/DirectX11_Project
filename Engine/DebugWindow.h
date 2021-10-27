@@ -22,12 +22,11 @@ private:
 	HRESULT Initialize(int _screenWidth, int _screenHeight, int _bitmapWidth, int _bitmapHeight);
 
 public:
-	void Render(int positionX, int positionY);
+	void Render();
 	int GetIndexCount();
 
 private:
 	HRESULT InitializeBuffers();
-	bool	UpdateBuffers(int positionX, int positionY);
 	void	RenderBuffers();
 
 public:
@@ -43,7 +42,5 @@ private:
 	int screenHeight = 0;
 	int bitmapWidth = 0;
 	int bitmapHeight = 0;
-	int previousPosX = 0;
-	int previousPosY = 0;
 };
 

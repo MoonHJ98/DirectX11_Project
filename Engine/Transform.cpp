@@ -2,6 +2,7 @@
 #include "Transform.h"
 #include "GraphicDevice.h"
 #include "Management.h"
+#include "Camera.h"
 
 Transform::Transform()
 {
@@ -51,7 +52,7 @@ Matrix* Transform::GetWorldMatrix()
 	return &WorldMatrix;
 }
 
-void Transform::Update(bool isOrtho, bool isBillboard)
+void Transform::Update(bool isOrtho, bool isBillboard, shared_ptr<Camera> camera)
 {
 	MATRIXBUFFERTYPE desc;
 	desc.World = XMMatrixTranspose(WorldMatrix);
@@ -62,6 +63,22 @@ void Transform::Update(bool isOrtho, bool isBillboard)
 	else
 		desc.Projection = XMMatrixTranspose(*Manage->GetTransform(D3DTRANSFORMSTATE_PROJECTION));
 
+	if (isBillboard)
+	{
+		//desc.World = XMMatrixTranspose(WorldMatrix);
+
+		Vector3 Pos = GetState(POSITION);
+		Vector3 CameraPos = camera->GetPosition();
+		double angle = atan2(Pos.x - CameraPos.x, Pos.z - CameraPos.z) * (180.0 / XM_PI);
+		float rotation = (float)angle * 0.0174532925f;
+
+		WorldMatrix = XMMatrixRotationY(rotation);
+
+		Matrix Translation = XMMatrixTranslation(Pos.x, Pos.y, Pos.z);
+		WorldMatrix = XMMatrixMultiply(WorldMatrix, Translation);
+		desc.World = XMMatrixTranspose(WorldMatrix);
+
+	}
 
 	MatrixBuffer.SetData(Graphic->GetDeviceContext(), desc);
 	auto buffer = MatrixBuffer.GetBuffer();

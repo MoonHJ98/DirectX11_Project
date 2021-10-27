@@ -41,12 +41,16 @@ ID3D11ShaderResourceView * RenderTarget::GetShaderResourceView()
 	return ShaderResourceView.Get();
 }
 
-HRESULT RenderTarget::Initialize(int screenWidth, int screenHeight, int bitmapWidth, int bitmapHeight)
+HRESULT RenderTarget::Initialize(shared_ptr<Camera> _camera, int _positionX, int _positionY, int screenWidth, int screenHeight, int bitmapWidth, int bitmapHeight)
 {
+	camera = _camera;
 	Graphic = GraphicDevice::GetInstance();
 
 	debugWindow = DebugWindow::Create(screenWidth, screenHeight, bitmapWidth, bitmapHeight);
 	transform = Transform::Create(Transform::TRANSDESC());
+
+	transform->SetState(Transform::POSITION, Vector3((float)_positionX, (float)_positionY, 1.f));
+
 
 	D3D11_INPUT_ELEMENT_DESC InputLayout[] =
 	{
@@ -109,10 +113,10 @@ HRESULT RenderTarget::Initialize(int screenWidth, int screenHeight, int bitmapWi
 	return S_OK;
 }
 
-shared_ptr<RenderTarget> RenderTarget::Create(int screenWidth, int screenHeight, int bitmapWidth, int bitmapHeight)
+shared_ptr<RenderTarget> RenderTarget::Create(shared_ptr<Camera> _camera, int _positionX, int _positionY, int screenWidth, int screenHeight, int bitmapWidth, int bitmapHeight)
 {
 	shared_ptr<RenderTarget> Instance(new RenderTarget());
-	if (FAILED(Instance->Initialize(screenWidth, screenHeight, bitmapWidth, bitmapHeight)))
+	if (FAILED(Instance->Initialize(_camera, _positionX, _positionY, screenWidth, screenHeight, bitmapWidth, bitmapHeight)))
 	{
 		MSG_BOX("Failed to create RenderTarget.");
 		return nullptr;
@@ -143,9 +147,10 @@ void RenderTarget::Render()
 
 void RenderTarget::PostRender()
 {
-	transform->Update(true);
+	transform->Update(true, true, camera.lock());
 
-	debugWindow->Render(50, 50);
+
+	debugWindow->Render();
 	shader->Render();
 
 	Graphic->GetDeviceContext()->PSSetShaderResources(0, 1, ShaderResourceView.GetAddressOf());

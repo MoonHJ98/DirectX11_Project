@@ -4,6 +4,7 @@
 
 class GraphicDevice;
 class Management;
+class Camera;
 
 class Transform
 {
@@ -37,7 +38,7 @@ public:
 	Matrix*						GetWorldMatrix();
 
 public:
-	void						Update(bool isOrtho = false, bool isBillboard = false);
+	void						Update(bool isOrtho = false, bool isBillboard = false, shared_ptr<Camera> camera = nullptr);
 
 public:
 	HRESULT						GoForward(float _Frametime);

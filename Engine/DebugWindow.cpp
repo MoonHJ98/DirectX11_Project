@@ -25,19 +25,12 @@ HRESULT DebugWindow::Initialize(int _screenWidth, int _screenHeight, int _bitmap
 	bitmapWidth = _bitmapWidth;
 	bitmapHeight = _bitmapHeight;
 
-	// 이전 렌더링 위치를 음수로 초기화합니다.
-	previousPosX = -1;
-	previousPosY = -1;
-
 	// 정점 및 인덱스 버퍼를 초기화합니다.
 	return InitializeBuffers();
 }
 
-void DebugWindow::Render(int positionX, int positionY)
+void DebugWindow::Render()
 {
-	// 화면의 다른 위치로 렌더링하기 위해 동적 정점 버퍼를 다시 빌드합니다.
-	if (!UpdateBuffers(positionX, positionY))
-		return;
 
 	// 그리기를 준비하기 위해 그래픽 파이프 라인에 꼭지점과 인덱스 버퍼를 놓습니다.
 	RenderBuffers();
@@ -120,48 +113,17 @@ HRESULT DebugWindow::InitializeBuffers()
 		return E_FAIL;
 	}
 
-	// 이제 버텍스와 인덱스 버퍼가 생성되고로드 된 배열을 해제하십시오.
-	delete[] vertices;
-	vertices = nullptr;
-
-	delete[] indices;
-	indices = nullptr;
-
-	return S_OK;
-}
-
-
-bool DebugWindow::UpdateBuffers(int positionX, int positionY)
-{
-	//이 비트 맵을 렌더링 할 위치가 변경되지 않은 경우 정점 버퍼를 업데이트하지 마십시오.
-// 현재 올바른 매개 변수가 있습니다.
-	if ((positionX == previousPosX) && (positionY == previousPosY))
-	{
-		return true;
-	}
-
-	// 변경된 경우 렌더링되는 위치를 업데이트합니다.
-	previousPosX = positionX;
-	previousPosY = positionY;
-
 	// 비트 맵 왼쪽의 화면 좌표를 계산합니다.
-	float left = (float)((screenWidth / 2) * -1) + (float)positionX;
+	float left = (float)((screenWidth / 2) * -1);
 
 	// 비트 맵 오른쪽의 화면 좌표를 계산합니다.
 	float right = left + (float)bitmapWidth;
 
 	// 비트 맵 상단의 화면 좌표를 계산합니다.
-	float top = (float)(screenHeight / 2) - (float)positionY;
+	float top = (float)(screenHeight / 2);
 
 	// 비트 맵 아래쪽의 화면 좌표를 계산합니다.
 	float bottom = top - (float)bitmapHeight;
-
-	// 정점 배열을 만듭니다.
-	VertexType* vertices = new VertexType[vertexCount];
-	if (!vertices)
-	{
-		return false;
-	}
 
 	// 정점 배열에 데이터를로드합니다.
 	// 첫 번째 삼각형.
@@ -200,11 +162,14 @@ bool DebugWindow::UpdateBuffers(int positionX, int positionY)
 	// 정점 버퍼의 잠금을 해제합니다.
 	Graphic->GetDeviceContext()->Unmap(vertexBuffer.Get(), 0);
 
-	// 더 이상 필요하지 않은 꼭지점 배열을 해제합니다.
+	// 이제 버텍스와 인덱스 버퍼가 생성되고로드 된 배열을 해제하십시오.
 	delete[] vertices;
 	vertices = nullptr;
 
-	return true;
+	delete[] indices;
+	indices = nullptr;
+
+	return S_OK;
 }
 
 void DebugWindow::RenderBuffers()

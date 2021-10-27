@@ -6,6 +6,7 @@ class GraphicDevice;
 class DebugWindow;
 class Transform;
 class Shader;
+class Camera;
 
 
 class RenderTarget : public Base
@@ -23,7 +24,7 @@ public:
 	ID3D11ShaderResourceView* GetShaderResourceView();
 
 private:
-	HRESULT Initialize(int screenWidth, int screenHeight, int bitmapWidth, int bitmapHeight);
+	HRESULT Initialize(shared_ptr<Camera> _camera, int _positionX, int _positionY, int screenWidth, int screenHeight, int bitmapWidth, int bitmapHeight);
 
 public:
 	virtual int Update(float _timeDelta) override;
@@ -31,7 +32,10 @@ public:
 	void PostRender();
 
 public:
-	static shared_ptr<RenderTarget> Create(int screenWidth, int screenHeight, int bitmapWidth, int bitmapHeight);
+
+
+public:
+	static shared_ptr<RenderTarget> Create(shared_ptr<Camera> _camera, int _positionX, int _positionY, int screenWidth, int screenHeight, int bitmapWidth, int bitmapHeight);
 
 private:
 	shared_ptr<GraphicDevice>			Graphic = nullptr;
@@ -42,6 +46,8 @@ private:
 	shared_ptr<DebugWindow>             debugWindow = nullptr;
 	shared_ptr<Transform>				transform = nullptr;
 	shared_ptr<Shader>					shader = nullptr;
+
+	weak_ptr<Camera>					camera;
 
 };
 
