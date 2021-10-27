@@ -4,6 +4,7 @@
 
 class GraphicDevice;
 class DebugWindow;
+class RectangleBuffer;
 class Transform;
 class Shader;
 class Camera;
@@ -44,6 +45,8 @@ private:
 	ComPtr<ID3D11ShaderResourceView>	ShaderResourceView = nullptr;
 
 	shared_ptr<DebugWindow>             debugWindow = nullptr;
+	
+
 	shared_ptr<Transform>				transform = nullptr;
 	shared_ptr<Shader>					shader = nullptr;
 

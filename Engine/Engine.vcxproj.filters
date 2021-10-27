@@ -218,6 +218,7 @@
     </ClInclude>
     <ClInclude Include="RenderTarget.h" />
     <ClInclude Include="DebugWindow.h" />
+    <ClInclude Include="RectangleBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -312,6 +313,7 @@
     </ClCompile>
     <ClCompile Include="RenderTarget.cpp" />
     <ClCompile Include="DebugWindow.cpp" />
+    <ClCompile Include="RectangleBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="SkinnedMeshPS.hlsl">

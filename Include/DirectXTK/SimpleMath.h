@@ -52,8 +52,6 @@ namespace DirectX
             Rectangle() noexcept : x(0), y(0), width(0), height(0) {}
             constexpr Rectangle(long ix, long iy, long iw, long ih) noexcept : x(ix), y(iy), width(iw), height(ih) {}
             explicit Rectangle(const RECT& rct) noexcept : x(rct.left), y(rct.top), width(rct.right - rct.left), height(rct.bottom - rct.top) {}
-
-            Rectangle(const Rectangle&) = default;
             Rectangle& operator=(const Rectangle&) = default;
 
             Rectangle(Rectangle&&) = default;
@@ -934,6 +932,7 @@ namespace DirectX
         };
 
     #include "SimpleMath.inl"
+
 
     } // namespace SimpleMath
 

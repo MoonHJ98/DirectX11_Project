@@ -36,6 +36,7 @@ public:
 	Vector3						GetState(STATE _State);
 	void 						SetState(STATE _State, Vector3 Vec);
 	Matrix*						GetWorldMatrix();
+	void						SetScale(Vector3 scale);
 
 public:
 	void						Update(bool isOrtho = false, bool isBillboard = false, shared_ptr<Camera> camera = nullptr);

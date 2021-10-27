@@ -52,6 +52,31 @@ Matrix* Transform::GetWorldMatrix()
 	return &WorldMatrix;
 }
 
+void Transform::SetScale(Vector3 scale)
+{
+	Vector3 Right = GetState(RIGHT);
+	Vector3 Up = GetState(UP);
+	Vector3 Look = GetState(LOOK);
+
+	XMVECTOR vecRight = XMLoadFloat3(&Right);
+	XMVECTOR vecUp = XMLoadFloat3(&Up);
+	XMVECTOR vecLook = XMLoadFloat3(&Look);
+
+	vecRight = XMVector3Normalize(vecRight) * scale.x;
+	vecUp = XMVector3Normalize(vecUp) * scale.y;
+	vecLook = XMVector3Normalize(vecLook) * scale.z;
+
+	XMStoreFloat3(&Right, vecRight);
+	XMStoreFloat3(&Up, vecUp);
+	XMStoreFloat3(&Look, vecLook);
+
+
+	SetState(RIGHT, Right);
+	SetState(UP, Up);
+	SetState(LOOK, Look);
+
+}
+
 void Transform::Update(bool isOrtho, bool isBillboard, shared_ptr<Camera> camera)
 {
 	MATRIXBUFFERTYPE desc;
@@ -65,19 +90,22 @@ void Transform::Update(bool isOrtho, bool isBillboard, shared_ptr<Camera> camera
 
 	if (isBillboard)
 	{
-		//desc.World = XMMatrixTranspose(WorldMatrix);
+		Vector3 cameraPos = camera->GetPosition();
 
-		Vector3 Pos = GetState(POSITION);
-		Vector3 CameraPos = camera->GetPosition();
-		double angle = atan2(Pos.x - CameraPos.x, Pos.z - CameraPos.z) * (180.0 / XM_PI);
+		Vector3 pos = GetState(POSITION);
+
+		double angle = atan2(pos.x - cameraPos.x, pos.z - cameraPos.z) * (180.0 / XM_PI);
+		// 회전각도를 라디안으로 변환합니다.
 		float rotation = (float)angle * 0.0174532925f;
 
+		// 월드 행렬을 이용하여 원점에서의 빌보드의 회전값을 설정합니다.
 		WorldMatrix = XMMatrixRotationY(rotation);
-
-		Matrix Translation = XMMatrixTranslation(Pos.x, Pos.y, Pos.z);
+		// 빌보드 모델의 이동 행렬을 설정합니다.
+		Matrix Translation = XMMatrixTranslation(pos.x, pos.y, pos.z);
+		// 마지막으로 회전 행렬와 이동 행렬을 조합하여 빌보드 모델의 최종 월드 행렬을 계산합니다.
 		WorldMatrix = XMMatrixMultiply(WorldMatrix, Translation);
-		desc.World = XMMatrixTranspose(WorldMatrix);
 
+		desc.World = XMMatrixTranspose(WorldMatrix);
 	}
 
 	MatrixBuffer.SetData(Graphic->GetDeviceContext(), desc);

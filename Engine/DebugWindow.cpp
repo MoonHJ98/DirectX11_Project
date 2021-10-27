@@ -114,13 +114,13 @@ HRESULT DebugWindow::InitializeBuffers()
 	}
 
 	// 비트 맵 왼쪽의 화면 좌표를 계산합니다.
-	float left = (float)((screenWidth / 2) * -1);
+	float left = (float)((screenWidth / 4) * -1);
 
 	// 비트 맵 오른쪽의 화면 좌표를 계산합니다.
 	float right = left + (float)bitmapWidth;
 
 	// 비트 맵 상단의 화면 좌표를 계산합니다.
-	float top = (float)(screenHeight / 2);
+	float top = (float)(screenHeight / 4);
 
 	// 비트 맵 아래쪽의 화면 좌표를 계산합니다.
 	float bottom = top - (float)bitmapHeight;

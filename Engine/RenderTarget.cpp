@@ -49,7 +49,7 @@ HRESULT RenderTarget::Initialize(shared_ptr<Camera> _camera, int _positionX, int
 	debugWindow = DebugWindow::Create(screenWidth, screenHeight, bitmapWidth, bitmapHeight);
 	transform = Transform::Create(Transform::TRANSDESC());
 
-	transform->SetState(Transform::POSITION, Vector3((float)_positionX, (float)_positionY, 1.f));
+	transform->SetState(Transform::POSITION, Vector3((float)_positionX, (float)_positionY, 0.f));
 
 
 	D3D11_INPUT_ELEMENT_DESC InputLayout[] =
