@@ -84,65 +84,30 @@ void Transform::Update(bool isOrtho, bool isBillboard, shared_ptr<Camera> camera
 	desc.View = XMMatrixTranspose(*Manage->GetTransform(D3DTRANSFORMSTATE_VIEW));
 
 	if (isOrtho)
-	{
 		desc.Projection = XMMatrixTranspose(*Manage->GetTransform(D3DTRANSFORMSTATE_TEXTURE0));
-		Matrix World = XMMatrixIdentity();
-		Matrix View = XMMatrixIdentity();
-
-		//Vector3 pos = GetState(POSITION);
-		//
-		//memcpy(&View(3, 0), &pos, sizeof(Vector3));
-
-		float scale[3] = { 100.f, 100.f, 1.f };
-
-		for (int i = 0; i < 3; ++i)
-		{
-			for (int j = 0; j < 4; ++j)
-			{
-				View(i, j) *= scale[i];
-			}
-		}
-
-		desc.World = XMMatrixTranspose(View);
-		desc.View = XMMatrixTranspose(View);
-	}
 	else
 		desc.Projection = XMMatrixTranspose(*Manage->GetTransform(D3DTRANSFORMSTATE_PROJECTION));
 
 	if (isBillboard)
 	{
-		Matrix World = XMMatrixIdentity();
-		Matrix BillView = XMMatrixIdentity();
-		//Vector3 pos = GetState(POSITION);
-		//
-		//memcpy(&BillView(3, 0), &pos, sizeof(Vector3));
-		
-		float scale[3] = { 100.f, 100.f, 1.f };
-		
-		for (int i = 0; i < 3; ++i)
-		{
-			for (int j = 0; j < 4; ++j)
-			{
-				World(i, j) *= scale[i];
-			}
-		}
+		SetScale(Vector3(100.f, 100.f, 1.f));
+		SetState(POSITION, Vector3(50.f, 50.f, 1.f));
 
-		desc.World = World;
-		desc.View = BillView;
-		
-		//desc.View = XMMatrixTranspose(BillView);
+		Matrix View = *Manage->GetTransform(D3DTRANSFORMSTATE_VIEW);
+		//View = XMMatrixInverse(nullptr, View);
 
+		memcpy(&View(3, 0), &GetState(POSITION), sizeof(Vector3));
 
+		desc.View = XMMatrixTranspose(View);
 		//Matrix View = *Manage->GetTransform(D3DTRANSFORMSTATE_VIEW);
 		//memset(&View(3, 0), 0, sizeof(Vector3));
 		//
-		//View = XMMatrixInverse(nullptr, View);
 		//
 		//Vector3 Pos = GetState(POSITION);
 		//
 		//memcpy(&View(3, 0), &Pos, sizeof(Vector3));
 		//
-		////float scale[3] = { 100.f, 100.f, 1.f };
+		//float scale[3] = { 100.f, 100.f, 1.f };
 		//
 		//for (int i = 0; i < 3; ++i)
 		//{

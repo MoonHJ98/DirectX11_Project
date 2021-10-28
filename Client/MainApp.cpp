@@ -6,6 +6,7 @@
 #include "GraphicDevice.h"
 #include "Scene.h"
 #include "Stage.h"
+#include "TestUI.h"
 
 extern SCENEID GSceneID;
 
@@ -65,7 +66,10 @@ HRESULT MainApp::Initialize()
 		return E_FAIL;
 	}
 
-	renderTarget = RenderTarget::Create(camera, 50, 50, GX, GY, 200, 200);
+	ui = TestUI::Create();
+	Manage->AddLayer(SCENEID::STATIC, L"UI", ui);
+
+	//renderTarget = RenderTarget::Create(camera, 50, 50, GX, GY, 200, 200);
 
 	return S_OK;
 }
@@ -101,26 +105,26 @@ int MainApp::Update(float _timeDelta)
 	
 	Manage->Update(_timeDelta);
 
-	renderTarget->Update(_timeDelta);
+	//renderTarget->Update(_timeDelta);
 
 	return 0;
 }
 
 void MainApp::Render()
 {
-	renderTarget->Render();
+	//renderTarget->Render();
 
 	GraphicDev->BeginScene(0.f, 0.f, 1.f, 1.f);
 
 	Manage->Render();
 
 	// 모든 2D 렌더링을 시작하려면 Z 버퍼를 끕니다.
-	GraphicDev->TurnZBufferOff();
+	//GraphicDev->TurnZBufferOff();
 
-	renderTarget->PostRender();
+	//renderTarget->PostRender();
 
 	// 모든 2D 렌더링이 완료되었으므로 Z 버퍼를 다시 켜십시오.
-	GraphicDev->TurnZBufferOn();
+	//GraphicDev->TurnZBufferOn();
 
 	GraphicDev->EndScene();
 }

@@ -7,6 +7,7 @@ class Management;
 class GraphicDevice;
 
 #include "RenderTarget.h"
+#include "TestUI.h"
 
 class MainApp : public Base
 {
@@ -31,7 +32,8 @@ public:
 private:
 	shared_ptr<Management>      Manage = nullptr;
 	shared_ptr<GraphicDevice>	GraphicDev = nullptr;
-	shared_ptr<RenderTarget>	renderTarget = nullptr;
+	shared_ptr<TestUI> ui;
+	//shared_ptr<RenderTarget>	renderTarget = nullptr;
 	
 
 

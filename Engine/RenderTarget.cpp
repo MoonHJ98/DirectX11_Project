@@ -150,7 +150,7 @@ void RenderTarget::Render()
 
 void RenderTarget::PostRender()
 {
-	transform->Update(true, false, camera.lock());
+	transform->Update(true, true, camera.lock());
 
 	rectangleBuffer->Render();
 	//debugWindow->Render();
