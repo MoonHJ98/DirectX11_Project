@@ -14,7 +14,7 @@ DebugWindow::~DebugWindow()
 {
 }
 
-HRESULT DebugWindow::Initialize(int _screenWidth, int _screenHeight, int _bitmapWidth, int _bitmapHeight)
+HRESULT DebugWindow::Initialize(int _positionX, int _positionY, int _screenWidth, int _screenHeight, int _bitmapWidth, int _bitmapHeight)
 {
 	Graphic = GraphicDevice::GetInstance();
 	// 화면 크기를 저장하십시오.
@@ -24,6 +24,9 @@ HRESULT DebugWindow::Initialize(int _screenWidth, int _screenHeight, int _bitmap
 	// 이 비트맵을 렌더링 할 픽셀의 크기를 저장합니다.
 	bitmapWidth = _bitmapWidth;
 	bitmapHeight = _bitmapHeight;
+
+	positionX = _positionX;
+	positionY = _positionY;
 
 	// 정점 및 인덱스 버퍼를 초기화합니다.
 	return InitializeBuffers();
@@ -114,13 +117,13 @@ HRESULT DebugWindow::InitializeBuffers()
 	}
 
 	// 비트 맵 왼쪽의 화면 좌표를 계산합니다.
-	float left = (float)((screenWidth / 4) * -1);
+	float left = (float)((screenWidth / 4) * -1) + (float)positionX;
 
 	// 비트 맵 오른쪽의 화면 좌표를 계산합니다.
 	float right = left + (float)bitmapWidth;
 
 	// 비트 맵 상단의 화면 좌표를 계산합니다.
-	float top = (float)(screenHeight / 4);
+	float top = (float)(screenHeight / 4) - float(positionY);
 
 	// 비트 맵 아래쪽의 화면 좌표를 계산합니다.
 	float bottom = top - (float)bitmapHeight;
@@ -188,10 +191,10 @@ void DebugWindow::RenderBuffers()
 	Graphic->GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
-shared_ptr<DebugWindow> DebugWindow::Create(int _screenWidth, int _screenHeight, int _bitmapWidth, int _bitmapHeight)
+shared_ptr<DebugWindow> DebugWindow::Create(int _positionX, int _positionY, int _screenWidth, int _screenHeight, int _bitmapWidth, int _bitmapHeight)
 {
 	shared_ptr<DebugWindow> Instance(new DebugWindow());
-	if (FAILED(Instance->Initialize(_screenWidth, _screenHeight, _bitmapWidth, _bitmapHeight)))
+	if (FAILED(Instance->Initialize(_positionX, _positionY, _screenWidth, _screenHeight, _bitmapWidth, _bitmapHeight)))
 	{
 		MSG_BOX("Failed to create DebugWindow.");
 		return nullptr;

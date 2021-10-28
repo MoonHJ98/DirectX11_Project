@@ -5,6 +5,7 @@
 #include "Transform.h"
 #include "Shader.h"
 #include "Management.h"
+#include "RectangleBuffer.h"
 
 RenderTarget::RenderTarget()
 {
@@ -46,10 +47,12 @@ HRESULT RenderTarget::Initialize(shared_ptr<Camera> _camera, int _positionX, int
 	camera = _camera;
 	Graphic = GraphicDevice::GetInstance();
 
-	debugWindow = DebugWindow::Create(screenWidth, screenHeight, bitmapWidth, bitmapHeight);
+	//debugWindow = DebugWindow::Create(50, 50, screenWidth, screenHeight, bitmapWidth, bitmapHeight);
+	rectangleBuffer = RectangleBuffer::Create();
+
 	transform = Transform::Create(Transform::TRANSDESC());
 
-	transform->SetState(Transform::POSITION, Vector3((float)_positionX, (float)_positionY, 0.f));
+	//transform->SetState(Transform::POSITION, Vector3((float)_positionX, (float)_positionY, 0.f));
 
 
 	D3D11_INPUT_ELEMENT_DESC InputLayout[] =
@@ -147,16 +150,16 @@ void RenderTarget::Render()
 
 void RenderTarget::PostRender()
 {
-	transform->Update(true, true, camera.lock());
+	transform->Update(true, false, camera.lock());
 
-
-	debugWindow->Render();
+	rectangleBuffer->Render();
+	//debugWindow->Render();
 	shader->Render();
 
 	Graphic->GetDeviceContext()->PSSetShaderResources(0, 1, ShaderResourceView.GetAddressOf());
 
 	
-	Graphic->GetDeviceContext()->DrawIndexed(debugWindow->GetIndexCount(), 0, 0);
+	Graphic->GetDeviceContext()->DrawIndexed(/*debugWindow*/rectangleBuffer->GetIndexCount(), 0, 0);
 
 
 }

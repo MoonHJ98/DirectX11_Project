@@ -44,8 +44,8 @@ private:
 	ComPtr<ID3D11RenderTargetView>		RenderTargetView = nullptr;
 	ComPtr<ID3D11ShaderResourceView>	ShaderResourceView = nullptr;
 
-	shared_ptr<DebugWindow>             debugWindow = nullptr;
-	
+	//shared_ptr<DebugWindow>             debugWindow = nullptr;
+	shared_ptr<RectangleBuffer>         rectangleBuffer = nullptr;
 
 	shared_ptr<Transform>				transform = nullptr;
 	shared_ptr<Shader>					shader = nullptr;

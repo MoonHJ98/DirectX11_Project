@@ -19,7 +19,7 @@ public:
 	~DebugWindow();
 
 private:
-	HRESULT Initialize(int _screenWidth, int _screenHeight, int _bitmapWidth, int _bitmapHeight);
+	HRESULT Initialize(int _positionX, int _positionY, int _screenWidth, int _screenHeight, int _bitmapWidth, int _bitmapHeight);
 
 public:
 	void Render();
@@ -30,7 +30,7 @@ private:
 	void	RenderBuffers();
 
 public:
-	static shared_ptr<DebugWindow> Create(int _screenWidth, int _screenHeight, int _bitmapWidth, int _bitmapHeight);
+	static shared_ptr<DebugWindow> Create(int _positionX, int _positionY, int _screenWidth, int _screenHeight, int _bitmapWidth, int _bitmapHeight);
 
 private:
 	shared_ptr<GraphicDevice> Graphic = nullptr;
@@ -42,5 +42,7 @@ private:
 	int screenHeight = 0;
 	int bitmapWidth = 0;
 	int bitmapHeight = 0;
+	int positionX = 0;
+	int positionY = 0;
 };
 

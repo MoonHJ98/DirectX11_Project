@@ -83,29 +83,76 @@ void Transform::Update(bool isOrtho, bool isBillboard, shared_ptr<Camera> camera
 	desc.World = XMMatrixTranspose(WorldMatrix);
 	desc.View = XMMatrixTranspose(*Manage->GetTransform(D3DTRANSFORMSTATE_VIEW));
 
-	if(isOrtho)
+	if (isOrtho)
+	{
 		desc.Projection = XMMatrixTranspose(*Manage->GetTransform(D3DTRANSFORMSTATE_TEXTURE0));
+		Matrix World = XMMatrixIdentity();
+		Matrix View = XMMatrixIdentity();
+
+		//Vector3 pos = GetState(POSITION);
+		//
+		//memcpy(&View(3, 0), &pos, sizeof(Vector3));
+
+		float scale[3] = { 100.f, 100.f, 1.f };
+
+		for (int i = 0; i < 3; ++i)
+		{
+			for (int j = 0; j < 4; ++j)
+			{
+				View(i, j) *= scale[i];
+			}
+		}
+
+		desc.World = XMMatrixTranspose(View);
+		desc.View = XMMatrixTranspose(View);
+	}
 	else
 		desc.Projection = XMMatrixTranspose(*Manage->GetTransform(D3DTRANSFORMSTATE_PROJECTION));
 
 	if (isBillboard)
 	{
-		Vector3 cameraPos = camera->GetPosition();
+		Matrix World = XMMatrixIdentity();
+		Matrix BillView = XMMatrixIdentity();
+		//Vector3 pos = GetState(POSITION);
+		//
+		//memcpy(&BillView(3, 0), &pos, sizeof(Vector3));
+		
+		float scale[3] = { 100.f, 100.f, 1.f };
+		
+		for (int i = 0; i < 3; ++i)
+		{
+			for (int j = 0; j < 4; ++j)
+			{
+				World(i, j) *= scale[i];
+			}
+		}
 
-		Vector3 pos = GetState(POSITION);
+		desc.World = World;
+		desc.View = BillView;
+		
+		//desc.View = XMMatrixTranspose(BillView);
 
-		double angle = atan2(pos.x - cameraPos.x, pos.z - cameraPos.z) * (180.0 / XM_PI);
-		// 회전각도를 라디안으로 변환합니다.
-		float rotation = (float)angle * 0.0174532925f;
 
-		// 월드 행렬을 이용하여 원점에서의 빌보드의 회전값을 설정합니다.
-		WorldMatrix = XMMatrixRotationY(rotation);
-		// 빌보드 모델의 이동 행렬을 설정합니다.
-		Matrix Translation = XMMatrixTranslation(pos.x, pos.y, pos.z);
-		// 마지막으로 회전 행렬와 이동 행렬을 조합하여 빌보드 모델의 최종 월드 행렬을 계산합니다.
-		WorldMatrix = XMMatrixMultiply(WorldMatrix, Translation);
-
-		desc.World = XMMatrixTranspose(WorldMatrix);
+		//Matrix View = *Manage->GetTransform(D3DTRANSFORMSTATE_VIEW);
+		//memset(&View(3, 0), 0, sizeof(Vector3));
+		//
+		//View = XMMatrixInverse(nullptr, View);
+		//
+		//Vector3 Pos = GetState(POSITION);
+		//
+		//memcpy(&View(3, 0), &Pos, sizeof(Vector3));
+		//
+		////float scale[3] = { 100.f, 100.f, 1.f };
+		//
+		//for (int i = 0; i < 3; ++i)
+		//{
+		//	for (int j = 0; j < 4; ++j)
+		//	{
+		//		View(i, j) *= scale[i];
+		//	}
+		//}
+		//
+		//desc.World = XMMatrixTranspose(View);
 	}
 
 	MatrixBuffer.SetData(Graphic->GetDeviceContext(), desc);
@@ -118,9 +165,9 @@ HRESULT Transform::GoForward(float _Frametime)
 	XMVECTOR vLook = GetState(Transform::LOOK);
 	XMVECTOR vPos = GetState(Transform::POSITION);
 
-	
+
 	vPos += XMVector3Normalize(vLook) * Status.Speed * static_cast<float>(_Frametime);
-	
+
 	SetState(Transform::POSITION, vPos);
 
 	return S_OK;
@@ -231,7 +278,7 @@ HRESULT Transform::RotationAxis(XMFLOAT3 _Axis, float _Frametime, float* _AngleA
 	SetState(Transform::LOOK, vLook);
 	SetState(Transform::UP, vUp);
 
-	
+
 	return S_OK;
 }
 
