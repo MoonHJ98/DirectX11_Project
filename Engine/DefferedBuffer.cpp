@@ -1,0 +1,172 @@
+#include "pch.h"
+#include "DefferedBuffer.h"
+#include "GraphicDevice.h"
+
+
+DefferedBuffer::DefferedBuffer()
+{
+}
+
+DefferedBuffer::DefferedBuffer(const DefferedBuffer & Rhs)
+{
+}
+
+DefferedBuffer::~DefferedBuffer()
+{
+}
+
+HRESULT DefferedBuffer::Initialize(int _textureWidth, int _textureHeight, float _screenDepth, float _screenNear)
+{
+	HRESULT hr;
+	textureWidth = _textureWidth;
+	textureHeight = _textureHeight;
+
+	// 렌더 타겟 텍스처 구조체를 초기화합니다.
+	D3D11_TEXTURE2D_DESC textureDesc;
+	ZeroMemory(&textureDesc, sizeof(textureDesc));
+
+	// 렌더 타겟 텍스처 구조체를 설정합니다.
+	textureDesc.Width = textureWidth;
+	textureDesc.Height = textureHeight;
+	textureDesc.MipLevels = 1;
+	textureDesc.ArraySize = 1;
+	textureDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	textureDesc.SampleDesc.Count = 1;
+	textureDesc.Usage = D3D11_USAGE_DEFAULT;
+	textureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+	textureDesc.CPUAccessFlags = 0;
+	textureDesc.MiscFlags = 0;
+
+
+	// 렌더 타겟 텍스처를 만듭니다.
+	for (int i = 0; i < BUFFER_COUNT; i++)
+	{
+		hr = Graphic->GetDevice()->CreateTexture2D(&textureDesc, NULL, renderTargetTextureArray[i].GetAddressOf());
+		if (FAILED(hr))
+		{
+			MSG_BOX("Failed to craete DefferedBuffer's render target texture.");
+			return E_FAIL;
+		}
+	}
+
+	// 렌더 타겟 뷰의 구조체를 설정합니다.
+	D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc;
+	renderTargetViewDesc.Format = textureDesc.Format;
+	renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+	renderTargetViewDesc.Texture2D.MipSlice = 0;
+
+	// 렌더 타겟 뷰를 생성합니다.
+	for (int i = 0; i < BUFFER_COUNT; i++)
+	{
+		hr = Graphic->GetDevice()->CreateRenderTargetView(renderTargetTextureArray[i].Get(), &renderTargetViewDesc, renderTargetViewArray[i].GetAddressOf());
+		if (FAILED(hr))
+		{
+			MSG_BOX("Failed to create DefferedBuffer's render target view.");
+			return E_FAIL;
+		}
+	}
+
+	// 셰이더 리소스 뷰의 구조체를 설정합니다.
+	D3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc;
+	shaderResourceViewDesc.Format = textureDesc.Format;
+	shaderResourceViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	shaderResourceViewDesc.Texture2D.MostDetailedMip = 0;
+	shaderResourceViewDesc.Texture2D.MipLevels = 1;
+
+	// 셰이더 리소스 뷰를 만듭니다.
+	for (int i = 0; i < BUFFER_COUNT; i++)
+	{
+		hr = Graphic->GetDevice()->CreateShaderResourceView(renderTargetTextureArray[i].Get(), &shaderResourceViewDesc, shaderResourceViewArray[i].GetAddressOf());
+		if (FAILED(hr))
+		{
+			MSG_BOX("Failed to create DefferedBuffer's shader resource view");
+			return E_FAIL;
+		}
+	}
+
+	// 깊이 버퍼의 구조체를 초기화합니다.
+	D3D11_TEXTURE2D_DESC depthBufferDesc;
+	ZeroMemory(&depthBufferDesc, sizeof(depthBufferDesc));
+
+	// 깊이 버퍼의 구조체를 설정합니다.
+	depthBufferDesc.Width = textureWidth;
+	depthBufferDesc.Height = textureHeight;
+	depthBufferDesc.MipLevels = 1;
+	depthBufferDesc.ArraySize = 1;
+	depthBufferDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	depthBufferDesc.SampleDesc.Count = 1;
+	depthBufferDesc.SampleDesc.Quality = 0;
+	depthBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	depthBufferDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	depthBufferDesc.CPUAccessFlags = 0;
+	depthBufferDesc.MiscFlags = 0;
+
+	// 채워진 구조체를 사용하여 깊이 버퍼의 텍스처를 만듭니다.
+	hr = Graphic->GetDevice()->CreateTexture2D(&depthBufferDesc, NULL, depthStencilBuffer.GetAddressOf());
+	if (FAILED(hr))
+	{
+		MSG_BOX("Failed to create DefferedBuffer's depth buffer.");
+		return E_FAIL;
+	}
+
+	// 깊이 스텐실 뷰 구조체를 초기화합니다.
+	D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
+	ZeroMemory(&depthStencilViewDesc, sizeof(depthStencilViewDesc));
+
+	// 깊이 스텐실 뷰 구조체를 설정합니다.
+	depthStencilViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+	depthStencilViewDesc.Texture2D.MipSlice = 0;
+
+	// 깊이 스텐실 뷰를 만듭니다.
+	hr = Graphic->GetDevice()->CreateDepthStencilView(depthStencilBuffer.Get(), &depthStencilViewDesc, depthStencilView.GetAddressOf());
+	if (FAILED(hr))
+	{
+		MSG_BOX("Failed to create DefferedBuffer's depth stencil view.");
+		return E_FAIL;
+	}
+
+	// 렌더링을 위해 뷰포트를 설정합니다.
+	viewport.Width = (float)textureWidth;
+	viewport.Height = (float)textureHeight;
+	viewport.MinDepth = 0.0f;
+	viewport.MaxDepth = 1.0f;
+	viewport.TopLeftX = 0.0f;
+	viewport.TopLeftY = 0.0f;
+
+	return S_OK;
+}
+
+ID3D11ShaderResourceView * DefferedBuffer::GetShaderResourceView(int _view)
+{
+	return shaderResourceViewArray[_view].Get();
+}
+
+void DefferedBuffer::ClearRenderTargets(float _red, float _green, float _blue, float _alpha)
+{
+}
+
+void DefferedBuffer::SetRenderTargets()
+{
+	// 렌더링 대상 뷰 배열 및 깊이 스텐실 버퍼를 출력 렌더 파이프 라인에 바인딩 합니다.
+	ID3D11RenderTargetView* rtv[2] =
+	{ 
+		renderTargetViewArray[0].Get(),
+	    renderTargetViewArray[1].Get()
+	};
+	Graphic->GetDeviceContext()->OMSetRenderTargets(BUFFER_COUNT, rtv, depthStencilView.Get());
+
+	// 뷰포트를 설정합니다.
+	Graphic->GetDeviceContext()->RSSetViewports(1, &viewport);
+}
+
+shared_ptr<DefferedBuffer> DefferedBuffer::Create(int _textureWidth, int _textureHeight, float _screenDepth, float _screenNear)
+{
+	shared_ptr<DefferedBuffer> Instance(new DefferedBuffer());
+	if (FAILED(Instance->Initialize(_textureWidth, _textureHeight, _screenDepth, _screenNear)))
+	{
+		MSG_BOX("Failed to create DefferedBuffer.");
+		return nullptr;
+	}
+	return Instance;
+}

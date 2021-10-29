@@ -11,5 +11,5 @@ struct PixelInputType
 
 float4 main(PixelInputType input) : SV_TARGET
 {
-    return float4(1.f, 1.f, 1.f, 0.f) /*shaderTexture.Sample(SampleType, input.tex)*/;
+    return shaderTexture.Sample(SampleType, input.tex);
 }

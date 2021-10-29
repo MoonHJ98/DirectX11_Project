@@ -25,7 +25,7 @@ public:
 	ID3D11ShaderResourceView* GetShaderResourceView();
 
 private:
-	HRESULT Initialize(shared_ptr<Camera> _camera, int _positionX, int _positionY, int screenWidth, int screenHeight, int bitmapWidth, int bitmapHeight);
+	HRESULT Initialize(Vector3 _position, int screenWidth, int screenHeight, int bitmapWidth, int bitmapHeight);
 
 public:
 	virtual int Update(float _timeDelta) override;
@@ -36,7 +36,7 @@ public:
 
 
 public:
-	static shared_ptr<RenderTarget> Create(shared_ptr<Camera> _camera, int _positionX, int _positionY, int screenWidth, int screenHeight, int bitmapWidth, int bitmapHeight);
+	static shared_ptr<RenderTarget> Create(Vector3 _position, int screenWidth, int screenHeight, int bitmapWidth, int bitmapHeight);
 
 private:
 	shared_ptr<GraphicDevice>			Graphic = nullptr;
@@ -44,13 +44,10 @@ private:
 	ComPtr<ID3D11RenderTargetView>		RenderTargetView = nullptr;
 	ComPtr<ID3D11ShaderResourceView>	ShaderResourceView = nullptr;
 
-	//shared_ptr<DebugWindow>             debugWindow = nullptr;
 	shared_ptr<RectangleBuffer>         rectangleBuffer = nullptr;
 
 	shared_ptr<Transform>				transform = nullptr;
 	shared_ptr<Shader>					shader = nullptr;
-
-	weak_ptr<Camera>					camera;
 
 };
 

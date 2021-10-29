@@ -24,7 +24,7 @@ PixelInputType main(VertexInputType input)
     PixelInputType output = (PixelInputType) 0;
     
 
-	// 월드, 뷰 및 투영 행렬에 대한 정점의 위치를 ??계산합니다.
+	// 월드, 뷰 및 투영 행렬에 대한 정점의 위치를 계산합니다.
     output.position = mul(float4(input.position, 1.f), worldMatrix);
     output.position = mul(output.position, viewMatrix);
     output.position = mul(output.position, projectionMatrix);

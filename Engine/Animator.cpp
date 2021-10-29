@@ -24,26 +24,26 @@ void Animator::Update(float _timeDelta)
 		CreateTexture();
 
 	KeyframeDesc& desc = keyframeDesc;
-	
+
 	// 현재 애니메이션.
-	//{
-	//	auto& clip = clips[desc.clip];
-	//	desc.RunningTime += _timeDelta;
-	//
-	//	// 시간 비율
-	//	float time = 1.f / clip->GetFrameRate() / desc.Speed;
-	//
-	//	// desc.Time이 1보다 크거나 같으면 애니메이션의 다음 프레임
-	//	if (desc.Time >= 1.f)
-	//	{
-	//		desc.RunningTime = 0.f;
-	//
-	//		// 루프. 한번만 플레이하고 싶다면 마지막 프레임에서 멈추면 됨
-	//		desc.CurrFrame = (desc.CurrFrame + 1) % clip->GetFrameCount();
-	//	}
-	//	desc.Time = desc.RunningTime / time;
-	//
-	//}
+	{
+		auto& clip = clips[desc.clip];
+		desc.RunningTime += _timeDelta;
+
+		// 시간 비율
+		float time = 1.f / clip->GetFrameRate() / desc.Speed;
+
+		// desc.Time이 1보다 크거나 같으면 애니메이션의 다음 프레임
+		if (desc.Time >= 1.f)
+		{
+			desc.RunningTime = 0.f;
+
+			// 루프. 한번만 플레이하고 싶다면 마지막 프레임에서 멈추면 됨
+			desc.CurrFrame = (desc.CurrFrame + 1) % clip->GetFrameCount();
+		}
+		desc.Time = desc.RunningTime / time;
+
+	}
 }
 
 void Animator::Render()
@@ -95,7 +95,7 @@ void Animator::ReadClip(wstring file)
 			void* ptr = (void *)&keyframe->Transforms[0];
 			r->ReadByte(&ptr, sizeof(ModelKeyframeData) * size);
 		}
-		 
+
 		clip->SetKeyframe(keyframe->BoneName, keyframe);
 	}
 
@@ -117,7 +117,7 @@ void Animator::CreateTexture()
 	// 2차원 배열을 동작할당해서 3차원 배열로 만든다.
 	//shared_ptr<ClipTransform[]> temp(new ClipTransform[clips.size()]);
 	//clipTransforms = temp;
-	
+
 	clipTransforms = new ClipTransform[clips.size()];
 
 	// 클립별로 순회하면서 처리.
@@ -152,10 +152,10 @@ void Animator::CreateTexture()
 		MEM_RESERVE: 예약하겠다.
 		PAGE_READWRITE : 예약한 곳은 읽고 쓸수 있게 열어두겠다.
 
-		
+
 		VirtualQuery(실제로 할당된 크기를 알아낼 수 있음) 리턴값 : MEMORY_BASIC_INFORMATION
-		*/ 
-		
+		*/
+
 		for (UINT c = 0; c < clips.size(); c++)
 		{
 			// 각 클립의 시작 번호

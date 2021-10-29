@@ -39,7 +39,7 @@ public:
 	void						SetScale(Vector3 scale);
 
 public:
-	void						Update(bool isOrtho = false, bool isBillboard = false, shared_ptr<Camera> camera = nullptr);
+	void						Update(bool isOrtho = false);
 
 public:
 	HRESULT						GoForward(float _Frametime);

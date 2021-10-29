@@ -219,6 +219,10 @@
     <ClInclude Include="RenderTarget.h" />
     <ClInclude Include="DebugWindow.h" />
     <ClInclude Include="RectangleBuffer.h" />
+    <ClInclude Include="DefferedBuffer.h" />
+    <ClInclude Include="OrthoWindow.h" />
+    <ClInclude Include="Renderer.h" />
+    <ClInclude Include="RenderTargetManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -314,6 +318,10 @@
     <ClCompile Include="RenderTarget.cpp" />
     <ClCompile Include="DebugWindow.cpp" />
     <ClCompile Include="RectangleBuffer.cpp" />
+    <ClCompile Include="DefferedBuffer.cpp" />
+    <ClCompile Include="OrthoWindow.cpp" />
+    <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="RenderTargetManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="SkinnedMeshPS.hlsl">
@@ -328,9 +336,11 @@
     <FxCompile Include="ModelPS.hlsl">
       <Filter>02. Includes\01. HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="texturePS.hlsl">
+    <FxCompile Include="TexturePS.hlsl">
       <Filter>02. Includes\01. HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="TextureVS.hlsl" />
+    <FxCompile Include="TextureVS.hlsl">
+      <Filter>02. Includes\01. HLSL</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

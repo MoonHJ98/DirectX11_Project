@@ -164,6 +164,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Clip.h" />
     <ClInclude Include="DebugWindow.h" />
+    <ClInclude Include="DefferedBuffer.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GraphicDevice.h" />
@@ -177,11 +178,14 @@
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="ObjectManager.h" />
+    <ClInclude Include="OrthoWindow.h" />
     <ClInclude Include="Path.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="PipeLine.h" />
     <ClInclude Include="RectangleBuffer.h" />
+    <ClInclude Include="Renderer.h" />
     <ClInclude Include="RenderTarget.h" />
+    <ClInclude Include="RenderTargetManager.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="Shader.h" />
@@ -200,6 +204,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Clip.cpp" />
     <ClCompile Include="DebugWindow.cpp" />
+    <ClCompile Include="DefferedBuffer.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GraphicDevice.cpp" />
@@ -212,6 +217,7 @@
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="ObjectManager.cpp" />
+    <ClCompile Include="OrthoWindow.cpp" />
     <ClCompile Include="Path.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -221,7 +227,9 @@
     </ClCompile>
     <ClCompile Include="PipeLine.cpp" />
     <ClCompile Include="RectangleBuffer.cpp" />
+    <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="RenderTarget.cpp" />
+    <ClCompile Include="RenderTargetManager.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="Shader.cpp" />
@@ -266,7 +274,8 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
     </FxCompile>
-    <FxCompile Include="texturePS.hlsl">
+    <FxCompile Include="TexturePS.hlsl">
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
     </FxCompile>
     <FxCompile Include="TextureVS.hlsl">

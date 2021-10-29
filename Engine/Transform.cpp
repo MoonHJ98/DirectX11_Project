@@ -77,48 +77,30 @@ void Transform::SetScale(Vector3 scale)
 
 }
 
-void Transform::Update(bool isOrtho, bool isBillboard, shared_ptr<Camera> camera)
+void Transform::Update(bool isOrtho)
 {
 	MATRIXBUFFERTYPE desc;
 	desc.World = XMMatrixTranspose(WorldMatrix);
 	desc.View = XMMatrixTranspose(*Manage->GetTransform(D3DTRANSFORMSTATE_VIEW));
 
 	if (isOrtho)
-		desc.Projection = XMMatrixTranspose(*Manage->GetTransform(D3DTRANSFORMSTATE_TEXTURE0));
-	else
-		desc.Projection = XMMatrixTranspose(*Manage->GetTransform(D3DTRANSFORMSTATE_PROJECTION));
-
-	if (isBillboard)
 	{
-		SetScale(Vector3(100.f, 100.f, 1.f));
-		SetState(POSITION, Vector3(50.f, 50.f, 1.f));
+		Matrix View = XMMatrixIdentity();
+		desc.World = XMMatrixIdentity();
 
-		Matrix View = *Manage->GetTransform(D3DTRANSFORMSTATE_VIEW);
-		//View = XMMatrixInverse(nullptr, View);
+		View(0, 0) = 100.f;
+		View(1, 1) = 100.f;
 
-		memcpy(&View(3, 0), &GetState(POSITION), sizeof(Vector3));
+		Vector3 pos = GetState(POSITION);
+		View(3, 0) = pos.x;
+		View(3, 1) = pos.y;
+		View(3, 2) = pos.z;
 
 		desc.View = XMMatrixTranspose(View);
-		//Matrix View = *Manage->GetTransform(D3DTRANSFORMSTATE_VIEW);
-		//memset(&View(3, 0), 0, sizeof(Vector3));
-		//
-		//
-		//Vector3 Pos = GetState(POSITION);
-		//
-		//memcpy(&View(3, 0), &Pos, sizeof(Vector3));
-		//
-		//float scale[3] = { 100.f, 100.f, 1.f };
-		//
-		//for (int i = 0; i < 3; ++i)
-		//{
-		//	for (int j = 0; j < 4; ++j)
-		//	{
-		//		View(i, j) *= scale[i];
-		//	}
-		//}
-		//
-		//desc.World = XMMatrixTranspose(View);
+		desc.Projection = XMMatrixTranspose(*Manage->GetTransform(D3DTRANSFORMSTATE_TEXTURE0));
 	}
+	else
+		desc.Projection = XMMatrixTranspose(*Manage->GetTransform(D3DTRANSFORMSTATE_PROJECTION));
 
 	MatrixBuffer.SetData(Graphic->GetDeviceContext(), desc);
 	auto buffer = MatrixBuffer.GetBuffer();

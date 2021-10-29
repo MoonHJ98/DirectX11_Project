@@ -42,17 +42,15 @@ ID3D11ShaderResourceView * RenderTarget::GetShaderResourceView()
 	return ShaderResourceView.Get();
 }
 
-HRESULT RenderTarget::Initialize(shared_ptr<Camera> _camera, int _positionX, int _positionY, int screenWidth, int screenHeight, int bitmapWidth, int bitmapHeight)
+HRESULT RenderTarget::Initialize(Vector3 _position, int screenWidth, int screenHeight, int bitmapWidth, int bitmapHeight)
 {
-	camera = _camera;
 	Graphic = GraphicDevice::GetInstance();
 
-	//debugWindow = DebugWindow::Create(50, 50, screenWidth, screenHeight, bitmapWidth, bitmapHeight);
 	rectangleBuffer = RectangleBuffer::Create();
 
 	transform = Transform::Create(Transform::TRANSDESC());
 
-	//transform->SetState(Transform::POSITION, Vector3((float)_positionX, (float)_positionY, 0.f));
+	transform->SetState(Transform::POSITION, _position);
 
 
 	D3D11_INPUT_ELEMENT_DESC InputLayout[] =
@@ -116,10 +114,10 @@ HRESULT RenderTarget::Initialize(shared_ptr<Camera> _camera, int _positionX, int
 	return S_OK;
 }
 
-shared_ptr<RenderTarget> RenderTarget::Create(shared_ptr<Camera> _camera, int _positionX, int _positionY, int screenWidth, int screenHeight, int bitmapWidth, int bitmapHeight)
+shared_ptr<RenderTarget> RenderTarget::Create(Vector3 _position, int screenWidth, int screenHeight, int bitmapWidth, int bitmapHeight)
 {
 	shared_ptr<RenderTarget> Instance(new RenderTarget());
-	if (FAILED(Instance->Initialize(_camera, _positionX, _positionY, screenWidth, screenHeight, bitmapWidth, bitmapHeight)))
+	if (FAILED(Instance->Initialize(_position, screenWidth, screenHeight, bitmapWidth, bitmapHeight)))
 	{
 		MSG_BOX("Failed to create RenderTarget.");
 		return nullptr;
@@ -150,16 +148,12 @@ void RenderTarget::Render()
 
 void RenderTarget::PostRender()
 {
-	transform->Update(true, true, camera.lock());
+	transform->Update(true);
 
-	rectangleBuffer->Render();
-	//debugWindow->Render();
+
 	shader->Render();
 
 	Graphic->GetDeviceContext()->PSSetShaderResources(0, 1, ShaderResourceView.GetAddressOf());
 
-	
-	Graphic->GetDeviceContext()->DrawIndexed(/*debugWindow*/rectangleBuffer->GetIndexCount(), 0, 0);
-
-
+	rectangleBuffer->Render();
 }

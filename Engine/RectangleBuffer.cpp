@@ -147,6 +147,9 @@ void RectangleBuffer::RenderBuffer()
 
 	// Set the type of primitive that should be rendered from this vertex buffer, in this case triangles.
 	Graphic->GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	Graphic->GetDeviceContext()->DrawIndexed(indexCount, 0, 0);
+
 }
 
 shared_ptr<RectangleBuffer> RectangleBuffer::Create()

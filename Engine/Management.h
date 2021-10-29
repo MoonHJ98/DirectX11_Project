@@ -57,5 +57,6 @@ private:
 	shared_ptr<PipeLine>			Pipeline = nullptr;
 	shared_ptr<LightManager>        LightMgr = nullptr;
 
+
 };
 
