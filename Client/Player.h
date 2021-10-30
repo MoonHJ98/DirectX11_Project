@@ -4,7 +4,7 @@
 class Model;
 
 
-class Player : public GameObject
+class Player : public GameObject, public enable_shared_from_this<Player>
 {
 private:
 	Player();

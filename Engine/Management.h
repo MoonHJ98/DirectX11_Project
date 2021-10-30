@@ -13,6 +13,7 @@ class ObjectManager;
 class LightManager;
 class Light;
 class Scene;
+class Renderer;
 
 class Management : public Base
 {
@@ -56,6 +57,7 @@ private:
 	shared_ptr<ObjectManager>		ObjectMgr = nullptr;
 	shared_ptr<PipeLine>			Pipeline = nullptr;
 	shared_ptr<LightManager>        LightMgr = nullptr;
+	shared_ptr<Renderer>            renderer = nullptr;
 
 
 };

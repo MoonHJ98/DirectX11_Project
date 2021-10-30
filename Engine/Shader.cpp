@@ -32,49 +32,63 @@ HRESULT Shader::Initialize(D3D11_INPUT_ELEMENT_DESC InputlayoutDesc[], UINT layo
 	pixelShaderBuffer = nullptr;
 
 	// Compile the vertex shader code.
-	if (FAILED(D3DCompileFromFile(_VSPath.c_str(), NULL, NULL, "main", "vs_4_0", ShaderFlag, 0, &vertexShaderBuffer, NULL)))
+	if (L"" != _VSPath)
 	{
-		MSG_BOX("Failed to compile vertex shader.");
-		return E_FAIL;
-	}
+		if (FAILED(D3DCompileFromFile(_VSPath.c_str(), NULL, NULL, "main", "vs_4_0", ShaderFlag, 0, &vertexShaderBuffer, NULL)))
+		{
+			MSG_BOX("Failed to compile vertex shader.");
+			return E_FAIL;
+		}
+		// Create the vertex shader from the buffer.
+		if (FAILED(Graphic->GetDevice()->CreateVertexShader(vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), NULL, VertexShader.GetAddressOf())))
+		{
+			MSG_BOX("Failed to create vertex shader from buffer.");
+			return E_FAIL;
+		}
 
-	// Compile the pixel shader code.
-	if (FAILED(D3DCompileFromFile(_PSPath.c_str(), NULL, NULL, "main", "ps_4_0", ShaderFlag, 0, &pixelShaderBuffer, NULL)))
-	{
-		MSG_BOX("Failed to compile pixel shader.");
-		return E_FAIL;
-	}
+		numElements = layoutSize / sizeof(D3D11_INPUT_ELEMENT_DESC);
 
-	// Create the vertex shader from the buffer.
-	if (FAILED(Graphic->GetDevice()->CreateVertexShader(vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), NULL, VertexShader.GetAddressOf())))
-	{
-		MSG_BOX("Failed to create vertex shader from buffer.");
-		return E_FAIL;
-	}
-
-	// Create the pixel shader from the buffer.
-	if (FAILED(Graphic->GetDevice()->CreatePixelShader(pixelShaderBuffer->GetBufferPointer(), pixelShaderBuffer->GetBufferSize(), NULL, PixelShader.GetAddressOf())))
-	{
-		MSG_BOX("Failed to create pixel shader from buffer.");
-		return E_FAIL;
+		// Create the vertex input layout.
+		if (FAILED(Graphic->GetDevice()->CreateInputLayout(InputlayoutDesc, numElements, vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), Layout.GetAddressOf())))
+		{
+			MSG_BOX("Failed to create vertex input layout.");
+			return E_FAIL;
+		}
 	}
 
 
-	numElements = layoutSize / sizeof(D3D11_INPUT_ELEMENT_DESC);
-
-	// Create the vertex input layout.
-	if (FAILED(Graphic->GetDevice()->CreateInputLayout(InputlayoutDesc, numElements, vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), Layout.GetAddressOf())))
+	if (L"" != _PSPath)
 	{
-		MSG_BOX("Failed to create vertex input layout.");
-		return E_FAIL;
+		// Compile the pixel shader code.
+		if (FAILED(D3DCompileFromFile(_PSPath.c_str(), NULL, NULL, "main", "ps_4_0", ShaderFlag, 0, &pixelShaderBuffer, NULL)))
+		{
+			MSG_BOX("Failed to compile pixel shader.");
+			return E_FAIL;
+		}
+
+
+
+		// Create the pixel shader from the buffer.
+		if (FAILED(Graphic->GetDevice()->CreatePixelShader(pixelShaderBuffer->GetBufferPointer(), pixelShaderBuffer->GetBufferSize(), NULL, PixelShader.GetAddressOf())))
+		{
+			MSG_BOX("Failed to create pixel shader from buffer.");
+			return E_FAIL;
+		}
 	}
+
 
 	// Release the vertex shader buffer and pixel shader buffer since they are no longer needed.
-	vertexShaderBuffer->Release();
-	vertexShaderBuffer = nullptr;
+	if (nullptr != vertexShaderBuffer)
+	{
+		vertexShaderBuffer->Release();
+		vertexShaderBuffer = nullptr;
+	}
 
-	pixelShaderBuffer->Release();
-	pixelShaderBuffer = nullptr;
+	if (nullptr != PixelShader)
+	{
+		pixelShaderBuffer->Release();
+		pixelShaderBuffer = nullptr;
+	}
 
 	// 텍스처 샘플러 생태 구조체 생성 및 설정
 	D3D11_SAMPLER_DESC samplerDecs;
@@ -102,13 +116,18 @@ HRESULT Shader::Initialize(D3D11_INPUT_ELEMENT_DESC InputlayoutDesc[], UINT layo
 
 void Shader::Render()
 {
-	Graphic->GetDeviceContext()->IASetInputLayout(Layout.Get());
+	if(nullptr != Layout)
+		Graphic->GetDeviceContext()->IASetInputLayout(Layout.Get());
 
-	Graphic->GetDeviceContext()->VSSetShader(VertexShader.Get(), NULL, 0);
-	Graphic->GetDeviceContext()->PSSetShader(PixelShader.Get(), NULL, 0);
+	if(nullptr != VertexShader)
+		Graphic->GetDeviceContext()->VSSetShader(VertexShader.Get(), NULL, 0);
+
+	if(nullptr != PixelShader)
+		Graphic->GetDeviceContext()->PSSetShader(PixelShader.Get(), NULL, 0);
 
 	// 픽셀쉐이더에 있는 sampler state 설정
-	Graphic->GetDeviceContext()->PSSetSamplers(0, 1, &SampleState);
+	if(nullptr != SampleState)
+		Graphic->GetDeviceContext()->PSSetSamplers(0, 1, &SampleState);
 
 
 }

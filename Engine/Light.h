@@ -4,6 +4,8 @@
 
 class GraphicDevice;
 
+class Shader;
+
 class Light
 {
 private:
@@ -32,6 +34,9 @@ public:
 
 private:
 	HRESULT Initialize(LIGHTDESC _LightInfo);
+
+public:
+	void Render(shared_ptr<Shader> shader);
 public:
 	static shared_ptr<Light> Create(LIGHTDESC _LightInfo);
 
@@ -39,5 +44,6 @@ private:
 	shared_ptr<GraphicDevice> Graphic = nullptr;
 	LIGHTDESC LightInfo;
 	shared_ptr<ConstantBuffer<LightBufferType>> LightBuffer = nullptr;
+
 };
 

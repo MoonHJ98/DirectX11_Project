@@ -6,7 +6,6 @@ class Management;
 
 class GraphicDevice;
 
-#include "RenderTarget.h"
 
 class MainApp : public Base
 {
@@ -32,8 +31,7 @@ private:
 	shared_ptr<Management>      Manage = nullptr;
 	shared_ptr<GraphicDevice>	GraphicDev = nullptr;
 
-	shared_ptr<RenderTarget>	renderTarget = nullptr;
-	
+
 
 
 };

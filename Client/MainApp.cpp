@@ -64,8 +64,6 @@ HRESULT MainApp::Initialize()
 	}
 
 
-	renderTarget = RenderTarget::Create(camera, Vector3(-290.f, 190.f, 0.1f), GX, GY, 150, 150);
-
 	return S_OK;
 }
 
@@ -105,19 +103,9 @@ int MainApp::Update(float _timeDelta)
 
 void MainApp::Render()
 {
-	renderTarget->Render();
-
 	GraphicDev->BeginScene(0.f, 0.f, 1.f, 1.f);
 
 	Manage->Render();
-
-	// 모든 2D 렌더링을 시작하려면 Z 버퍼를 끕니다.
-	GraphicDev->TurnZBufferOff();
-
-	renderTarget->PostRender();
-
-	// 모든 2D 렌더링이 완료되었으므로 Z 버퍼를 다시 켜십시오.
-	GraphicDev->TurnZBufferOn();
 
 	GraphicDev->EndScene();
 }

@@ -28,11 +28,7 @@ extern int GY;
 extern SCENEID GSceneID;
 
 
-#define VSYNC_ENABLE true
-#define FULLSCREEN false
-#define SCREENDEPTH 1000.f
-#define SCREENNEAR 0.1f
-#define FoV 3.141592654f / 4.f
+
 
 
 #endif //PCH_H

@@ -7,7 +7,7 @@ Texture2D SpecularTexture : register(t2);
 SamplerState SampleType; // 텍스쳐를 도형에 셰이딩 할때 사용
 
 
-struct VertexOutput
+struct PixelInput
 {
     float4 Position : SV_POSITION;
     float2 Uv : TEXCOORD;
@@ -17,6 +17,11 @@ struct VertexOutput
     float4 BlendWeights : BLENDWEIGHTS;
     float4 BlendIndices : BLENDINDICES;
     float3 ViewDirection : TEXCOORD1;
+};
+struct PixelOutput
+{
+    float4 Color : SV_TARGET0;
+    float4 Normal : SV_TARGET1;
 };
 
 cbuffer LightBuffer : register(b0)
@@ -28,7 +33,7 @@ cbuffer LightBuffer : register(b0)
     float SpecularPower;  
 };
 
-float4 main(VertexOutput input) : SV_TARGET
+PixelOutput main(PixelInput input) : SV_TARGET
 {
     float4 textureColor;
     float4 color;
@@ -47,42 +52,48 @@ float4 main(VertexOutput input) : SV_TARGET
     normal = (normalMap.x * input.Tangent) + (normalMap.y * input.BiTangent) + (normalMap.z * input.Normal);
     normal = normalize(normal);
     
-    
-    // 모든 픽셀의 기본 출력 색상을 Ambient로 설정. (For Directional + Ambient Light)
-    color = AmbientColor;
-    
-    
-    // 계산을 위해 빛 방향을 반전 시킴
-    float3 lightDir = -LightDirection;
-    
-    // 빛의 양 계산
-    float lightIntensity = saturate(dot(normal, lightDir));
-    
-    // for Directional + Ambient Light.
-    if(lightIntensity > 0.f)
-    {
-        color += saturate(DiffuseColor * lightIntensity);
-        
-        // for Specular
-        {
-            specularIntensity = SpecularTexture.Sample(SampleType, input.Uv); // For Specular Mapping
+    PixelOutput Out;
 
-            reflection = normalize(2 * lightIntensity * normal - lightDir);
-            specular = SpecularColor * pow(saturate(dot(reflection, input.ViewDirection)), SpecularPower);
+    Out.Color = textureColor;
+    Out.Normal = float4(normal, 0.f);
+    return Out;
 
-            specular = specular * specularIntensity; // For Specular Mapping
 
-        }
-    }
-    // 최종 색생 결정(for Directinal Light)
-    //color = saturate(DiffuseColor * lightIntensity);
-    
-    // 텍스쳐와 빛을 곱하여 최종 픽셀 색상 결과 얻기.
-    color = color * textureColor;
-    
-    // for Specular
-    color = saturate(color + specular);
-    return color;
+    //// 모든 픽셀의 기본 출력 색상을 Ambient로 설정. (For Directional + Ambient Light)
+    //color = AmbientColor;
+    //
+    //
+    //// 계산을 위해 빛 방향을 반전 시킴
+    //float3 lightDir = -LightDirection;
+    //
+    //// 빛의 양 계산
+    //float lightIntensity = saturate(dot(normal, lightDir));
+    //
+    //// for Directional + Ambient Light.
+    //if(lightIntensity > 0.f)
+    //{
+    //    color += saturate(DiffuseColor * lightIntensity);
+    //    
+    //    // for Specular
+    //    {
+    //        specularIntensity = SpecularTexture.Sample(SampleType, input.Uv); // For Specular Mapping
+    //
+    //        reflection = normalize(2 * lightIntensity * normal - lightDir);
+    //        specular = SpecularColor * pow(saturate(dot(reflection, input.ViewDirection)), SpecularPower);
+    //
+    //        specular = specular * specularIntensity; // For Specular Mapping
+    //
+    //    }
+    //}
+    //// 최종 색생 결정(for Directinal Light)
+    ////color = saturate(DiffuseColor * lightIntensity);
+    //
+    //// 텍스쳐와 빛을 곱하여 최종 픽셀 색상 결과 얻기.
+    //color = color * textureColor;
+    //
+    //// for Specular
+    //color = saturate(color + specular);
+    //return color;
 }
 
 /*

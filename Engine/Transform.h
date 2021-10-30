@@ -37,6 +37,7 @@ public:
 	void 						SetState(STATE _State, Vector3 Vec);
 	Matrix*						GetWorldMatrix();
 	void						SetScale(Vector3 scale);
+	Vector3						GetScale();
 
 public:
 	void						Update(bool isOrtho = false);

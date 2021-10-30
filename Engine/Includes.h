@@ -5,6 +5,12 @@
 #undef min
 #endif
 
+#define VSYNC_ENABLE true
+#define FULLSCREEN false
+#define SCREENDEPTH 1000.f
+#define SCREENNEAR 0.1f
+#define FoV 3.141592654f / 4.f
+
 #include <d3d11.h>
 #include <DirectXMath.h>
 #include <d3dtypes.h>

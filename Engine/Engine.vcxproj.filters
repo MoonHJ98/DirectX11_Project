@@ -121,6 +121,15 @@
     <Filter Include="01. Utility\03. Component\01. Material\00. Texture">
       <UniqueIdentifier>{8a1fc8fd-a5ae-4bb2-992f-4cb513b11873}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Utility\03. Component\08. Renderer">
+      <UniqueIdentifier>{24f45b3e-f216-4f43-9cd3-ca92445e1ed6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\05. Deferred">
+      <UniqueIdentifier>{c27ab575-bfb7-440a-8cfd-602b2fc4b6bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\05. Deferred\00. RenderTarget">
+      <UniqueIdentifier>{aaac2dd2-e118-434c-9c9b-6d8a1903fb9d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -216,13 +225,18 @@
     <ClInclude Include="Material.h">
       <Filter>01. Utility\03. Component\01. Material</Filter>
     </ClInclude>
-    <ClInclude Include="RenderTarget.h" />
     <ClInclude Include="DebugWindow.h" />
     <ClInclude Include="RectangleBuffer.h" />
-    <ClInclude Include="DefferedBuffer.h" />
     <ClInclude Include="OrthoWindow.h" />
-    <ClInclude Include="Renderer.h" />
-    <ClInclude Include="RenderTargetManager.h" />
+    <ClInclude Include="Renderer.h">
+      <Filter>01. Utility\03. Component\08. Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="DeferredBuffer.h">
+      <Filter>01. Utility\05. Deferred</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderTarget.h">
+      <Filter>01. Utility\05. Deferred\00. RenderTarget</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -315,13 +329,18 @@
     <ClCompile Include="Material.cpp">
       <Filter>01. Utility\03. Component\01. Material</Filter>
     </ClCompile>
-    <ClCompile Include="RenderTarget.cpp" />
     <ClCompile Include="DebugWindow.cpp" />
     <ClCompile Include="RectangleBuffer.cpp" />
-    <ClCompile Include="DefferedBuffer.cpp" />
     <ClCompile Include="OrthoWindow.cpp" />
-    <ClCompile Include="Renderer.cpp" />
-    <ClCompile Include="RenderTargetManager.cpp" />
+    <ClCompile Include="Renderer.cpp">
+      <Filter>01. Utility\03. Component\08. Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="DeferredBuffer.cpp">
+      <Filter>01. Utility\05. Deferred</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderTarget.cpp">
+      <Filter>01. Utility\05. Deferred\00. RenderTarget</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="SkinnedMeshPS.hlsl">
@@ -342,5 +361,6 @@
     <FxCompile Include="TextureVS.hlsl">
       <Filter>02. Includes\01. HLSL</Filter>
     </FxCompile>
+    <FxCompile Include="LightAccPS.hlsl" />
   </ItemGroup>
 </Project>

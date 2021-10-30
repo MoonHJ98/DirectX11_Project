@@ -1,22 +1,31 @@
 #include "pch.h"
-#include "DefferedBuffer.h"
+#include "DeferredBuffer.h"
 #include "GraphicDevice.h"
+#include "Management.h"
+#include "RenderTarget.h"
 
 
-DefferedBuffer::DefferedBuffer()
+DeferredBuffer::DeferredBuffer()
 {
 }
 
-DefferedBuffer::DefferedBuffer(const DefferedBuffer & Rhs)
+DeferredBuffer::DeferredBuffer(const DeferredBuffer & Rhs)
 {
 }
 
-DefferedBuffer::~DefferedBuffer()
+DeferredBuffer::~DeferredBuffer()
 {
 }
 
-HRESULT DefferedBuffer::Initialize(int _textureWidth, int _textureHeight, float _screenDepth, float _screenNear)
+HRESULT DeferredBuffer::Initialize(int _textureWidth, int _textureHeight, float _screenDepth, float _screenNear)
 {
+	auto renderTarget1 = RenderTarget::Create(Vector3(-290.f, 190.f, 0.1f), Vector3(100.f, 100.f, 1.f), Vector4(1.f, 1.f, 1.f, 1.f));
+	renderTargets.push_back(renderTarget1);
+	auto renderTarget2 = RenderTarget::Create(Vector3(-90.f, 190.f, 0.1f), Vector3(100.f, 100.f, 1.f), Vector4(1.f, 1.f, 1.f, 1.f));
+	renderTargets.push_back(renderTarget2);
+
+	Graphic = GraphicDevice::GetInstance();
+
 	HRESULT hr;
 	textureWidth = _textureWidth;
 	textureHeight = _textureHeight;
@@ -39,12 +48,12 @@ HRESULT DefferedBuffer::Initialize(int _textureWidth, int _textureHeight, float 
 
 
 	// 렌더 타겟 텍스처를 만듭니다.
-	for (int i = 0; i < BUFFER_COUNT; i++)
+	for (int i = 0; i < BUFFER_END; i++)
 	{
 		hr = Graphic->GetDevice()->CreateTexture2D(&textureDesc, NULL, renderTargetTextureArray[i].GetAddressOf());
 		if (FAILED(hr))
 		{
-			MSG_BOX("Failed to craete DefferedBuffer's render target texture.");
+			MSG_BOX("Failed to craete DeferredBuffer's render target texture.");
 			return E_FAIL;
 		}
 	}
@@ -56,12 +65,12 @@ HRESULT DefferedBuffer::Initialize(int _textureWidth, int _textureHeight, float 
 	renderTargetViewDesc.Texture2D.MipSlice = 0;
 
 	// 렌더 타겟 뷰를 생성합니다.
-	for (int i = 0; i < BUFFER_COUNT; i++)
+	for (int i = 0; i < BUFFER_END; i++)
 	{
 		hr = Graphic->GetDevice()->CreateRenderTargetView(renderTargetTextureArray[i].Get(), &renderTargetViewDesc, renderTargetViewArray[i].GetAddressOf());
 		if (FAILED(hr))
 		{
-			MSG_BOX("Failed to create DefferedBuffer's render target view.");
+			MSG_BOX("Failed to create DeferredBuffer's render target view.");
 			return E_FAIL;
 		}
 	}
@@ -74,12 +83,12 @@ HRESULT DefferedBuffer::Initialize(int _textureWidth, int _textureHeight, float 
 	shaderResourceViewDesc.Texture2D.MipLevels = 1;
 
 	// 셰이더 리소스 뷰를 만듭니다.
-	for (int i = 0; i < BUFFER_COUNT; i++)
+	for (int i = 0; i < BUFFER_END; i++)
 	{
 		hr = Graphic->GetDevice()->CreateShaderResourceView(renderTargetTextureArray[i].Get(), &shaderResourceViewDesc, shaderResourceViewArray[i].GetAddressOf());
 		if (FAILED(hr))
 		{
-			MSG_BOX("Failed to create DefferedBuffer's shader resource view");
+			MSG_BOX("Failed to create DeferredBuffer's shader resource view");
 			return E_FAIL;
 		}
 	}
@@ -105,7 +114,7 @@ HRESULT DefferedBuffer::Initialize(int _textureWidth, int _textureHeight, float 
 	hr = Graphic->GetDevice()->CreateTexture2D(&depthBufferDesc, NULL, depthStencilBuffer.GetAddressOf());
 	if (FAILED(hr))
 	{
-		MSG_BOX("Failed to create DefferedBuffer's depth buffer.");
+		MSG_BOX("Failed to create DeferredBuffer's depth buffer.");
 		return E_FAIL;
 	}
 
@@ -122,7 +131,7 @@ HRESULT DefferedBuffer::Initialize(int _textureWidth, int _textureHeight, float 
 	hr = Graphic->GetDevice()->CreateDepthStencilView(depthStencilBuffer.Get(), &depthStencilViewDesc, depthStencilView.GetAddressOf());
 	if (FAILED(hr))
 	{
-		MSG_BOX("Failed to create DefferedBuffer's depth stencil view.");
+		MSG_BOX("Failed to create DeferredBuffer's depth stencil view.");
 		return E_FAIL;
 	}
 
@@ -137,35 +146,108 @@ HRESULT DefferedBuffer::Initialize(int _textureWidth, int _textureHeight, float 
 	return S_OK;
 }
 
-ID3D11ShaderResourceView * DefferedBuffer::GetShaderResourceView(int _view)
+ID3D11ShaderResourceView * DeferredBuffer::GetShaderResourceView(int _view)
 {
 	return shaderResourceViewArray[_view].Get();
 }
 
-void DefferedBuffer::ClearRenderTargets(float _red, float _green, float _blue, float _alpha)
+void DeferredBuffer::ClearRenderTargets(wstring MRTTag, float _red, float _green, float _blue, float _alpha)
 {
+	// 버퍼를 지울 색을 설정합니다.
+	float color[4] = { _red, _green, _blue, _alpha };
+
+	auto renderTargetVector = FindMultiRenderTarget(MRTTag);
+
+	// 렌더 타겟 버퍼를 지웁니다.
+	//for (int i = 0; i < BUFFER_END; i++)
+	//{
+	//	Graphic->GetDeviceContext()->ClearRenderTargetView(renderTargetViewArray[i].Get(), color);
+	//}
+	for (size_t i = 0; i< renderTargetVector->size(); ++i)
+	{
+	
+		Graphic->GetDeviceContext()->ClearRenderTargetView(renderTargetVector->data()[i], color);
+	}
+
+	// 깊이 버퍼를 지웁니다.
+	Graphic->GetDeviceContext()->ClearDepthStencilView(depthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
-void DefferedBuffer::SetRenderTargets()
+void DeferredBuffer::SetRenderTargets(wstring MRTTag)
 {
 	// 렌더링 대상 뷰 배열 및 깊이 스텐실 버퍼를 출력 렌더 파이프 라인에 바인딩 합니다.
-	ID3D11RenderTargetView* rtv[2] =
-	{ 
-		renderTargetViewArray[0].Get(),
-	    renderTargetViewArray[1].Get()
-	};
-	Graphic->GetDeviceContext()->OMSetRenderTargets(BUFFER_COUNT, rtv, depthStencilView.Get());
+
+	auto renderTargetVector = FindMultiRenderTarget(MRTTag);
+
+	
+	//ID3D11RenderTargetView* rtv[2] =
+	//{ 
+	//	renderTargetViewArray[0].Get(),
+	//    renderTargetViewArray[1].Get()
+	//};
+	Graphic->GetDeviceContext()->OMSetRenderTargets(renderTargetVector->size(), renderTargetVector->data(), depthStencilView.Get());
 
 	// 뷰포트를 설정합니다.
 	Graphic->GetDeviceContext()->RSSetViewports(1, &viewport);
 }
 
-shared_ptr<DefferedBuffer> DefferedBuffer::Create(int _textureWidth, int _textureHeight, float _screenDepth, float _screenNear)
+void DeferredBuffer::Render()
 {
-	shared_ptr<DefferedBuffer> Instance(new DefferedBuffer());
+	for (int i = 0; i < BUFFER_END; ++i)
+	{
+		renderTargets[i]->Render(shaderResourceViewArray[i].Get());
+	}
+
+}
+
+void DeferredBuffer::BeginMRT(wstring MRTTag)
+{
+	SetRenderTargets(MRTTag);
+	
+	ClearRenderTargets(MRTTag, 1.f, 1.f, 1.f, 1.f);
+}
+
+void DeferredBuffer::EndMRT()
+{
+	Graphic->SetBackBufferRenderTarget();
+
+}
+
+void DeferredBuffer::AddMultiRenderTarget(wstring MRTTag, BUFFER id)
+{
+	
+	auto rtvVector = FindMultiRenderTarget(MRTTag);
+
+	if (nullptr == rtvVector)
+	{
+		vector<ID3D11RenderTargetView*> rtvVector;
+
+		rtvVector.push_back(renderTargetViewArray[id].Get());
+
+		renderTargetMap.emplace(MRTTag, rtvVector);
+	}
+	else
+		rtvVector->push_back(renderTargetViewArray[id].Get());
+
+}
+
+vector<ID3D11RenderTargetView*>* DeferredBuffer::FindMultiRenderTarget(wstring MRTTag)
+{
+	auto iter = renderTargetMap.find(MRTTag);
+
+
+	if (iter == renderTargetMap.end())
+		return nullptr;
+
+	return &iter->second;
+}
+
+shared_ptr<DeferredBuffer> DeferredBuffer::Create(int _textureWidth, int _textureHeight, float _screenDepth, float _screenNear)
+{
+	shared_ptr<DeferredBuffer> Instance(new DeferredBuffer());
 	if (FAILED(Instance->Initialize(_textureWidth, _textureHeight, _screenDepth, _screenNear)))
 	{
-		MSG_BOX("Failed to create DefferedBuffer.");
+		MSG_BOX("Failed to create DeferredBuffer.");
 		return nullptr;
 	}
 	return Instance;

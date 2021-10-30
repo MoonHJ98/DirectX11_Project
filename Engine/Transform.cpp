@@ -77,6 +77,16 @@ void Transform::SetScale(Vector3 scale)
 
 }
 
+Vector3 Transform::GetScale()
+{
+	Vector3 right = GetState(RIGHT);
+	Vector3 up = GetState(UP);
+	Vector3 look = GetState(LOOK);
+
+
+	return Vector3(right.Length(), up.Length(), look.Length());
+}
+
 void Transform::Update(bool isOrtho)
 {
 	MATRIXBUFFERTYPE desc;
@@ -88,8 +98,9 @@ void Transform::Update(bool isOrtho)
 		Matrix View = XMMatrixIdentity();
 		desc.World = XMMatrixIdentity();
 
-		View(0, 0) = 100.f;
-		View(1, 1) = 100.f;
+		Vector3 scale = GetScale();
+		View(0, 0) = scale.x;
+		View(1, 1) = scale.y;
 
 		Vector3 pos = GetState(POSITION);
 		View(3, 0) = pos.x;

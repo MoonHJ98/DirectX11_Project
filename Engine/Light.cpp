@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Light.h"
 #include "GraphicDevice.h"
+#include "Shader.h"
 
 Light::Light()
 {

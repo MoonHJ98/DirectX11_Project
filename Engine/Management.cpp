@@ -7,6 +7,7 @@
 #include "GameObject.h"
 #include "Scene.h"
 #include "LightManager.h"
+#include "Renderer.h"
 
 int Management::Update(float _timeDelta)
 {
@@ -21,7 +22,7 @@ void Management::Render()
 {
 	SceneMgr->Render();
 
-	ObjectMgr->Render();
+	renderer->Render();
 }
 
 void Management::UpdateInputDevice()
@@ -89,9 +90,11 @@ void Management::Initialize(HINSTANCE hInst, HWND hWnd, int SceneCnt, int screen
 	ObjectMgr = ObjectManager::GetInstance();
 	Pipeline = PipeLine::GetInstance();
 	LightMgr = LightManager::GetInstance();
+	renderer = Renderer::GetInstance();
 
 	GraphicDevice::GetInstance()->Initialize(screenWidth, screenHeight, vsync, hWnd, fullscreen, screenDepth, screenNear);
 	InputDevice::GetInstance()->Initialize(hInst, hWnd, screenWidth, screenHeight);
 
 	ObjectMgr->ReserveLayerMap(SceneCnt);
+	renderer->Initialize();
 }
