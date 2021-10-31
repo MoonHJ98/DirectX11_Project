@@ -3,7 +3,6 @@
 #include "Includes.h"
 
 class GraphicDevice;
-class Shader;
 
 class OrthoWindow
 {
@@ -22,7 +21,7 @@ public:
 	~OrthoWindow();
 
 private:
-	HRESULT Initialize(int _windowWidth, int _windowHeight);
+	HRESULT Initialize();
 	HRESULT InitializeBuffers(int _windowWidth, int _windowHeight);
 	void	RenderBuffers();
 
@@ -30,9 +29,12 @@ public:
 	void Render();
 	int GetIndexCount();
 
+public:
+	static shared_ptr<OrthoWindow> Create();
+
 private:
 	shared_ptr<GraphicDevice> Graphic = nullptr;
-	shared_ptr<Shader> shader = nullptr;
+
 	ComPtr<ID3D11Buffer> vertexBuffer = nullptr;
 	ComPtr<ID3D11Buffer> indexBuffer = nullptr;
 	int vertexCount = 0;

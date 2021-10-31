@@ -19,10 +19,24 @@ DeferredBuffer::~DeferredBuffer()
 
 HRESULT DeferredBuffer::Initialize(int _textureWidth, int _textureHeight, float _screenDepth, float _screenNear)
 {
-	auto renderTarget1 = RenderTarget::Create(Vector3(-290.f, 190.f, 0.1f), Vector3(100.f, 100.f, 1.f), Vector4(1.f, 1.f, 1.f, 1.f));
-	renderTargets.push_back(renderTarget1);
-	auto renderTarget2 = RenderTarget::Create(Vector3(-90.f, 190.f, 0.1f), Vector3(100.f, 100.f, 1.f), Vector4(1.f, 1.f, 1.f, 1.f));
-	renderTargets.push_back(renderTarget2);
+	auto Diffuse = RenderTarget::Create(Vector3(-350.f, 250.f, 0.1f), Vector3(50.f, 50.f, 1.f), Vector4(1.f, 1.f, 1.f, 1.f));
+	renderTargets.push_back(Diffuse);
+
+	auto Normal = RenderTarget::Create(Vector3(-250.f, 250.f, 0.1f), Vector3(50.f, 50.f, 1.f), Vector4(1.f, 1.f, 1.f, 1.f));
+	renderTargets.push_back(Normal);
+
+	auto SpecularMap = RenderTarget::Create(Vector3(-350.f, 150.f, 0.1f), Vector3(50.f, 50.f, 1.f), Vector4(1.f, 1.f, 1.f, 1.f));
+	renderTargets.push_back(SpecularMap);
+
+	auto ViewDirection = RenderTarget::Create(Vector3(-250.f, 150.f, 0.1f), Vector3(50.f, 50.f, 1.f), Vector4(1.f, 1.f, 1.f, 1.f));
+	renderTargets.push_back(ViewDirection);
+
+	auto shade = RenderTarget::Create(Vector3(-350.f, 50.f, 0.1f), Vector3(50.f, 50.f, 1.f), Vector4(1.f, 1.f, 1.f, 1.f));
+	renderTargets.push_back(shade);
+
+	auto specular = RenderTarget::Create(Vector3(-250.f, 50.f, 0.1f), Vector3(50.f, 50.f, 1.f), Vector4(1.f, 1.f, 1.f, 1.f));
+	renderTargets.push_back(specular);
+
 
 	Graphic = GraphicDevice::GetInstance();
 
@@ -159,13 +173,10 @@ void DeferredBuffer::ClearRenderTargets(wstring MRTTag, float _red, float _green
 	auto renderTargetVector = FindMultiRenderTarget(MRTTag);
 
 	// ·»´õ Å¸°Ù ¹öÆÛ¸¦ Áö¿ó´Ï´Ù.
-	//for (int i = 0; i < BUFFER_END; i++)
-	//{
-	//	Graphic->GetDeviceContext()->ClearRenderTargetView(renderTargetViewArray[i].Get(), color);
-	//}
+
 	for (size_t i = 0; i< renderTargetVector->size(); ++i)
 	{
-	
+		
 		Graphic->GetDeviceContext()->ClearRenderTargetView(renderTargetVector->data()[i], color);
 	}
 
@@ -179,12 +190,6 @@ void DeferredBuffer::SetRenderTargets(wstring MRTTag)
 
 	auto renderTargetVector = FindMultiRenderTarget(MRTTag);
 
-	
-	//ID3D11RenderTargetView* rtv[2] =
-	//{ 
-	//	renderTargetViewArray[0].Get(),
-	//    renderTargetViewArray[1].Get()
-	//};
 	Graphic->GetDeviceContext()->OMSetRenderTargets(renderTargetVector->size(), renderTargetVector->data(), depthStencilView.Get());
 
 	// ºäÆ÷Æ®¸¦ ¼³Á¤ÇÕ´Ï´Ù.
@@ -204,7 +209,7 @@ void DeferredBuffer::BeginMRT(wstring MRTTag)
 {
 	SetRenderTargets(MRTTag);
 	
-	ClearRenderTargets(MRTTag, 1.f, 1.f, 1.f, 1.f);
+	ClearRenderTargets(MRTTag, 0.f, 0.f, 1.f, 1.f);
 }
 
 void DeferredBuffer::EndMRT()

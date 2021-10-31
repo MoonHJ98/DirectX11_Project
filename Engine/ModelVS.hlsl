@@ -24,7 +24,9 @@ struct VertexOutput
     float3 BiTangent : BITANGENT;
     float4 BlendWeights : BLENDWEIGHTS;
     float4 BlendIndices : BLENDINDICES;  
-    float3 ViewDirection : TEXCOORD1;
+    //float3 ViewDirection : TEXCOORD1;
+    float4 WorldPos : TEXCOORD1;
+    float4 ProjPos : TEXCOORD2;
 
 };
 
@@ -142,7 +144,9 @@ VertexOutput main(VertexModel input)
     Out.Normal = normalize(mul(float4(input.Normal, 0.f), WorldMatrix));
     
     float4 WorldPosition = mul(float4(input.Position, 1.f), WorldMatrix);
-    Out.ViewDirection = normalize(CameraPosition.xyz - WorldPosition.xyz);
+    Out.WorldPos = WorldPosition;
+    Out.ProjPos = Out.Position;
+    //Out.ViewDirection = normalize(CameraPosition.xyz - WorldPosition.xyz);
 
     
     Out.Tangent = normalize(mul(float4(input.Tangent, 0.f), WorldMatrix));

@@ -361,6 +361,13 @@
     <FxCompile Include="TextureVS.hlsl">
       <Filter>02. Includes\01. HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="LightAccPS.hlsl" />
+    <FxCompile Include="LightPS.hlsl">
+      <Filter>02. Includes\01. HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="LightVS.hlsl">
+      <Filter>02. Includes\01. HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="BlendVS.hlsl" />
+    <FxCompile Include="BlendPS.hlsl" />
   </ItemGroup>
 </Project>

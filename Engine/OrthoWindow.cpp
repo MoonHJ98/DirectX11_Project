@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "OrthoWindow.h"
 #include "GraphicDevice.h"
-#include "Shader.h"
 
 OrthoWindow::OrthoWindow()
 {
@@ -15,11 +14,15 @@ OrthoWindow::~OrthoWindow()
 {
 }
 
-HRESULT OrthoWindow::Initialize(int _windowWidth, int _windowHeight)
+HRESULT OrthoWindow::Initialize()
 {
 	Graphic = GraphicDevice::GetInstance();
 
-	return InitializeBuffers(_windowWidth, _windowHeight);
+	UINT num = 1;
+	D3D11_VIEWPORT viewport;
+	Graphic->GetDeviceContext()->RSGetViewports(&num, &viewport);
+
+	return InitializeBuffers((int)viewport.Width, (int)viewport.Height);
 }
 
 HRESULT OrthoWindow::InitializeBuffers(int _windowWidth, int _windowHeight)
@@ -164,4 +167,17 @@ void OrthoWindow::Render()
 int OrthoWindow::GetIndexCount()
 {
 	return 0;
+}
+
+shared_ptr<OrthoWindow> OrthoWindow::Create()
+{
+	shared_ptr<OrthoWindow> Instnace(new OrthoWindow());
+
+
+	if (FAILED(Instnace->Initialize()))
+	{
+		MSG_BOX("Failed to create OrthoWindow.");
+		return nullptr;
+	}
+	return Instnace;
 }

@@ -45,10 +45,10 @@ HRESULT RenderTarget::Initialize(Vector3 _position, Vector3 bitmapScale, Vector4
 
 void RenderTarget::Render(ID3D11ShaderResourceView* _ShaderResourceView)
 {
-	transform->Update(true);
-
 
 	shader->Render();
+
+	transform->Update(true);
 
 	Graphic->GetDeviceContext()->PSSetShaderResources(0, 1, &_ShaderResourceView);
 

@@ -51,8 +51,8 @@ HRESULT MainApp::Initialize()
 	lightDesc.Diffuse = Color(1.f, 1.f, 1.f, 1.f);
 	lightDesc.Specular = Color(1.f, 1.f, 1.f, 1.f);
 	lightDesc.Ambient = Color(0.3f, 0.3f, 0.3f, 1.f);
-	lightDesc.Direction = Vector3(1.f, 0.5f, 1.f);
-	lightDesc.SpecularPower = 10.f;
+	lightDesc.Direction = Vector3(0.f, -0.5f, 1.f);
+	lightDesc.SpecularPower = 5.f;
 
 
 	Manage->AddLight(lightDesc, L"DirectionalLight");

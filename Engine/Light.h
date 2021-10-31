@@ -3,8 +3,10 @@
 #include "Includes.h"
 
 class GraphicDevice;
-
 class Shader;
+class Transform;
+class RectangleBuffer;
+
 
 class Light
 {
@@ -36,8 +38,6 @@ private:
 	HRESULT Initialize(LIGHTDESC _LightInfo);
 
 public:
-	void Render(shared_ptr<Shader> shader);
-public:
 	static shared_ptr<Light> Create(LIGHTDESC _LightInfo);
 
 private:
@@ -45,5 +45,7 @@ private:
 	LIGHTDESC LightInfo;
 	shared_ptr<ConstantBuffer<LightBufferType>> LightBuffer = nullptr;
 
+	shared_ptr<RectangleBuffer> rb = nullptr;
+	shared_ptr<Transform> transform = nullptr;
 };
 

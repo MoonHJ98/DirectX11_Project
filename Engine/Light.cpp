@@ -2,6 +2,8 @@
 #include "Light.h"
 #include "GraphicDevice.h"
 #include "Shader.h"
+#include "Transform.h"
+#include "RectangleBuffer.h"
 
 Light::Light()
 {
@@ -28,6 +30,11 @@ void Light::Render()
 	LightBuffer->SetData(Graphic->GetDeviceContext(), buffertype);
 	auto buffer = LightBuffer->GetBuffer();
 	Graphic->GetDeviceContext()->PSSetConstantBuffers(0, 1, &buffer);
+
+
+	transform->Update(true);
+
+	rb->Render();
 }
 
 HRESULT Light::Initialize(LIGHTDESC _LightInfo)
@@ -38,6 +45,15 @@ HRESULT Light::Initialize(LIGHTDESC _LightInfo)
 	LightBuffer = temp;
 	LightBuffer->Create(Graphic->GetDevice());
 
+	rb = RectangleBuffer::Create();
+	transform = Transform::Create(Transform::TRANSDESC());
+	transform->SetState(Transform::POSITION, Vector3(0.f, 0.f, 0.1f));
+
+	UINT viewportNum = 1;
+	D3D11_VIEWPORT viewport;
+	Graphic->GetDeviceContext()->RSGetViewports(&viewportNum, &viewport);
+
+	transform->SetScale(Vector3(viewport.Width/2.f, viewport.Height/2.f, 1.f));
 	return S_OK;
 }
 

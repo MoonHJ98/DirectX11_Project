@@ -291,9 +291,6 @@ int Model::Update(float _timeDelta)
 
 void Model::Render()
 {
-	auto light = Management::GetInstance()->FindLight(L"DirectionalLight", 0);
-
-	light->Render();
 
 	animator->Render();
 	shader->Render();

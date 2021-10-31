@@ -21,7 +21,7 @@ private:
 
 public:
 	void Render(ID3D11ShaderResourceView* _ShaderResourceView);
-
+	Vector4 GetClearColor() { return ClearColor; }
 
 public:
 	static shared_ptr<RenderTarget> Create(Vector3 _position, Vector3 bitmapScale, Vector4 _ClearColor);

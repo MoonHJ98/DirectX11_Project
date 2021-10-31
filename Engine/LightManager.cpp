@@ -44,3 +44,12 @@ shared_ptr<Light> LightManager::FindLight(wstring _LightTag, UINT _Index)
 
 	return *light;
 }
+
+void LightManager::Render()
+{
+	for (auto& Pair : LightMap)
+	{
+		for (auto iter = Pair.second.begin(); iter != Pair.second.end(); ++iter)
+			(*iter)->Render();
+	}
+}

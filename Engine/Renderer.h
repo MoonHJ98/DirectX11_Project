@@ -8,6 +8,9 @@ class DeferredBuffer;
 class LightManager;
 class Shader;
 class RenderTargetManager;
+class RectangleBuffer;
+class Transform;
+class Management;
 
 class Renderer
 {
@@ -18,6 +21,13 @@ public:
 
 	typedef list<shared_ptr<GameObject>>		RENDERGROUP;
 
+	struct ProjtoWorldType //16바이트의 배수로 패딩
+	{
+		Matrix ProjInv;
+		Matrix ViewInv;
+		Vector3 CamPos;
+		float padding;
+	};
 
 public:
 	HRESULT Initialize();
@@ -31,7 +41,7 @@ private:
 	void RenderNonAlpha();
 	void RenderAlpha();
 	void RenderUI();
-	void RenderLightAcc();
+	void RenderLight();
 	void RenderBlend();
 
 public:
@@ -42,10 +52,15 @@ private:
 	RENDERGROUP	RenderGroup[RENDER_END];
 
 	shared_ptr<DeferredBuffer> deferredBuffer;
-	//shared_ptr<RenderTargetManager> renderTargetMGR;
 
 	shared_ptr<LightManager> LightMgr;
 
 	shared_ptr<Shader> lightShader = nullptr;
+	shared_ptr<Shader> blendShader = nullptr;
+
+	shared_ptr<RectangleBuffer> rectangleBuffer = nullptr;
+	shared_ptr<Transform> transform = nullptr;
+	shared_ptr<ConstantBuffer<ProjtoWorldType>> projToWorld;
+	shared_ptr<Management> Manage = nullptr;
 };
 

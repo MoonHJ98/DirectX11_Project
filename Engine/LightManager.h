@@ -18,6 +18,7 @@ public:
 	HRESULT				FindLightList(wstring _LightTag);
 	shared_ptr<Light>	FindLight(wstring _LightTag, UINT _Index);
 
+	void Render();
 
 private:
 	LIGHTLIST			LightList;

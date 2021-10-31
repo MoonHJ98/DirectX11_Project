@@ -16,22 +16,27 @@ struct PixelInput
     float3 BiTangent : BITANGENT;
     float4 BlendWeights : BLENDWEIGHTS;
     float4 BlendIndices : BLENDINDICES;
-    float3 ViewDirection : TEXCOORD1;
+    //float3 ViewDirection : TEXCOORD1;
+    vector WorldPos : TEXCOORD1;
+    vector ProjPos : TEXCOORD2;
 };
 struct PixelOutput
 {
     float4 Color : SV_TARGET0;
     float4 Normal : SV_TARGET1;
+    float4 Specular : SV_TARGET2;
+    float4 Depth : SV_TARGET3;
+    float3 ViewDirection : SV_TARGET3;
 };
 
-cbuffer LightBuffer : register(b0)
-{
-    float4 DiffuseColor;
-    float4 AmbientColor;
-    float4 SpecularColor;
-    float3 LightDirection;
-    float SpecularPower;  
-};
+//cbuffer LightBuffer : register(b0)
+//{
+//    float4 DiffuseColor;
+//    float4 AmbientColor;
+//    float4 SpecularColor;
+//    float3 LightDirection;
+//    float SpecularPower;  
+//};
 
 PixelOutput main(PixelInput input) : SV_TARGET
 {
@@ -56,6 +61,10 @@ PixelOutput main(PixelInput input) : SV_TARGET
 
     Out.Color = textureColor;
     Out.Normal = float4(normal, 0.f);
+    Out.Specular = SpecularTexture.Sample(SampleType, input.Uv);
+    Out.Depth = vector(input.ProjPos.z / input.ProjPos.w, input.ProjPos.w / 1000.f, 0.f, 0.f);
+
+    //Out.ViewDirection = input.ViewDirection;
     return Out;
 
 
