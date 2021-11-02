@@ -49,9 +49,12 @@ PSOut main(PSInput input) : SV_TARGET
 
     normal = NormalTexture.Sample(SampleType, input.Uv);
     specularIntensity = SpecularTexture.Sample(SampleType, input.Uv);
-   // viewDirection = ViewDirection.Sample(SampleType, input.Uv);
+    float4 vDepthInfo = DepthTexture.Sample(SampleType, input.Uv);
 
-    color = AmbientColor * 2;
+    
+    color = AmbientColor;
+    
+    
     lightDir = -LightDirection;
     float lightIntensity = saturate(dot(normal, lightDir));
 
@@ -61,7 +64,6 @@ PSOut main(PSInput input) : SV_TARGET
 
         // for Specular
         {
-            float4 vDepthInfo = DepthTexture.Sample(SampleType, input.Uv);
             float fViewZ = vDepthInfo.y * 1000.f; // 1000 : far
 
             vector vPosition;
@@ -84,8 +86,9 @@ PSOut main(PSInput input) : SV_TARGET
     
         }
     }
-    color = saturate(DiffuseColor * lightIntensity);
 
+
+    
     Out.shade = color;
     Out.specular = specular;
     return Out;

@@ -40,11 +40,11 @@ struct PixelOutput
 
 PixelOutput main(PixelInput input) : SV_TARGET
 {
-    float4 textureColor;
+    float4 textureColor = float4(0.f, 0.f, 1.f, 1.f);
     float4 color;
     float3 reflection;
     float4 specular = float4(0.f, 0.f, 0.f, 0.f);
-    float4 normalMap;
+    float4 normalMap = float4(0.f, 0.f, 1.f, 1.f);
     float3 normal;
     float4 specularIntensity; // for Specular Mapping
 

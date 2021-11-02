@@ -48,10 +48,10 @@ HRESULT MainApp::Initialize()
 	//Light
 	LIGHTDESC lightDesc;
 	lightDesc.Type = D3DLIGHT_DIRECTIONAL;
-	lightDesc.Diffuse = Color(1.f, 1.f, 1.f, 1.f);
-	lightDesc.Specular = Color(1.f, 1.f, 1.f, 1.f);
-	lightDesc.Ambient = Color(0.3f, 0.3f, 0.3f, 1.f);
-	lightDesc.Direction = Vector3(0.f, -0.5f, 1.f);
+	lightDesc.Diffuse = Color(0.5f, 0.5f, 0.5f, 1.f);
+	lightDesc.Specular = Color(0.5f, 0.5f, 0.5f, 1.f);
+	lightDesc.Ambient = Color(0.4f, 0.4f, 0.4f, 1.f);
+	lightDesc.Direction = Vector3(-0.5f, -0.5f, 1.f);
 	lightDesc.SpecularPower = 5.f;
 
 
@@ -62,7 +62,6 @@ HRESULT MainApp::Initialize()
 		MSG_BOX("Failed to create Scene.");
 		return E_FAIL;
 	}
-
 
 	return S_OK;
 }
