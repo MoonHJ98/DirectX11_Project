@@ -26,7 +26,6 @@ struct PixelOutput
     float4 Normal : SV_TARGET1;
     float4 Specular : SV_TARGET2;
     float4 Depth : SV_TARGET3;
-    float3 ViewDirection : SV_TARGET3;
 };
 
 //cbuffer LightBuffer : register(b0)

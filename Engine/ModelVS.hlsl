@@ -24,7 +24,7 @@ struct VertexOutput
     float3 BiTangent : BITANGENT;
     float4 BlendWeights : BLENDWEIGHTS;
     float4 BlendIndices : BLENDINDICES;  
-    //float3 ViewDirection : TEXCOORD1;
+
     float4 WorldPos : TEXCOORD1;
     float4 ProjPos : TEXCOORD2;
 

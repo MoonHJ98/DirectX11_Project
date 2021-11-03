@@ -240,6 +240,7 @@
     <ClInclude Include="RectangleBuffer.h">
       <Filter>01. Utility\03. Component\01. Buffer\00. Rectangle</Filter>
     </ClInclude>
+    <ClInclude Include="TerrainBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -344,6 +345,7 @@
     <ClCompile Include="RectangleBuffer.cpp">
       <Filter>01. Utility\03. Component\01. Buffer\00. Rectangle</Filter>
     </ClCompile>
+    <ClCompile Include="TerrainBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="ModelVS.hlsl">
@@ -370,5 +372,7 @@
     <FxCompile Include="BlendVS.hlsl">
       <Filter>02. Includes\01. HLSL</Filter>
     </FxCompile>
+    <FxCompile Include="ColorVS.hlsl" />
+    <FxCompile Include="ColorPS.hlsl" />
   </ItemGroup>
 </Project>

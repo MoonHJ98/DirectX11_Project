@@ -75,6 +75,15 @@ void Renderer::Render()
 
 void Renderer::RenderPriority()
 {
+	for (auto& pGameObject : RenderGroup[RENDER_PRIORITY])
+	{
+		if (nullptr != pGameObject)
+		{
+			pGameObject->Render();
+		}
+	}
+
+	RenderGroup[RENDER_PRIORITY].clear();
 }
 
 void Renderer::RenderNonAlpha()

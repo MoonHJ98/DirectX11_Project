@@ -6,6 +6,7 @@
 #include "GraphicDevice.h"
 #include "Scene.h"
 #include "Stage.h"
+#include "Terrain.h"
 
 
 MainApp::MainApp()
@@ -44,6 +45,9 @@ HRESULT MainApp::Initialize()
 
 	auto player = Player::Create(GraphicDev->GetDevice());
 	Manage->AddLayer(SCENEID::STATIC, L"Player", player);
+
+	auto terrain = Terrain::Create(100, 100, L"../Resources/heightmap01.bmp");
+	Manage->AddLayer(SCENEID::STATIC, L"Terrain", terrain);
 
 	//Light
 	LIGHTDESC lightDesc;

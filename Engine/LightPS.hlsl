@@ -51,8 +51,8 @@ PSOut main(PSInput input) : SV_TARGET
     specularIntensity = SpecularTexture.Sample(SampleType, input.Uv);
     float4 vDepthInfo = DepthTexture.Sample(SampleType, input.Uv);
 
-    
-    color = AmbientColor;
+    if (vDepthInfo.b != 1.f)
+        color = AmbientColor;
     
     
     lightDir = -LightDirection;
