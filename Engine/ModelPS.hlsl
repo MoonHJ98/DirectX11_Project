@@ -37,7 +37,7 @@ struct PixelOutput
 //    float SpecularPower;  
 //};
 
-PixelOutput main(PixelInput input) : SV_TARGET
+PixelOutput main(PixelInput input)
 {
     float4 textureColor = float4(0.f, 0.f, 1.f, 1.f);
     float4 color;

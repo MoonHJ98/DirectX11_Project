@@ -30,6 +30,7 @@ private:
 	HRESULT InitializeBuffer();
 	HRESULT LoadHeightMap(wstring _heightMapPath);
 	void NormalizeHeightMap();
+
 	void RenderBuffers();
 
 public:
@@ -40,8 +41,10 @@ public:
 
 private:
 	shared_ptr<GraphicDevice> Graphic = nullptr;
+
 	ComPtr<ID3D11Buffer> vertexBuffer = nullptr;
 	ComPtr<ID3D11Buffer> indexBuffer = nullptr;
+
 	HeightMapType* heightMap = nullptr;
 
 	UINT vertexCount = 0;

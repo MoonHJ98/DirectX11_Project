@@ -34,7 +34,7 @@ struct PSOut
     float4 specular : SV_TARGET1;
 };
 
-PSOut main(PSInput input) : SV_TARGET
+PSOut main(PSInput input)
 {
     PSOut Out;
 

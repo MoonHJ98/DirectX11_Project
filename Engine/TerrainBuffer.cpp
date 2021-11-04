@@ -33,6 +33,8 @@ HRESULT TerrainBuffer::Initialize(UINT _terrainWidth, UINT _terrainHeight, wstri
 		NormalizeHeightMap();
 	}
 
+
+
 	if (FAILED(InitializeBuffer()))
 	{
 		MSG_BOX("Failed to initial buffer for TerrainBuffer.");
@@ -46,7 +48,7 @@ HRESULT TerrainBuffer::Initialize(UINT _terrainWidth, UINT _terrainHeight, wstri
 HRESULT TerrainBuffer::InitializeBuffer()
 {
 	// 지형 메쉬의 정점 수를 계산합니다.
-	if(heightMap == nullptr)
+	if (heightMap == nullptr)
 		vertexCount = (terrainWidth - 1) * (terrainHeight - 1) * 8;
 	else
 		vertexCount = (terrainWidth - 1) * (terrainHeight - 1) * 12;
@@ -75,164 +77,56 @@ HRESULT TerrainBuffer::InitializeBuffer()
 	{
 		for (UINT i = 0; i < (terrainWidth - 1); i++)
 		{
-			
-			if (heightMap == nullptr)
-			{
-				// LINE 1
-				// 왼쪽 위.
-				float positionX = (float)i;
-				float positionZ = (float)(j + 1);
 
-				vertices[index].position = Vector3(positionX, 0.0f, positionZ);
-				vertices[index].color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-				indices[index] = index;
-				index++;
+			// Get the indexes to the four points of the quad.
+			int index1 = (terrainWidth * j) + i;          // Upper left.
+			int index2 = (terrainWidth * j) + (i + 1);      // Upper right.
+			int index3 = (terrainWidth * (j + 1)) + i;      // Bottom left.
+			int index4 = (terrainWidth * (j + 1)) + (i + 1);  // Bottom right.
 
-				// 오른쪽 위.
-				positionX = (float)(i + 1);
-				positionZ = (float)(j + 1);
+			// Now create two triangles for that quad.
+			// Triangle 1 - Upper left.
+			vertices[index].position.x = heightMap[index1].x;
+			vertices[index].position.y = heightMap[index1].y;
+			vertices[index].position.z = heightMap[index1].z;
+			indices[index] = index;
+			index++;
 
-				vertices[index].position = Vector3(positionX, 0.0f, positionZ);
-				vertices[index].color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-				indices[index] = index;
-				index++;
+			// Triangle 1 - Upper right.
+			vertices[index].position.x = heightMap[index2].x;
+			vertices[index].position.y = heightMap[index2].y;
+			vertices[index].position.z = heightMap[index2].z;
+			indices[index] = index;
+			index++;
 
-				// LINE 2
-				// 오른쪽 위.
-				positionX = (float)(i + 1);
-				positionZ = (float)(j + 1);
+			// Triangle 1 - Bottom left.
+			vertices[index].position.x = heightMap[index3].x;
+			vertices[index].position.y = heightMap[index3].y;
+			vertices[index].position.z = heightMap[index3].z;
+			indices[index] = index;
+			index++;
 
-				vertices[index].position = Vector3(positionX, 0.0f, positionZ);
-				vertices[index].color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-				indices[index] = index;
-				index++;
+			// Triangle 2 - Bottom left.
+			vertices[index].position.x = heightMap[index3].x;
+			vertices[index].position.y = heightMap[index3].y;
+			vertices[index].position.z = heightMap[index3].z;
+			indices[index] = index;
+			index++;
 
-				// 오른쪽 아래.
-				positionX = (float)(i + 1);
-				positionZ = (float)j;
+			// Triangle 2 - Upper right.
+			vertices[index].position.x = heightMap[index2].x;
+			vertices[index].position.y = heightMap[index2].y;
+			vertices[index].position.z = heightMap[index2].z;
+			indices[index] = index;
+			index++;
 
-				vertices[index].position = Vector3(positionX, 0.0f, positionZ);
-				vertices[index].color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-				indices[index] = index;
-				index++;
+			// Triangle 2 - Bottom right.
+			vertices[index].position.x = heightMap[index4].x;
+			vertices[index].position.y = heightMap[index4].y;
+			vertices[index].position.z = heightMap[index4].z;
+			indices[index] = index;
+			index++;
 
-				// LINE 3
-				// 오른쪽 아래.
-				positionX = (float)(i + 1);
-				positionZ = (float)j;
-
-				vertices[index].position = Vector3(positionX, 0.0f, positionZ);
-				vertices[index].color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-				indices[index] = index;
-				index++;
-
-				// 왼쪽 아래.
-				positionX = (float)i;
-				positionZ = (float)j;
-
-				vertices[index].position = Vector3(positionX, 0.0f, positionZ);
-				vertices[index].color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-				indices[index] = index;
-				index++;
-
-				// LINE 4
-				// 왼쪽 아래.
-				positionX = (float)i;
-				positionZ = (float)j;
-
-				vertices[index].position = Vector3(positionX, 0.0f, positionZ);
-				vertices[index].color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-				indices[index] = index;
-				index++;
-
-				// 왼쪽 위.
-				positionX = (float)i;
-				positionZ = (float)(j + 1);
-
-				vertices[index].position = Vector3(positionX, 0.0f, positionZ);
-				vertices[index].color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-				indices[index] = index;
-				index++;
-			}
-			else
-			{
-				UINT index1 = (terrainHeight * j) + i;          // Bottom left.
-				UINT index2 = (terrainHeight * j) + (i + 1);      // Bottom right.
-				UINT index3 = (terrainHeight * (j + 1)) + i;      // Upper left.
-				UINT index4 = (terrainHeight * (j + 1)) + (i + 1);  // Upper right.
-
-				// Upper left.
-				vertices[index].position = Vector3(heightMap[index3].x, heightMap[index3].y, heightMap[index3].z);
-				vertices[index].color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-				indices[index] = index;
-				index++;
-
-				// Upper right.
-				vertices[index].position = Vector3(heightMap[index4].x, heightMap[index4].y, heightMap[index4].z);
-				vertices[index].color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-				indices[index] = index;
-				index++;
-
-				// Upper right.
-				vertices[index].position = Vector3(heightMap[index4].x, heightMap[index4].y, heightMap[index4].z);
-				vertices[index].color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-				indices[index] = index;
-				index++;
-
-				// Bottom left.
-				vertices[index].position = Vector3(heightMap[index1].x, heightMap[index1].y, heightMap[index1].z);
-				vertices[index].color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-				indices[index] = index;
-				index++;
-
-				// Bottom left.
-				vertices[index].position = Vector3(heightMap[index1].x, heightMap[index1].y, heightMap[index1].z);
-				vertices[index].color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-				indices[index] = index;
-				index++;
-
-				// Upper left.
-				vertices[index].position = Vector3(heightMap[index3].x, heightMap[index3].y, heightMap[index3].z);
-				vertices[index].color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-				indices[index] = index;
-				index++;
-
-				// Bottom left.
-				vertices[index].position = Vector3(heightMap[index1].x, heightMap[index1].y, heightMap[index1].z);
-				vertices[index].color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-				indices[index] = index;
-				index++;
-
-				// Upper right.
-				vertices[index].position = Vector3(heightMap[index4].x, heightMap[index4].y, heightMap[index4].z);
-				vertices[index].color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-				indices[index] = index;
-				index++;
-
-				// Upper right.
-				vertices[index].position = Vector3(heightMap[index4].x, heightMap[index4].y, heightMap[index4].z);
-				vertices[index].color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-				indices[index] = index;
-				index++;
-
-				// Bottom right.
-				vertices[index].position = Vector3(heightMap[index2].x, heightMap[index2].y, heightMap[index2].z);
-				vertices[index].color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-				indices[index] = index;
-				index++;
-
-				// Bottom right.
-				vertices[index].position = Vector3(heightMap[index2].x, heightMap[index2].y, heightMap[index2].z);
-				vertices[index].color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-				indices[index] = index;
-				index++;
-
-				// Bottom left.
-				vertices[index].position = Vector3(heightMap[index1].x, heightMap[index1].y, heightMap[index1].z);
-				vertices[index].color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-				indices[index] = index;
-				index++;
-			}
 		}
 	}
 
@@ -340,7 +234,10 @@ void TerrainBuffer::NormalizeHeightMap()
 	{
 		for (UINT i = 0; i < terrainWidth; i++)
 		{
-			heightMap[(terrainHeight * j) + i].y /= 15.0f;
+			UINT index = index = (terrainWidth * j) + i;
+			//heightMap[index].z += (float)(terrainHeight - 1);
+
+			heightMap[index].y /= 15.0f;
 		}
 	}
 }

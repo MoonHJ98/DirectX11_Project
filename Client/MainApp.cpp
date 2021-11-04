@@ -46,7 +46,7 @@ HRESULT MainApp::Initialize()
 	auto player = Player::Create(GraphicDev->GetDevice());
 	Manage->AddLayer(SCENEID::STATIC, L"Player", player);
 
-	auto terrain = Terrain::Create(100, 100, L"../Resources/heightmap01.bmp");
+	auto terrain = Terrain::Create(100, 100, L"../Resources/heightmap.bmp");
 	Manage->AddLayer(SCENEID::STATIC, L"Terrain", terrain);
 
 	//Light
