@@ -9,11 +9,23 @@ class TerrainBuffer
 	typedef struct VertexType
 	{
 		Vector3	position;
-		Vector4 color;
+		Vector2 uv;
+		Vector3 normal;
 
 	}VERTEXTYPE;
 
 	struct HeightMapType
+	{
+		float x, y, z;
+		float nx, ny, nz;
+	};
+	struct ModelType
+	{
+		float x, y, z;
+		float u, v;
+		float nx, ny, nz;
+	};
+	struct VectorType
 	{
 		float x, y, z;
 	};
@@ -29,7 +41,10 @@ private:
 	HRESULT Initialize(UINT _terrainWidth, UINT _terrainHeight, wstring _heightMapPath);
 	HRESULT InitializeBuffer();
 	HRESULT LoadHeightMap(wstring _heightMapPath);
-	void NormalizeHeightMap();
+	void SetTerrainCoordinates();
+	HRESULT BuildTerrainModel();
+	HRESULT CalculateNormal();
+
 
 	void RenderBuffers();
 
@@ -49,7 +64,9 @@ private:
 
 	UINT vertexCount = 0;
 	UINT indexCount = 0;
-	UINT terrainWidth = 0;
-	UINT terrainHeight = 0;
+	UINT terrainWidth = 257;
+	UINT terrainHeight = 257;
+	float heightScale = 12.f;
+	ModelType* terrainModel = nullptr;
 };
 

@@ -25,7 +25,7 @@ HRESULT Renderer::Initialize()
 	deferredBuffer->AddMultiRenderTarget(L"Deferred", DeferredBuffer::DIFFUSEMAP);
 	deferredBuffer->AddMultiRenderTarget(L"Deferred", DeferredBuffer::NORMALMAP);
 	deferredBuffer->AddMultiRenderTarget(L"Deferred", DeferredBuffer::SPECULARMAP);
-	deferredBuffer->AddMultiRenderTarget(L"Deferred", DeferredBuffer::VIEWDIRECTION);
+	deferredBuffer->AddMultiRenderTarget(L"Deferred", DeferredBuffer::DEPTH);
 
 
 	deferredBuffer->AddMultiRenderTarget(L"Light", DeferredBuffer::SHADE);
@@ -121,7 +121,7 @@ void Renderer::RenderLight()
 	
 	auto normal = deferredBuffer->GetShaderResourceView(DeferredBuffer::NORMALMAP);
 	auto specular = deferredBuffer->GetShaderResourceView(DeferredBuffer::SPECULARMAP);
-	auto viewDirection = deferredBuffer->GetShaderResourceView(DeferredBuffer::VIEWDIRECTION);
+	auto viewDirection = deferredBuffer->GetShaderResourceView(DeferredBuffer::DEPTH);
 	
 	Graphic->GetDeviceContext()->PSSetShaderResources(0, 1, &normal);
 	Graphic->GetDeviceContext()->PSSetShaderResources(1, 1, &specular);

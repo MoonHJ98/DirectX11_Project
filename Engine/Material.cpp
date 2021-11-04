@@ -38,6 +38,9 @@ void Material::SetDiffuseMap(wstring file)
 {
 	diffuseMap.reset();
 
+	if (file == L"")
+		return;
+
 	TEXTUREDESC desc;
 	desc.MaterialName = name;
 	desc.Path = file;
@@ -51,6 +54,9 @@ void Material::SetSpecularMap(wstring file)
 {
 	specularMap.reset();
 
+	if (file == L"")
+		return;
+
 	TEXTUREDESC desc;
 	desc.MaterialName = name;
 	desc.Path = file;
@@ -63,6 +69,10 @@ void Material::SetSpecularMap(wstring file)
 void Material::SetNormalMap(wstring file)
 {
 	normalMap.reset();
+
+	if (file == L"")
+		return;
+
 
 	TEXTUREDESC desc;
 	desc.MaterialName = name;

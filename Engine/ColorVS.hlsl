@@ -10,15 +10,17 @@ cbuffer MatrixBuffer
 struct VertexInputType
 {
     float3 position : POSITION;
-    float4 color : COLOR;
+    float2 uv : TEXCOORD0;
+    float3 normal : NORMAL;
 };
 
 struct PixelInputType
 {
     float4 position : SV_POSITION;
-    float4 color : COLOR;
-    float4 WorldPos : TEXCOORD0;
-    float4 ProjPos : TEXCOORD1;
+    float2 uv : TEXCOORD0;
+    float4 normal : NORMAL;
+    float4 WorldPos : TEXCOORD1;
+    float4 ProjPos : TEXCOORD2;
 };
 
 
@@ -30,7 +32,8 @@ PixelInputType main(VertexInputType input)
     output.position = mul(output.position, viewMatrix);
     output.position = mul(output.position, projectionMatrix);
     
-    output.color = input.color;
+    output.uv = input.uv;
+    output.normal = normalize(mul(float4(input.normal, 0.f), worldMatrix));
     
     float4 WorldPosition = mul(float4(input.position, 1.f), worldMatrix);
     output.WorldPos = WorldPosition;

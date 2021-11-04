@@ -20,19 +20,33 @@ HRESULT TerrainBuffer::Initialize(UINT _terrainWidth, UINT _terrainHeight, wstri
 {
 	Graphic = GraphicDevice::GetInstance();
 
-	terrainWidth = _terrainWidth;
-	terrainHeight = _terrainHeight;
+	//terrainWidth = _terrainWidth;
+	//terrainHeight = _terrainHeight;
 
 	if (_heightMapPath != L"")
 	{
 		if (FAILED(LoadHeightMap(_heightMapPath)))
 		{
-			MSG_BOX("Failed to load height map for TerrainBuffer.");
+			MSG_BOX("Failed to load height map.");
 			return E_FAIL;
 		}
-		NormalizeHeightMap();
+		SetTerrainCoordinates();
 	}
 
+	if (FAILED(CalculateNormal()))
+	{
+		MSG_BOX("Failed to calculate normal.");
+		return E_FAIL;
+	}
+
+	if (FAILED(BuildTerrainModel()))
+	{
+		MSG_BOX("Failed to create terrain model.");
+		return E_FAIL;
+	}
+
+	delete heightMap;
+	heightMap = nullptr;
 
 
 	if (FAILED(InitializeBuffer()))
@@ -41,206 +55,469 @@ HRESULT TerrainBuffer::Initialize(UINT _terrainWidth, UINT _terrainHeight, wstri
 		return E_FAIL;
 	}
 
+	delete terrainModel;
+	terrainModel = nullptr;
 
 	return S_OK;
 }
 
 HRESULT TerrainBuffer::InitializeBuffer()
 {
-	// 지형 메쉬의 정점 수를 계산합니다.
-	if (heightMap == nullptr)
-		vertexCount = (terrainWidth - 1) * (terrainHeight - 1) * 8;
-	else
-		vertexCount = (terrainWidth - 1) * (terrainHeight - 1) * 12;
+	VertexType* vertices;
+	unsigned long* indices;
+	D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
+	D3D11_SUBRESOURCE_DATA vertexData, indexData;
+	HRESULT result;
+	UINT i;
+	XMFLOAT4 color;
 
 
-	// 인덱스 수를 꼭지점 수와 같게 설정합니다.
+	// Set the color of the terrain grid.
+	color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+
+	// Calculate the number of vertices in the terrain.
+	vertexCount = (terrainWidth - 1) * (terrainHeight - 1) * 6;
+
+	// Set the index count to the same as the vertex count.
 	indexCount = vertexCount;
 
-	// 정점 배열을 만듭니다.
-	VertexType* vertices = new VertexType[vertexCount];
+	// Create the vertex array.
+	vertices = new VertexType[vertexCount];
 	if (!vertices)
 	{
 		return false;
 	}
 
-	// 인덱스 배열을 만듭니다.
-	ULONG* indices = new ULONG[indexCount];
+	// Create the index array.
+	indices = new unsigned long[indexCount];
 	if (!indices)
-		return E_FAIL;
-
-	// 정점 배열에 대한 인덱스를 초기화합니다.
-	int index = 0;
-
-	// 지형 데이터로 정점 및 인덱스 배열을 로드합니다.
-	for (UINT j = 0; j < (terrainHeight - 1); j++)
 	{
-		for (UINT i = 0; i < (terrainWidth - 1); i++)
-		{
-
-			// Get the indexes to the four points of the quad.
-			int index1 = (terrainWidth * j) + i;          // Upper left.
-			int index2 = (terrainWidth * j) + (i + 1);      // Upper right.
-			int index3 = (terrainWidth * (j + 1)) + i;      // Bottom left.
-			int index4 = (terrainWidth * (j + 1)) + (i + 1);  // Bottom right.
-
-			// Now create two triangles for that quad.
-			// Triangle 1 - Upper left.
-			vertices[index].position.x = heightMap[index1].x;
-			vertices[index].position.y = heightMap[index1].y;
-			vertices[index].position.z = heightMap[index1].z;
-			indices[index] = index;
-			index++;
-
-			// Triangle 1 - Upper right.
-			vertices[index].position.x = heightMap[index2].x;
-			vertices[index].position.y = heightMap[index2].y;
-			vertices[index].position.z = heightMap[index2].z;
-			indices[index] = index;
-			index++;
-
-			// Triangle 1 - Bottom left.
-			vertices[index].position.x = heightMap[index3].x;
-			vertices[index].position.y = heightMap[index3].y;
-			vertices[index].position.z = heightMap[index3].z;
-			indices[index] = index;
-			index++;
-
-			// Triangle 2 - Bottom left.
-			vertices[index].position.x = heightMap[index3].x;
-			vertices[index].position.y = heightMap[index3].y;
-			vertices[index].position.z = heightMap[index3].z;
-			indices[index] = index;
-			index++;
-
-			// Triangle 2 - Upper right.
-			vertices[index].position.x = heightMap[index2].x;
-			vertices[index].position.y = heightMap[index2].y;
-			vertices[index].position.z = heightMap[index2].z;
-			indices[index] = index;
-			index++;
-
-			// Triangle 2 - Bottom right.
-			vertices[index].position.x = heightMap[index4].x;
-			vertices[index].position.y = heightMap[index4].y;
-			vertices[index].position.z = heightMap[index4].z;
-			indices[index] = index;
-			index++;
-
-		}
+		return false;
 	}
 
-	if (FAILED(CreateStaticBuffer(Graphic->GetDevice(), vertices, vertexCount, sizeof(VertexType), D3D11_BIND_VERTEX_BUFFER, vertexBuffer.GetAddressOf())))
+	// Load the vertex array and index array with 3D terrain model data.
+	for (i = 0; i < vertexCount; i++)
 	{
-		MSG_BOX("Failed to create vertex buffer for TerrainBuffer.");
-		return E_FAIL;
+		vertices[i].position = XMFLOAT3(terrainModel[i].x, terrainModel[i].y, terrainModel[i].z);
+		vertices[i].uv = XMFLOAT2(terrainModel[i].u, terrainModel[i].v);
+		vertices[i].normal = XMFLOAT3(terrainModel[i].nx, terrainModel[i].ny, terrainModel[i].nz);
+		indices[i] = i;
 	}
 
-	if (FAILED(CreateStaticBuffer(Graphic->GetDevice(), indices, indexCount, sizeof(ULONG), D3D11_BIND_INDEX_BUFFER, indexBuffer.GetAddressOf())))
+	// Set up the description of the static vertex buffer.
+	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	vertexBufferDesc.ByteWidth = sizeof(VertexType) * vertexCount;
+	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	vertexBufferDesc.CPUAccessFlags = 0;
+	vertexBufferDesc.MiscFlags = 0;
+	vertexBufferDesc.StructureByteStride = 0;
+
+	// Give the subresource structure a pointer to the vertex data.
+	vertexData.pSysMem = vertices;
+	vertexData.SysMemPitch = 0;
+	vertexData.SysMemSlicePitch = 0;
+
+	// Now create the vertex buffer.
+	result = Graphic->GetDevice()->CreateBuffer(&vertexBufferDesc, &vertexData, vertexBuffer.GetAddressOf());
+	if (FAILED(result))
 	{
-		MSG_BOX("Failed to create index buffer for TerrainBuffer.");
-		return E_FAIL;
+		return false;
 	}
 
+	// Set up the description of the static index buffer.
+	indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	indexBufferDesc.ByteWidth = sizeof(unsigned long) * indexCount;
+	indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	indexBufferDesc.CPUAccessFlags = 0;
+	indexBufferDesc.MiscFlags = 0;
+	indexBufferDesc.StructureByteStride = 0;
 
-	// 이제 버퍼가 생성되고 로드된 배열을 해제하십시오.
+	// Give the subresource structure a pointer to the index data.
+	indexData.pSysMem = indices;
+	indexData.SysMemPitch = 0;
+	indexData.SysMemSlicePitch = 0;
+
+	// Create the index buffer.
+	result = Graphic->GetDevice()->CreateBuffer(&indexBufferDesc, &indexData, indexBuffer.GetAddressOf());
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	// Release the arrays now that the buffers have been created and loaded.
 	delete[] vertices;
-	vertices = nullptr;
+	vertices = 0;
 
 	delete[] indices;
-	indices = nullptr;
-
+	indices = 0;
 	return S_OK;
 }
 
 HRESULT TerrainBuffer::LoadHeightMap(wstring _heightMapPath)
 {
-	// 바이너리 모드로 높이맵 파일을 엽니다.
-	FILE* filePtr = nullptr;
-
-	if (_wfopen_s(&filePtr, _heightMapPath.c_str(), L"rb") != 0)
-		return E_FAIL;
-
-
-	// 파일 헤더를 읽습니다.
+	int error, imageSize;
+	UINT i, j, k, index;
+	FILE* filePtr;
+	unsigned long long count;
 	BITMAPFILEHEADER bitmapFileHeader;
-	if (fread(&bitmapFileHeader, sizeof(BITMAPFILEHEADER), 1, filePtr) != 1)
-		return E_FAIL;
-
-
-	// 비트맵 정보 헤더를 읽습니다.
 	BITMAPINFOHEADER bitmapInfoHeader;
-	if (fread(&bitmapInfoHeader, sizeof(BITMAPINFOHEADER), 1, filePtr) != 1)
-		return E_FAIL;
+	unsigned char* bitmapImage;
+	unsigned char height;
 
-	// 지형의 크기를 저장합니다.
-	terrainWidth = bitmapInfoHeader.biWidth;
-	terrainHeight = bitmapInfoHeader.biHeight;
 
-	// 비트맵 이미지 데이터의 크기를 계산합니다.
-	int imageSize = terrainWidth * terrainHeight * 3;
-
-	// 비트맵 이미지 데이터에 메모리를 할당합니다.
-	unsigned char* bitmapImage = new unsigned char[imageSize];
-	if (!bitmapImage)
-		return E_FAIL;
-
-	// 비트맵 데이터의 시작 부분으로 이동합니다.
-	fseek(filePtr, bitmapFileHeader.bfOffBits, SEEK_SET);
-
-	// 비트맵 이미지 데이터를 읽습니다.
-	if (fread(bitmapImage, 1, imageSize, filePtr) != imageSize)
-		return E_FAIL;
-
-	// 파일을 닫습니다.
-	if (fclose(filePtr) != 0)
-		return E_FAIL;
-
-	// 높이 맵 데이터를 저장할 구조체를 만듭니다.
+	// Start by creating the array structure to hold the height map data.
 	heightMap = new HeightMapType[terrainWidth * terrainHeight];
 	if (!heightMap)
-		return E_FAIL;
-
-	// 이미지 데이터 버퍼의 위치를 ​​초기화합니다.
-	int k = 0;
-
-	// 이미지 데이터를 높이 맵으로 읽어들입니다.
-	for (UINT j = 0; j < terrainHeight; j++)
 	{
-		for (UINT i = 0; i < terrainWidth; i++)
-		{
-			unsigned char height = bitmapImage[k];
-
-			int index = (terrainHeight * j) + i;
-
-			heightMap[index].x = (float)i;
-			heightMap[index].y = (float)height;
-			heightMap[index].z = (float)j;
-
-			k += 3;
-		}
+		return E_FAIL;
 	}
 
-	// 비트맵 이미지 데이터를 해제합니다.
+	// Open the bitmap map file in binary.
+	error = _wfopen_s(&filePtr, _heightMapPath.c_str(), L"rb");
+	if (error != 0)
+	{
+		return E_FAIL;
+	}
+
+	// Read in the bitmap file header.
+	count = fread(&bitmapFileHeader, sizeof(BITMAPFILEHEADER), 1, filePtr);
+	if (count != 1)
+	{
+		return E_FAIL;
+	}
+
+	// Read in the bitmap info header.
+	count = fread(&bitmapInfoHeader, sizeof(BITMAPINFOHEADER), 1, filePtr);
+	if (count != 1)
+	{
+		return E_FAIL;
+	}
+
+	// Make sure the height map dimensions are the same as the terrain dimensions for easy 1 to 1 mapping.
+	if ((bitmapInfoHeader.biHeight != terrainHeight) || (bitmapInfoHeader.biWidth != terrainWidth))
+	{
+		return E_FAIL;
+	}
+
+	// Calculate the size of the bitmap image data.  
+	// Since we use non-divide by 2 dimensions (eg. 257x257) we need to add an extra byte to each line.
+	imageSize = terrainHeight * ((terrainWidth * 3) + 1);
+
+	// Allocate memory for the bitmap image data.
+	bitmapImage = new unsigned char[imageSize];
+	if (!bitmapImage)
+	{
+		return E_FAIL;
+	}
+
+	// Move to the beginning of the bitmap data.
+	fseek(filePtr, bitmapFileHeader.bfOffBits, SEEK_SET);
+
+	// Read in the bitmap image data.
+	count = fread(bitmapImage, 1, imageSize, filePtr);
+	if (count != imageSize)
+	{
+		return E_FAIL;
+	}
+
+	// Close the file.
+	error = fclose(filePtr);
+	if (error != 0)
+	{
+		return false;
+	}
+
+	// Initialize the position in the image data buffer.
+	k = 0;
+
+	// Read the image data into the height map array.
+	for (j = 0; j < terrainHeight; j++)
+	{
+		for (i = 0; i < terrainWidth; i++)
+		{
+			// Bitmaps are upside down so load bottom to top into the height map array.
+			index = (terrainWidth * (terrainHeight - 1 - j)) + i;
+
+			// Get the grey scale pixel value from the bitmap image data at this location.
+			height = bitmapImage[k];
+
+			// Store the pixel value as the height at this point in the height map array.
+			heightMap[index].y = (float)height;
+
+			// Increment the bitmap image data index.
+			k += 3;
+		}
+
+		// Compensate for the extra byte at end of each line in non-divide by 2 bitmaps (eg. 257x257).
+		k++;
+	}
+
+	// Release the bitmap image data now that the height map array has been loaded.
 	delete[] bitmapImage;
 	bitmapImage = nullptr;
+
 
 	return S_OK;
 }
 
-void TerrainBuffer::NormalizeHeightMap()
+void TerrainBuffer::SetTerrainCoordinates()
 {
-	for (UINT j = 0; j < terrainHeight; j++)
-	{
-		for (UINT i = 0; i < terrainWidth; i++)
-		{
-			UINT index = index = (terrainWidth * j) + i;
-			//heightMap[index].z += (float)(terrainHeight - 1);
+	UINT i, j, index;
 
-			heightMap[index].y /= 15.0f;
+
+	// Loop through all the elements in the height map array and adjust their coordinates correctly.
+	for (j = 0; j < terrainHeight; j++)
+	{
+		for (i = 0; i < terrainWidth; i++)
+		{
+			index = (terrainWidth * j) + i;
+
+			// Set the X and Z coordinates.
+			heightMap[index].x = (float)i;
+			heightMap[index].z = -(float)j;
+
+			// Move the terrain depth into the positive range.  For example from (0, -256) to (256, 0).
+			heightMap[index].z += (float)(terrainHeight - 1);
+
+			// Scale the height.
+			heightMap[index].y /= heightScale;
 		}
 	}
 }
+
+HRESULT TerrainBuffer::BuildTerrainModel()
+{
+	UINT i, j, index, index1, index2, index3, index4;
+
+
+	// Calculate the number of vertices in the 3D terrain model.
+	vertexCount = (terrainHeight - 1) * (terrainWidth - 1) * 6;
+
+	// Create the 3D terrain model array.
+	terrainModel = new ModelType[vertexCount];
+	if (!terrainModel)
+	{
+		return false;
+	}
+
+	// Initialize the index into the height map array.
+	index = 0;
+
+	// Load the 3D terrain model with the height map terrain data.
+	// We will be creating 2 triangles for each of the four points in a quad.
+	for (j = 0; j < (terrainHeight - 1); j++)
+	{
+		for (i = 0; i < (terrainWidth - 1); i++)
+		{
+			// Get the indexes to the four points of the quad.
+			index1 = (terrainWidth * j) + i;          // Upper left.
+			index2 = (terrainWidth * j) + (i + 1);      // Upper right.
+			index3 = (terrainWidth * (j + 1)) + i;      // Bottom left.
+			index4 = (terrainWidth * (j + 1)) + (i + 1);  // Bottom right.
+
+			// Now create two triangles for that quad.
+			// Triangle 1 - Upper left.
+			terrainModel[index].x = heightMap[index1].x;
+			terrainModel[index].y = heightMap[index1].y;
+			terrainModel[index].z = heightMap[index1].z;
+			terrainModel[index].u = 0.f;
+			terrainModel[index].v = 0.f;
+			terrainModel[index].nx = heightMap[index1].nx;
+			terrainModel[index].ny = heightMap[index1].ny;
+			terrainModel[index].nz = heightMap[index1].nz;
+			index++;
+
+			// Triangle 1 - Upper right.
+			terrainModel[index].x = heightMap[index2].x;
+			terrainModel[index].y = heightMap[index2].y;
+			terrainModel[index].z = heightMap[index2].z;
+			terrainModel[index].u = 1.f;
+			terrainModel[index].v = 0.f;
+			terrainModel[index].nx = heightMap[index2].nx;
+			terrainModel[index].ny = heightMap[index2].ny;
+			terrainModel[index].nz = heightMap[index2].nz;
+			index++;
+
+			// Triangle 1 - Bottom left.
+			terrainModel[index].x = heightMap[index3].x;
+			terrainModel[index].y = heightMap[index3].y;
+			terrainModel[index].z = heightMap[index3].z;
+			terrainModel[index].u = 0.f;
+			terrainModel[index].v = 1.f;
+			terrainModel[index].nx = heightMap[index3].nx;
+			terrainModel[index].ny = heightMap[index3].ny;
+			terrainModel[index].nz = heightMap[index3].nz;
+			index++;
+
+			// Triangle 2 - Bottom left.
+			terrainModel[index].x = heightMap[index3].x;
+			terrainModel[index].y = heightMap[index3].y;
+			terrainModel[index].z = heightMap[index3].z;
+			terrainModel[index].u = 0.f;
+			terrainModel[index].v = 1.f;
+			terrainModel[index].nx = heightMap[index3].nx;
+			terrainModel[index].ny = heightMap[index3].ny;
+			terrainModel[index].nz = heightMap[index3].nz;
+			index++;
+
+			// Triangle 2 - Upper right.
+			terrainModel[index].x = heightMap[index2].x;
+			terrainModel[index].y = heightMap[index2].y;
+			terrainModel[index].z = heightMap[index2].z;
+			terrainModel[index].u = 1.f;
+			terrainModel[index].v = 0.f;
+			terrainModel[index].nx = heightMap[index2].nx;
+			terrainModel[index].ny = heightMap[index2].ny;
+			terrainModel[index].nz = heightMap[index2].nz;
+			index++;
+
+			// Triangle 2 - Bottom right.
+			terrainModel[index].x = heightMap[index4].x;
+			terrainModel[index].y = heightMap[index4].y;
+			terrainModel[index].z = heightMap[index4].z;
+			terrainModel[index].u = 1.f;
+			terrainModel[index].v = 1.f;
+			terrainModel[index].nx = heightMap[index4].nx;
+			terrainModel[index].ny = heightMap[index4].ny;
+			terrainModel[index].nz = heightMap[index4].nz;
+			index++;
+		}
+	}
+	return S_OK;
+}
+
+HRESULT TerrainBuffer::CalculateNormal()
+{
+	int i, j, index1, index2, index3, index;
+	float vertex1[3], vertex2[3], vertex3[3], vector1[3], vector2[3], sum[3], length;
+	VectorType* normals;
+
+
+	// Create a temporary array to hold the face normal vectors.
+	normals = new VectorType[(terrainHeight - 1) * (terrainWidth - 1)];
+	if (!normals)
+	{
+		return false;
+	}
+
+	// Go through all the faces in the mesh and calculate their normals.
+	for (j = 0; j < (terrainHeight - 1); j++)
+	{
+		for (i = 0; i < (terrainWidth - 1); i++)
+		{
+			index1 = ((j + 1) * terrainWidth) + i;      // Bottom left vertex.
+			index2 = ((j + 1) * terrainWidth) + (i + 1);  // Bottom right vertex.
+			index3 = (j * terrainWidth) + i;          // Upper left vertex.
+
+			// Get three vertices from the face.
+			vertex1[0] = heightMap[index1].x;
+			vertex1[1] = heightMap[index1].y;
+			vertex1[2] = heightMap[index1].z;
+
+			vertex2[0] = heightMap[index2].x;
+			vertex2[1] = heightMap[index2].y;
+			vertex2[2] = heightMap[index2].z;
+
+			vertex3[0] = heightMap[index3].x;
+			vertex3[1] = heightMap[index3].y;
+			vertex3[2] = heightMap[index3].z;
+
+			// Calculate the two vectors for this face.
+			vector1[0] = vertex1[0] - vertex3[0];
+			vector1[1] = vertex1[1] - vertex3[1];
+			vector1[2] = vertex1[2] - vertex3[2];
+			vector2[0] = vertex3[0] - vertex2[0];
+			vector2[1] = vertex3[1] - vertex2[1];
+			vector2[2] = vertex3[2] - vertex2[2];
+
+			index = (j * (terrainWidth - 1)) + i;
+
+			// Calculate the cross product of those two vectors to get the un-normalized value for this face normal.
+			normals[index].x = (vector1[1] * vector2[2]) - (vector1[2] * vector2[1]);
+			normals[index].y = (vector1[2] * vector2[0]) - (vector1[0] * vector2[2]);
+			normals[index].z = (vector1[0] * vector2[1]) - (vector1[1] * vector2[0]);
+
+			// Calculate the length.
+			length = (float)sqrt((normals[index].x * normals[index].x) + (normals[index].y * normals[index].y) +
+				(normals[index].z * normals[index].z));
+
+			// Normalize the final value for this face using the length.
+			normals[index].x = (normals[index].x / length);
+			normals[index].y = (normals[index].y / length);
+			normals[index].z = (normals[index].z / length);
+		}
+	}
+
+	// Now go through all the vertices and take a sum of the face normals that touch this vertex.
+	for (j = 0; j < terrainHeight; j++)
+	{
+		for (i = 0; i < terrainWidth; i++)
+		{
+			// Initialize the sum.
+			sum[0] = 0.0f;
+			sum[1] = 0.0f;
+			sum[2] = 0.0f;
+
+			// Bottom left face.
+			if (((i - 1) >= 0) && ((j - 1) >= 0))
+			{
+				index = ((j - 1) * (terrainWidth - 1)) + (i - 1);
+
+				sum[0] += normals[index].x;
+				sum[1] += normals[index].y;
+				sum[2] += normals[index].z;
+			}
+
+			// Bottom right face.
+			if ((i < (terrainWidth - 1)) && ((j - 1) >= 0))
+			{
+				index = ((j - 1) * (terrainWidth - 1)) + i;
+
+				sum[0] += normals[index].x;
+				sum[1] += normals[index].y;
+				sum[2] += normals[index].z;
+			}
+
+			// Upper left face.
+			if (((i - 1) >= 0) && (j < (terrainHeight - 1)))
+			{
+				index = (j * (terrainWidth - 1)) + (i - 1);
+
+				sum[0] += normals[index].x;
+				sum[1] += normals[index].y;
+				sum[2] += normals[index].z;
+			}
+
+			// Upper right face.
+			if ((i < (terrainWidth - 1)) && (j < (terrainHeight - 1)))
+			{
+				index = (j * (terrainWidth - 1)) + i;
+
+				sum[0] += normals[index].x;
+				sum[1] += normals[index].y;
+				sum[2] += normals[index].z;
+			}
+
+			// Calculate the length of this normal.
+			length = (float)sqrt((sum[0] * sum[0]) + (sum[1] * sum[1]) + (sum[2] * sum[2]));
+
+			// Get an index to the vertex location in the height map array.
+			index = (j * terrainWidth) + i;
+
+			// Normalize the final shared normal for this vertex and store it in the height map array.
+			heightMap[index].nx = (sum[0] / length);
+			heightMap[index].ny = (sum[1] / length);
+			heightMap[index].nz = (sum[2] / length);
+		}
+	}
+
+	// Release the temporary normals.
+	delete[] normals;
+	normals = nullptr;
+
+	return S_OK;
+}
+
 
 void TerrainBuffer::RenderBuffers()
 {
@@ -255,7 +532,7 @@ void TerrainBuffer::RenderBuffers()
 	Graphic->GetDeviceContext()->IASetIndexBuffer(indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 
 	// 이 버텍스 버퍼에서 렌더링되어야하는 프리미티브의 타입을 설정한다.이 경우 라인리스트이다.
-	Graphic->GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
+	Graphic->GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	Graphic->GetDeviceContext()->DrawIndexed(indexCount, 0, 0);
 }

@@ -6,6 +6,8 @@ class TerrainBuffer;
 class Transform;
 class Shader;
 
+class Material;
+
 class Terrain :public GameObject, public enable_shared_from_this<Terrain> 
 {
 private:
@@ -29,5 +31,6 @@ private:
 	shared_ptr<TerrainBuffer> terrainBuffer = nullptr;
 	shared_ptr<Transform> transform = nullptr;
 	shared_ptr<Shader> shader = nullptr;
+	shared_ptr<Material> material = nullptr;
 };
 

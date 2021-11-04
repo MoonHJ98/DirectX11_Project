@@ -44,9 +44,9 @@ typedef struct tagMaterial
 	Color Specular = Color();
 	Color Emissive = Color();
 
-	wstring DiffuseMap;
-	wstring SpecularMap;
-	wstring NormalMap;
+	wstring DiffuseMap = L"";
+	wstring SpecularMap = L"";
+	wstring NormalMap = L"";
 
 
 }MATERIALDESC;

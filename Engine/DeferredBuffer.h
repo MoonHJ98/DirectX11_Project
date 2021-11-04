@@ -10,7 +10,7 @@ class RenderTarget;
 class DeferredBuffer
 {
 public:
-	enum BUFFER { DIFFUSEMAP, NORMALMAP, SPECULARMAP, VIEWDIRECTION, SHADE, SPECULAR, BUFFER_END };
+	enum BUFFER { DIFFUSEMAP, NORMALMAP, SPECULARMAP, DEPTH, SHADE, SPECULAR, BUFFER_END };
 
 private:
 	DeferredBuffer();

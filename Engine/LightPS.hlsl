@@ -2,6 +2,7 @@ Texture2D NormalTexture : register(t0);
 Texture2D SpecularTexture : register(t1);
 Texture2D DepthTexture : register(t2);
 
+
 SamplerState SampleType; // 텍스쳐를 도형에 셰이딩 할때 사용
 
 cbuffer LightBuffer : register(b0)
@@ -83,6 +84,8 @@ PSOut main(PSInput input)
             specular = SpecularColor * pow(saturate(dot(reflection, vLook)), SpecularPower);
     
             specular = specular * specularIntensity; // For Specular Mapping
+            if (lightIntensity == 0)
+                specular = float4(0.f, 0.f, 0.f, 0.f);
     
         }
     }

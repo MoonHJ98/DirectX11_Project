@@ -4,6 +4,7 @@
 #include "Transform.h"
 #include "Shader.h"
 #include "Renderer.h"
+#include "Material.h"
 
 Terrain::Terrain()
 {
@@ -25,11 +26,18 @@ HRESULT Terrain::Initialize(UINT _terrainWidth, UINT _terrainHeight, wstring _he
 	D3D11_INPUT_ELEMENT_DESC InputLayout[] =
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+
 	};
 
 	shader = Shader::Create(InputLayout, sizeof(InputLayout), L"../Engine/ColorVS.hlsl", L"../Engine/ColorPS.hlsl");
 
+	MATERIALDESC desc;
+	desc.name = L"Terrain";
+	desc.DiffuseMap = L"../Resources/dirt01d.tga";
+
+	material = Material::Create(desc);
 
 	return S_OK;
 }
@@ -44,6 +52,7 @@ int Terrain::Update(float _TimeDelta)
 void Terrain::Render()
 {
 	shader->Render();
+	material->Render();
 	transform->Update();
 	terrainBuffer->Render();
 }
