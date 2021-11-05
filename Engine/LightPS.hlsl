@@ -22,6 +22,14 @@ cbuffer ProjtoWorld : register(b1)
     float padding;
 };
 
+cbuffer LightMatrixBuffer : register(b2)
+{
+    matrix ViewMatrix;
+    matrix ProjMatrix;
+    float3 lightPosition;
+    float padding2;
+}
+
 
 struct PSInput
 {
@@ -65,27 +73,29 @@ PSOut main(PSInput input)
 
         // for Specular
         {
-            float fViewZ = vDepthInfo.y * 1000.f; // 1000 : far
+            if (!(vDepthInfo.r == 0.f && vDepthInfo.g == 0.f && vDepthInfo.b == 1.f))
+            {
+            
+                float fViewZ = vDepthInfo.y * 1000.f; // 1000 : far
 
-            vector vPosition;
+                float4 vPosition;
 
-	        // 투영행렬까지 곱해놓은 위치.
-            vPosition.x = ((input.Uv.x * 2.f - 1.f)) * fViewZ;
-            vPosition.y = ((input.Uv.y * -2.f + 1.f)) * fViewZ;
-            vPosition.z = vDepthInfo.x * fViewZ;
-            vPosition.w = 1.f * fViewZ;
+	            // 투영행렬까지 곱해놓은 위치.
+                vPosition.x = ((input.Uv.x * 2.f - 1.f)) * fViewZ;
+                vPosition.y = ((input.Uv.y * -2.f + 1.f)) * fViewZ;
+                vPosition.z = vDepthInfo.x * fViewZ;
+                vPosition.w = 1.f * fViewZ;
 
-            vPosition = mul(vPosition, ProjInv);
-            vPosition = mul(vPosition, ViewInv);
+                vPosition = mul(vPosition, ProjInv);
+                vPosition = mul(vPosition, ViewInv);
 
-            float3 vLook = vPosition - float4(CamPos, 1.f);
+                float3 vLook = vPosition - float4(CamPos, 1.f);
 
-            reflection = normalize(2 * lightIntensity * normal - lightDir);
-            specular = SpecularColor * pow(saturate(dot(reflection, vLook)), SpecularPower);
+                reflection = normalize(2 * lightIntensity * normal - lightDir);
+                specular = SpecularColor * pow(saturate(dot(reflection, vLook)), SpecularPower);
     
-            specular = specular * specularIntensity; // For Specular Mapping
-            if (lightIntensity == 0)
-                specular = float4(0.f, 0.f, 0.f, 0.f);
+                specular = specular * specularIntensity; // For Specular Mapping
+            }
     
         }
     }

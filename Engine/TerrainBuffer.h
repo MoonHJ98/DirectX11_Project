@@ -38,7 +38,7 @@ public:
 	~TerrainBuffer();
 
 private:
-	HRESULT Initialize(UINT _terrainWidth, UINT _terrainHeight, wstring _heightMapPath);
+	HRESULT Initialize(int _terrainWidth, int _terrainHeight, wstring _heightMapPath);
 	HRESULT InitializeBuffer();
 	HRESULT LoadHeightMap(wstring _heightMapPath);
 	void SetTerrainCoordinates();
@@ -52,7 +52,7 @@ public:
 	void Render();
 
 public:
-	static shared_ptr<TerrainBuffer> Create(UINT _terrainWidth, UINT _terrainHeight, wstring _heightMapPath);
+	static shared_ptr<TerrainBuffer> Create(int _terrainWidth, int _terrainHeight, wstring _heightMapPath);
 
 private:
 	shared_ptr<GraphicDevice> Graphic = nullptr;
@@ -62,11 +62,11 @@ private:
 
 	HeightMapType* heightMap = nullptr;
 
-	UINT vertexCount = 0;
-	UINT indexCount = 0;
-	UINT terrainWidth = 257;
-	UINT terrainHeight = 257;
-	float heightScale = 12.f;
+	int vertexCount = 0;
+	int indexCount = 0;
+	int terrainWidth = 257;
+	int terrainHeight = 257;
+	float heightScale = 5.f;
 	ModelType* terrainModel = nullptr;
 };
 

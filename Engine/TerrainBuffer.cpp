@@ -16,7 +16,7 @@ TerrainBuffer::~TerrainBuffer()
 	heightMap = nullptr;
 }
 
-HRESULT TerrainBuffer::Initialize(UINT _terrainWidth, UINT _terrainHeight, wstring _heightMapPath)
+HRESULT TerrainBuffer::Initialize(int _terrainWidth, int _terrainHeight, wstring _heightMapPath)
 {
 	Graphic = GraphicDevice::GetInstance();
 
@@ -68,7 +68,7 @@ HRESULT TerrainBuffer::InitializeBuffer()
 	D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
 	D3D11_SUBRESOURCE_DATA vertexData, indexData;
 	HRESULT result;
-	UINT i;
+	int i;
 	XMFLOAT4 color;
 
 
@@ -85,14 +85,14 @@ HRESULT TerrainBuffer::InitializeBuffer()
 	vertices = new VertexType[vertexCount];
 	if (!vertices)
 	{
-		return false;
+		return E_FAIL;
 	}
 
 	// Create the index array.
 	indices = new unsigned long[indexCount];
 	if (!indices)
 	{
-		return false;
+		return E_FAIL;
 	}
 
 	// Load the vertex array and index array with 3D terrain model data.
@@ -121,7 +121,7 @@ HRESULT TerrainBuffer::InitializeBuffer()
 	result = Graphic->GetDevice()->CreateBuffer(&vertexBufferDesc, &vertexData, vertexBuffer.GetAddressOf());
 	if (FAILED(result))
 	{
-		return false;
+		return E_FAIL;
 	}
 
 	// Set up the description of the static index buffer.
@@ -141,7 +141,7 @@ HRESULT TerrainBuffer::InitializeBuffer()
 	result = Graphic->GetDevice()->CreateBuffer(&indexBufferDesc, &indexData, indexBuffer.GetAddressOf());
 	if (FAILED(result))
 	{
-		return false;
+		return E_FAIL;
 	}
 
 	// Release the arrays now that the buffers have been created and loaded.
@@ -156,7 +156,7 @@ HRESULT TerrainBuffer::InitializeBuffer()
 HRESULT TerrainBuffer::LoadHeightMap(wstring _heightMapPath)
 {
 	int error, imageSize;
-	UINT i, j, k, index;
+	int i, j, k, index;
 	FILE* filePtr;
 	unsigned long long count;
 	BITMAPFILEHEADER bitmapFileHeader;
@@ -262,7 +262,7 @@ HRESULT TerrainBuffer::LoadHeightMap(wstring _heightMapPath)
 
 void TerrainBuffer::SetTerrainCoordinates()
 {
-	UINT i, j, index;
+	int i, j, index;
 
 
 	// Loop through all the elements in the height map array and adjust their coordinates correctly.
@@ -287,7 +287,7 @@ void TerrainBuffer::SetTerrainCoordinates()
 
 HRESULT TerrainBuffer::BuildTerrainModel()
 {
-	UINT i, j, index, index1, index2, index3, index4;
+	int i, j, index, index1, index2, index3, index4;
 
 
 	// Calculate the number of vertices in the 3D terrain model.
@@ -542,7 +542,7 @@ void TerrainBuffer::Render()
 	RenderBuffers();
 }
 
-shared_ptr<TerrainBuffer> TerrainBuffer::Create(UINT _terrainWidth, UINT _terrainHeight, wstring _heightMapPath)
+shared_ptr<TerrainBuffer> TerrainBuffer::Create(int _terrainWidth, int _terrainHeight, wstring _heightMapPath)
 {
 	shared_ptr<TerrainBuffer> Instance(new TerrainBuffer());
 	if (FAILED(Instance->Initialize(_terrainWidth, _terrainHeight, _heightMapPath)))

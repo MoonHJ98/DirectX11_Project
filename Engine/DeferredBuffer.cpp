@@ -37,6 +37,9 @@ HRESULT DeferredBuffer::Initialize(int _textureWidth, int _textureHeight, float 
 	auto specular = RenderTarget::Create(Vector3(-250.f, 50.f, 0.1f), Vector3(50.f, 50.f, 1.f), Vector4(1.f, 1.f, 1.f, 1.f));
 	renderTargets.push_back(specular);
 
+	//auto shadow = RenderTarget::Create(Vector3(-350.f, -50.f, 0.1f), Vector3(50.f, 50.f, 1.f), Vector4(1.f, 1.f, 1.f, 1.f));
+	//renderTargets.push_back(shadow);
+
 
 	Graphic = GraphicDevice::GetInstance();
 

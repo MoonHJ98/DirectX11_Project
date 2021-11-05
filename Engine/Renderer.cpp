@@ -30,6 +30,8 @@ HRESULT Renderer::Initialize()
 
 	deferredBuffer->AddMultiRenderTarget(L"Light", DeferredBuffer::SHADE);
 	deferredBuffer->AddMultiRenderTarget(L"Light", DeferredBuffer::SPECULAR);
+	//deferredBuffer->AddMultiRenderTarget(L"Light", DeferredBuffer::SHADOW);
+
 
 
 

@@ -31,21 +31,34 @@ void Light::Render()
 	auto buffer = LightBuffer->GetBuffer();
 	Graphic->GetDeviceContext()->PSSetConstantBuffers(0, 1, &buffer);
 
+	LightMatrixBufferType matrixBufferType;
+	matrixBufferType.ViewMatrix = ViewMatrix;
+	matrixBufferType.ProjMatrix = ProjectMatrix;
+	matrixBufferType.lightPosition = position;
+	lightMatrixBuffer->SetData(Graphic->GetDeviceContext(), matrixBufferType);
+	auto matrixBuffer = lightMatrixBuffer->GetBuffer();
+	Graphic->GetDeviceContext()->PSSetConstantBuffers(2, 1, &matrixBuffer);
 
 	transform->Update(true);
 
-	rb->Render();
+	rectangleBuffer->Render();
 }
 
 HRESULT Light::Initialize(LIGHTDESC _LightInfo)
 {
 	LightInfo = _LightInfo;
 	Graphic = GraphicDevice::GetInstance();
+
 	shared_ptr<ConstantBuffer<LightBufferType>> temp(new ConstantBuffer<LightBufferType>());
 	LightBuffer = temp;
 	LightBuffer->Create(Graphic->GetDevice());
 
-	rb = RectangleBuffer::Create();
+	shared_ptr<ConstantBuffer<LightMatrixBufferType>> lightmatrixTemp(new ConstantBuffer<LightMatrixBufferType>());
+	lightMatrixBuffer = lightmatrixTemp;
+	lightMatrixBuffer->Create(Graphic->GetDevice());
+
+
+	rectangleBuffer = RectangleBuffer::Create();
 	transform = Transform::Create(Transform::TRANSDESC());
 	transform->SetState(Transform::POSITION, Vector3(0.f, 0.f, 0.1f));
 
@@ -54,7 +67,36 @@ HRESULT Light::Initialize(LIGHTDESC _LightInfo)
 	Graphic->GetDeviceContext()->RSGetViewports(&viewportNum, &viewport);
 
 	transform->SetScale(Vector3(viewport.Width/2.f, viewport.Height/2.f, 1.f));
+	
+	CreateViewMatrix();
+
+	CreateProjMatrix();
+
 	return S_OK;
+}
+
+void Light::CreateViewMatrix()
+{
+	Vector3 up = Vector3(0.f, 1.f, 0.f);
+
+	XMVECTOR upVec = XMLoadFloat3(&up);
+	XMVECTOR posVec = XMLoadFloat3(&position);
+	XMVECTOR lookVec = XMLoadFloat3(&LightInfo.Direction);
+
+	ViewMatrix = XMMatrixLookAtLH(posVec, lookVec, upVec);
+
+}
+
+void Light::CreateProjMatrix()
+{
+	float screenAspect = 0.f;
+	UINT viewportNum = 1;
+	D3D11_VIEWPORT viewport;
+	Graphic->GetDeviceContext()->RSGetViewports(&viewportNum, &viewport);
+
+	screenAspect = viewport.Width / viewport.Height;
+
+	ProjectMatrix = XMMatrixPerspectiveFovLH(FoV, screenAspect, SCREENNEAR, SCREENDEPTH);
 }
 
 shared_ptr<Light> Light::Create(LIGHTDESC _LightInfo)

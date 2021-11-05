@@ -36,6 +36,7 @@ void Player::Render()
 HRESULT Player::Initialize(ID3D11Device * _Device)
 {
 	transform = Transform::Create(Transform::TRANSDESC(10.f, 10.f));
+	transform->SetScale(Vector3(0.1f, 0.1f, 0.1f));
 	model = Model::Create();
 	
 	
