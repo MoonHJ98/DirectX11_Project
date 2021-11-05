@@ -24,10 +24,9 @@ Output main(PixelInputType input)
     Output Out;
     Out.color = DiffuseTexture.Sample(SampleType, input.uv);
     Out.normal = input.normal;
-    float depthValue = input.ProjPos.z / input.ProjPos.w;
 
     
-    Out.depth = vector(input.ProjPos.z / input.ProjPos.w, input.ProjPos.w / 1000.f, 0.f, 0.f);
+    Out.depth = float4(input.ProjPos.z / input.ProjPos.w, input.ProjPos.w / 1000.f, 0.f, 0.f);
     Out.Specular = float4(0.f, 0.f, 0.f, 0.f);
     return Out;
 }
