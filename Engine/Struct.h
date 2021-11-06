@@ -26,6 +26,8 @@ typedef struct MatrixBufferType
 	XMMATRIX World = {};
 	XMMATRIX View = {};
 	XMMATRIX Projection = {};
+	bool renderDepthForShadow;
+
 
 }MATRIXBUFFERTYPE;
 

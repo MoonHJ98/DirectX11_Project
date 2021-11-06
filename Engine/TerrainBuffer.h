@@ -66,7 +66,7 @@ private:
 	int indexCount = 0;
 	int terrainWidth = 257;
 	int terrainHeight = 257;
-	float heightScale = 2.f;
+	float heightScale = 5.f;
 	ModelType* terrainModel = nullptr;
 };
 

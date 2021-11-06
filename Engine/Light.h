@@ -40,6 +40,10 @@ public:
 
 public:
 	void Render();
+	void MatrixBufferToShader();
+	Matrix* GetViewMatrix() { return &ViewMatrix; }
+	Matrix* GetProjectionMatrix() { return &ProjectMatrix; }
+	Matrix* GetOrthoMatrix() { return &OrthoMatrix; }
 
 private:
 	HRESULT Initialize(LIGHTDESC _LightInfo);
@@ -61,6 +65,7 @@ private:
 
 	Matrix ViewMatrix;
 	Matrix ProjectMatrix;
-	Vector3 position = Vector3(-119.f, 233.f, -170.f);
+	Matrix OrthoMatrix;
+	Vector3 position = Vector3(0.f, 50.f, -50.f);
 };
 

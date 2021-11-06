@@ -3,6 +3,9 @@ Texture2D SpecularTexture : register(t1);
 Texture2D DepthTexture : register(t2);
 
 
+
+
+
 SamplerState SampleType; // 텍스쳐를 도형에 셰이딩 할때 사용
 
 cbuffer LightBuffer : register(b0)
@@ -24,8 +27,8 @@ cbuffer ProjtoWorld : register(b1)
 
 cbuffer LightMatrixBuffer : register(b2)
 {
-    matrix ViewMatrix;
-    matrix ProjMatrix;
+    matrix lightViewMatrix;
+    matrix lightProjMatrix;
     float3 lightPosition;
     float padding2;
 }
@@ -41,6 +44,7 @@ struct PSOut
 {
     float4 shade : SV_TARGET0;
     float4 specular : SV_TARGET1;
+    float4 shadow : SV_TARGET2;
 };
 
 PSOut main(PSInput input)
@@ -67,6 +71,7 @@ PSOut main(PSInput input)
     lightDir = -LightDirection;
     float lightIntensity = saturate(dot(normal, lightDir));
 
+    
     if (lightIntensity > 0.f)
     {
         color += saturate(DiffuseColor * lightIntensity);
@@ -98,6 +103,7 @@ PSOut main(PSInput input)
             }
     
         }
+       
     }
 
 

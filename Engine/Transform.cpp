@@ -3,6 +3,7 @@
 #include "GraphicDevice.h"
 #include "Management.h"
 #include "Camera.h"
+#include "Light.h"
 
 Transform::Transform()
 {
@@ -87,7 +88,7 @@ Vector3 Transform::GetScale()
 	return Vector3(right.Length(), up.Length(), look.Length());
 }
 
-void Transform::Update(bool isOrtho)
+void Transform::Update(bool isOrtho, bool _depthForShadow)
 {
 	MATRIXBUFFERTYPE desc;
 	desc.World = XMMatrixTranspose(WorldMatrix);
@@ -113,6 +114,14 @@ void Transform::Update(bool isOrtho)
 	else
 		desc.Projection = XMMatrixTranspose(*Manage->GetTransform(D3DTRANSFORMSTATE_PROJECTION));
 
+	if (_depthForShadow == true)
+	{
+		auto light = Manage->FindLight(L"DirectionalLight", 0);
+		desc.View = XMMatrixTranspose(*light->GetViewMatrix());
+		desc.Projection = XMMatrixTranspose(*light->GetProjectionMatrix());
+		
+	}
+	desc.renderDepthForShadow = _depthForShadow;
 	MatrixBuffer.SetData(Graphic->GetDeviceContext(), desc);
 	auto buffer = MatrixBuffer.GetBuffer();
 	Graphic->GetDeviceContext()->VSSetConstantBuffers(0, 1, &buffer);

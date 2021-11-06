@@ -32,6 +32,19 @@ HRESULT MainApp::Initialize()
 	Manage->Initialize(GInstance, GhWnd, SCENE_END, GX, GY, VSYNC_ENABLE, FULLSCREEN, SCREENDEPTH, SCREENNEAR);
 
 
+	//Light
+	LIGHTDESC lightDesc;
+	lightDesc.Type = D3DLIGHT_DIRECTIONAL;
+	lightDesc.Diffuse = Color(1.f, 1.f, 1.f, 1.f);
+	lightDesc.Specular = Color(0.5f, 0.5f, 0.5f, 1.f);
+	lightDesc.Ambient = Color(0.4f, 0.4f, 0.4f, 1.f);
+	lightDesc.Direction = Vector3(-0.5f, -0.5f, 1.f);
+	lightDesc.SpecularPower = 5.f;
+
+
+	Manage->AddLight(lightDesc, L"DirectionalLight");
+
+
 	Camera::CAMERADECS _decs;
 	_decs.Far = SCREENDEPTH;
 	_decs.Near = SCREENNEAR;
@@ -49,17 +62,7 @@ HRESULT MainApp::Initialize()
 	auto terrain = Terrain::Create(100, 100, L"../Resources/heightmap.bmp");
 	Manage->AddLayer(SCENEID::STATIC, L"Terrain", terrain);
 
-	//Light
-	LIGHTDESC lightDesc;
-	lightDesc.Type = D3DLIGHT_DIRECTIONAL;
-	lightDesc.Diffuse = Color(1.f, 1.f, 1.f, 1.f);
-	lightDesc.Specular = Color(0.5f, 0.5f, 0.5f, 1.f);
-	lightDesc.Ambient = Color(0.4f, 0.4f, 0.4f, 1.f);
-	lightDesc.Direction = Vector3(-0.5f, -0.5f, 1.f);
-	lightDesc.SpecularPower = 5.f;
 
-
-	Manage->AddLight(lightDesc, L"DirectionalLight");
 
 	if (FAILED(ReadyScene(LOGO)))
 	{

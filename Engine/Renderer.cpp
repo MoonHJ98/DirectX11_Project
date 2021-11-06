@@ -26,10 +26,13 @@ HRESULT Renderer::Initialize()
 	deferredBuffer->AddMultiRenderTarget(L"Deferred", DeferredBuffer::NORMALMAP);
 	deferredBuffer->AddMultiRenderTarget(L"Deferred", DeferredBuffer::SPECULARMAP);
 	deferredBuffer->AddMultiRenderTarget(L"Deferred", DeferredBuffer::DEPTH);
-
+	
 
 	deferredBuffer->AddMultiRenderTarget(L"Light", DeferredBuffer::SHADE);
 	deferredBuffer->AddMultiRenderTarget(L"Light", DeferredBuffer::SPECULAR);
+
+	deferredBuffer->AddMultiRenderTarget(L"Shadow", DeferredBuffer::DEPTHFORSHADOW);
+
 	//deferredBuffer->AddMultiRenderTarget(L"Light", DeferredBuffer::SHADOW);
 
 
@@ -90,17 +93,37 @@ void Renderer::RenderPriority()
 
 void Renderer::RenderNonAlpha()
 {
+
+	deferredBuffer->BeginMRT(L"Shadow");
+	
+	for (auto& pGameObject : RenderGroup[RENDER_NONALPHA])
+	{
+		if (nullptr != pGameObject)
+		{
+			pGameObject->RenderDepthForShadow(true);
+			pGameObject->Render();
+		}
+	}
+	
+	deferredBuffer->EndMRT();
+
+
+
+
 	deferredBuffer->BeginMRT(L"Deferred");
 
 	for (auto& pGameObject : RenderGroup[RENDER_NONALPHA])
 	{
 		if (nullptr != pGameObject)
 		{
+			pGameObject->RenderDepthForShadow(false);
 			pGameObject->Render();
 		}
 	}
 
 	deferredBuffer->EndMRT();
+
+
 	RenderGroup[RENDER_NONALPHA].clear();
 
 }
@@ -124,10 +147,31 @@ void Renderer::RenderLight()
 	auto normal = deferredBuffer->GetShaderResourceView(DeferredBuffer::NORMALMAP);
 	auto specular = deferredBuffer->GetShaderResourceView(DeferredBuffer::SPECULARMAP);
 	auto viewDirection = deferredBuffer->GetShaderResourceView(DeferredBuffer::DEPTH);
+
 	
 	Graphic->GetDeviceContext()->PSSetShaderResources(0, 1, &normal);
 	Graphic->GetDeviceContext()->PSSetShaderResources(1, 1, &specular);
 	Graphic->GetDeviceContext()->PSSetShaderResources(2, 1, &viewDirection);
+
+
+
+	ProjtoWorldType buffertype;
+	Matrix View = *Manage->GetTransform(D3DTRANSFORMSTATE_VIEW);
+	Matrix Proj = *Manage->GetTransform(D3DTRANSFORMSTATE_PROJECTION);
+	Vector3 CamPos;
+	memcpy(&CamPos, &View(3, 0), sizeof(Vector3));
+
+	View = XMMatrixInverse(nullptr, View);
+	Proj = XMMatrixInverse(nullptr, Proj);
+
+	buffertype.ProjInv = XMMatrixTranspose(Proj);
+	buffertype.ViewInv = XMMatrixTranspose(View);
+	buffertype.CamPos = CamPos;
+
+
+	projToWorld->SetData(Graphic->GetDeviceContext(), buffertype);
+	auto buffer = projToWorld->GetBuffer();
+	Graphic->GetDeviceContext()->PSSetConstantBuffers(1, 1, &buffer);
 	
 	
 	LightMgr->Render();
@@ -153,25 +197,7 @@ void Renderer::RenderBlend()
 	Graphic->GetDeviceContext()->PSSetShaderResources(2, 1, &specular);
 
 
-	
 
-	ProjtoWorldType buffertype;
-	Matrix View = *Manage->GetTransform(D3DTRANSFORMSTATE_VIEW);
-	Matrix Proj = *Manage->GetTransform(D3DTRANSFORMSTATE_PROJECTION);
-	Vector3 CamPos;
-	memcpy(&CamPos, &View(3, 0), sizeof(Vector3));
-
-	View = XMMatrixInverse(nullptr, View);
-	Proj = XMMatrixInverse(nullptr, Proj);
-
-	buffertype.ProjInv = XMMatrixTranspose(Proj);
-	buffertype.ViewInv = XMMatrixTranspose(View);
-	buffertype.CamPos = CamPos;
-
-
-	projToWorld->SetData(Graphic->GetDeviceContext(), buffertype);
-	auto buffer = projToWorld->GetBuffer();
-	Graphic->GetDeviceContext()->PSSetConstantBuffers(1, 1, &buffer);
 	transform->Update(true);
 	rectangleBuffer->Render();
 

@@ -4,6 +4,8 @@
 #include "Transform.h"
 #include "Shader.h"
 #include "Renderer.h"
+#include "Management.h"
+#include "Light.h"
 #include "Material.h"
 
 Terrain::Terrain()
@@ -52,8 +54,12 @@ int Terrain::Update(float _TimeDelta)
 void Terrain::Render()
 {
 	shader->Render();
+
+	auto light = Management::GetInstance()->FindLight(L"DirectionalLight", 0);
+	light->MatrixBufferToShader();
+
 	material->Render();
-	transform->Update();
+	transform->Update(false, renderDepthForShadow);
 	terrainBuffer->Render();
 }
 

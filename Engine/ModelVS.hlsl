@@ -27,6 +27,8 @@ struct VertexOutput
 
     float4 WorldPos : TEXCOORD1;
     float4 ProjPos : TEXCOORD2;
+   
+   
 
 };
 
@@ -49,6 +51,8 @@ cbuffer MatrixBuffer : register(b0)
     matrix WorldMatrix;
     matrix ViewMatrix;
     matrix ProjectionMatrix;
+	bool renderDepthForShadow;
+    
 }
 
 cbuffer CB_Bone : register(b1)
@@ -67,6 +71,15 @@ cbuffer CameraBuffer : register(b3)
     float3 CameraPosition;
     float padding;
 };
+
+cbuffer LightMatrixBuffer : register(b4)
+{
+    matrix lightViewMatrix;
+    matrix lightProjMatrix;
+    float3 lightPosition;
+    float padding2;
+}
+
 
 /*
 inout : 파라미터 world를 입출력용으로 사용하겠다.
@@ -133,11 +146,15 @@ VertexOutput main(VertexModel input)
     matrix animationWorld;
     SetAnimationWorld(animationWorld, WorldMatrix, input);
 
-    Out.Tangent = mul(float4(input.Position, 1.f), animationWorld);
 
-    Out.Position = mul(float4(input.Position, 1.f), animationWorld);
-    Out.Position = mul(Out.Position, ViewMatrix);
-    Out.Position = mul(Out.Position, ProjectionMatrix);
+    if (renderDepthForShadow == false)
+    {
+        Out.Position = mul(float4(input.Position, 1.f), animationWorld);
+        float4 WorldforLight = Out.Position;
+        Out.Position = mul(Out.Position, ViewMatrix);
+        Out.Position = mul(Out.Position, ProjectionMatrix);
+    }
+
 
     Out.Uv = input.Uv;
     
@@ -152,6 +169,9 @@ VertexOutput main(VertexModel input)
     Out.Tangent = normalize(mul(float4(input.Tangent, 0.f), WorldMatrix));
     Out.BiTangent = normalize(mul(float4(input.BiTangent, 0.f), WorldMatrix));
     
-  
+    //WorldforLight = mul(WorldforLight, lightViewMatrix);
+    //WorldforLight = mul(WorldforLight, lightProjMatrix);
+   
+    
     return Out;
 }

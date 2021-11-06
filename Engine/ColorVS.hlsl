@@ -16,13 +16,22 @@ struct VertexInputType
 
 struct PixelInputType
 {
-    float4 position : SV_POSITION;
+    float4 position : SV_POSITION0;
     float2 uv : TEXCOORD0;
     float4 normal : NORMAL;
     float4 WorldPos : TEXCOORD1;
     float4 ProjPos : TEXCOORD2;
+    
+    
 };
 
+cbuffer LightMatrixBuffer : register(b4)
+{
+    matrix lightViewMatrix;
+    matrix lightProjMatrix;
+    float3 lightPosition;
+    float padding2;
+}
 
 PixelInputType main(VertexInputType input)
 {
@@ -38,6 +47,9 @@ PixelInputType main(VertexInputType input)
     float4 WorldPosition = mul(float4(input.position, 1.f), worldMatrix);
     output.WorldPos = WorldPosition;
     output.ProjPos = output.position;
+    
+    //float4 WorldforLight = mul(WorldPosition, lightViewMatrix);
+    //WorldforLight = mul(WorldforLight, lightProjMatrix);
     
     
     return output;

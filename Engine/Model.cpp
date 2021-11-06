@@ -295,6 +295,7 @@ void Model::Render()
 	animator->Render();
 	shader->Render();
 
+
 	for (auto& mesh : meshes)
 		mesh->Render();
 

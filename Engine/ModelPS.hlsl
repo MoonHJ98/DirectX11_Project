@@ -19,6 +19,8 @@ struct PixelInput
     //float3 ViewDirection : TEXCOORD1;
     vector WorldPos : TEXCOORD1;
     vector ProjPos : TEXCOORD2;
+    
+    
 };
 struct PixelOutput
 {
@@ -26,16 +28,17 @@ struct PixelOutput
     float4 Normal : SV_TARGET1;
     float4 Specular : SV_TARGET2;
     float4 Depth : SV_TARGET3;
+    
 };
 
-//cbuffer LightBuffer : register(b0)
-//{
-//    float4 DiffuseColor;
-//    float4 AmbientColor;
-//    float4 SpecularColor;
-//    float3 LightDirection;
-//    float SpecularPower;  
-//};
+cbuffer LightBuffer : register(b0)
+{
+    float4 DiffuseColor;
+    float4 AmbientColor;
+    float4 SpecularColor;
+    float3 LightDirection;
+    float SpecularPower;  
+};
 
 PixelOutput main(PixelInput input)
 {
@@ -45,7 +48,8 @@ PixelOutput main(PixelInput input)
     float4 specular = float4(0.f, 0.f, 0.f, 0.f);
     float4 normalMap = float4(0.f, 0.f, 1.f, 1.f);
     float3 normal;
-    float4 specularIntensity; // for Specular Mapping
+    
+    
 
     textureColor = ShaderTexture.Sample(SampleType, input.Uv);
     normalMap = NormalTexture.Sample(SampleType, input.Uv);
@@ -62,8 +66,7 @@ PixelOutput main(PixelInput input)
     Out.Normal = float4(normal, 0.f);
     Out.Specular = SpecularTexture.Sample(SampleType, input.Uv);
     Out.Depth = vector(input.ProjPos.z / input.ProjPos.w, input.ProjPos.w / 1000.f, 0.f, 0.f);
-
-    //Out.ViewDirection = input.ViewDirection;
+    
     return Out;
 
 

@@ -20,6 +20,8 @@ Light::~Light()
 
 void Light::Render()
 {
+	
+
 	LightBufferType buffertype;
 	buffertype.DiffuseColor = LightInfo.Diffuse;
 	buffertype.AmbientColor = LightInfo.Ambient;
@@ -31,17 +33,20 @@ void Light::Render()
 	auto buffer = LightBuffer->GetBuffer();
 	Graphic->GetDeviceContext()->PSSetConstantBuffers(0, 1, &buffer);
 
-	LightMatrixBufferType matrixBufferType;
-	matrixBufferType.ViewMatrix = ViewMatrix;
-	matrixBufferType.ProjMatrix = ProjectMatrix;
-	matrixBufferType.lightPosition = position;
-	lightMatrixBuffer->SetData(Graphic->GetDeviceContext(), matrixBufferType);
-	auto matrixBuffer = lightMatrixBuffer->GetBuffer();
-	Graphic->GetDeviceContext()->PSSetConstantBuffers(2, 1, &matrixBuffer);
-
 	transform->Update(true);
 
 	rectangleBuffer->Render();
+}
+
+void Light::MatrixBufferToShader()
+{
+	LightMatrixBufferType matrixBufferType;
+	matrixBufferType.ViewMatrix = XMMatrixTranspose(ViewMatrix);
+	matrixBufferType.ProjMatrix = XMMatrixTranspose(OrthoMatrix);
+	matrixBufferType.lightPosition = position;
+	lightMatrixBuffer->SetData(Graphic->GetDeviceContext(), matrixBufferType);
+	auto matrixBuffer = lightMatrixBuffer->GetBuffer();
+	Graphic->GetDeviceContext()->VSSetConstantBuffers(4, 1, &matrixBuffer);
 }
 
 HRESULT Light::Initialize(LIGHTDESC _LightInfo)
@@ -57,7 +62,7 @@ HRESULT Light::Initialize(LIGHTDESC _LightInfo)
 	lightMatrixBuffer = lightmatrixTemp;
 	lightMatrixBuffer->Create(Graphic->GetDevice());
 
-
+	
 	rectangleBuffer = RectangleBuffer::Create();
 	transform = Transform::Create(Transform::TRANSDESC());
 	transform->SetState(Transform::POSITION, Vector3(0.f, 0.f, 0.1f));
@@ -97,6 +102,9 @@ void Light::CreateProjMatrix()
 	screenAspect = viewport.Width / viewport.Height;
 
 	ProjectMatrix = XMMatrixPerspectiveFovLH(FoV, screenAspect, SCREENNEAR, SCREENDEPTH);
+
+	OrthoMatrix = XMMatrixOrthographicLH(viewport.Width, viewport.Height, SCREENNEAR, SCREENDEPTH);
+
 }
 
 shared_ptr<Light> Light::Create(LIGHTDESC _LightInfo)
