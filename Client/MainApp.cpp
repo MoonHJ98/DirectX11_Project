@@ -38,7 +38,7 @@ HRESULT MainApp::Initialize()
 	lightDesc.Diffuse = Color(1.f, 1.f, 1.f, 1.f);
 	lightDesc.Specular = Color(0.5f, 0.5f, 0.5f, 1.f);
 	lightDesc.Ambient = Color(0.4f, 0.4f, 0.4f, 1.f);
-	lightDesc.Direction = Vector3(-0.5f, -0.5f, 1.f);
+	lightDesc.Direction = Vector3(0.5f, -0.5f, 1.f);
 	lightDesc.SpecularPower = 5.f;
 
 

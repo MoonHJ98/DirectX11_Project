@@ -3,6 +3,7 @@
 #include "Base.h"
 
 class Transform;
+class GraphicDevice;
 
 class GameObject abstract : public Base
 {
@@ -14,12 +15,13 @@ public:
 public:
 	virtual int Update(float _TimeDelta) PURE;
 	virtual void Render() PURE;
-	void RenderDepthForShadow(bool _renderDepthForShadow) { renderDepthForShadow = _renderDepthForShadow; }
+	void RenderDepthForShadow(BOOL _renderDepthForShadow) { renderDepthForShadow = _renderDepthForShadow; }
 
 
 protected:
+	shared_ptr<GraphicDevice> Graphic = nullptr;
 	shared_ptr<Transform>	transform = nullptr;
 	float					TimeDelta = 0;
-	bool                    renderDepthForShadow = false;
+	BOOL                    renderDepthForShadow = FALSE;
 };
 

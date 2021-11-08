@@ -5,6 +5,7 @@
 #include "Management.h"
 #include "Renderer.h"
 #include "Light.h"
+#include "GraphicDevice.h"
 
 Player::Player()
 {
@@ -33,18 +34,21 @@ void Player::Render()
 	transform->Update(false, renderDepthForShadow);
 
 	model->Render();
-	auto light = Management::GetInstance()->FindLight(L"DirectionalLight", 0);
-	light->MatrixBufferToShader();
+
 }
 
 HRESULT Player::Initialize(ID3D11Device * _Device)
 {
+	Graphic = GraphicDevice::GetInstance();
+
+
 	transform = Transform::Create(Transform::TRANSDESC(10.f, 10.f));
 	transform->SetScale(Vector3(0.1f, 0.1f, 0.1f));
+	transform->SetState(Transform::POSITION, Vector3(10.f, 0.f, 10.f));
 	model = Model::Create();
 
-	
-	
+
+
 
 	
 	return S_OK;

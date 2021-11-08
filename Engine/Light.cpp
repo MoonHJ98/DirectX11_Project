@@ -38,17 +38,6 @@ void Light::Render()
 	rectangleBuffer->Render();
 }
 
-void Light::MatrixBufferToShader()
-{
-	LightMatrixBufferType matrixBufferType;
-	matrixBufferType.ViewMatrix = XMMatrixTranspose(ViewMatrix);
-	matrixBufferType.ProjMatrix = XMMatrixTranspose(OrthoMatrix);
-	matrixBufferType.lightPosition = position;
-	lightMatrixBuffer->SetData(Graphic->GetDeviceContext(), matrixBufferType);
-	auto matrixBuffer = lightMatrixBuffer->GetBuffer();
-	Graphic->GetDeviceContext()->VSSetConstantBuffers(4, 1, &matrixBuffer);
-}
-
 HRESULT Light::Initialize(LIGHTDESC _LightInfo)
 {
 	LightInfo = _LightInfo;
@@ -57,10 +46,6 @@ HRESULT Light::Initialize(LIGHTDESC _LightInfo)
 	shared_ptr<ConstantBuffer<LightBufferType>> temp(new ConstantBuffer<LightBufferType>());
 	LightBuffer = temp;
 	LightBuffer->Create(Graphic->GetDevice());
-
-	shared_ptr<ConstantBuffer<LightMatrixBufferType>> lightmatrixTemp(new ConstantBuffer<LightMatrixBufferType>());
-	lightMatrixBuffer = lightmatrixTemp;
-	lightMatrixBuffer->Create(Graphic->GetDevice());
 
 	
 	rectangleBuffer = RectangleBuffer::Create();
@@ -103,7 +88,7 @@ void Light::CreateProjMatrix()
 
 	ProjectMatrix = XMMatrixPerspectiveFovLH(FoV, screenAspect, SCREENNEAR, SCREENDEPTH);
 
-	OrthoMatrix = XMMatrixOrthographicLH(viewport.Width, viewport.Height, SCREENNEAR, SCREENDEPTH);
+	OrthoMatrix = XMMatrixOrthographicLH(viewport.Width/12.f, viewport.Height/12.f, 1.f, 100.f);
 
 }
 

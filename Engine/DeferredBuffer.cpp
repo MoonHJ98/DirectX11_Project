@@ -40,6 +40,9 @@ HRESULT DeferredBuffer::Initialize(int _textureWidth, int _textureHeight, float 
 	auto depthForShadow = RenderTarget::Create(Vector3(-350.f, -50.f, 0.1f), Vector3(50.f, 50.f, 1.f), Vector4(1.f, 1.f, 1.f, 1.f));
 	renderTargets.push_back(depthForShadow);
 
+	auto lightViewPos = RenderTarget::Create(Vector3(-250.f, -50.f, 0.1f), Vector3(50.f, 50.f, 1.f), Vector4(1.f, 1.f, 1.f, 1.f));
+	renderTargets.push_back(lightViewPos);
+
 
 	Graphic = GraphicDevice::GetInstance();
 

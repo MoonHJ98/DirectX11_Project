@@ -88,7 +88,7 @@ Vector3 Transform::GetScale()
 	return Vector3(right.Length(), up.Length(), look.Length());
 }
 
-void Transform::Update(bool isOrtho, bool _depthForShadow)
+void Transform::Update(bool isOrtho, BOOL _depthForShadow)
 {
 	MATRIXBUFFERTYPE desc;
 	desc.World = XMMatrixTranspose(WorldMatrix);
@@ -114,13 +114,20 @@ void Transform::Update(bool isOrtho, bool _depthForShadow)
 	else
 		desc.Projection = XMMatrixTranspose(*Manage->GetTransform(D3DTRANSFORMSTATE_PROJECTION));
 
-	if (_depthForShadow == true)
+	auto light = Manage->FindLight(L"DirectionalLight", 0);
+	Matrix lightViewMatrix = *light->GetViewMatrix();
+	Matrix lightProjectionMatrix = *light->GetOrthoMatrix();
+
+	if (_depthForShadow == TRUE)
 	{
-		auto light = Manage->FindLight(L"DirectionalLight", 0);
-		desc.View = XMMatrixTranspose(*light->GetViewMatrix());
-		desc.Projection = XMMatrixTranspose(*light->GetProjectionMatrix());
-		
+		desc.View = XMMatrixTranspose(lightViewMatrix);
+		desc.Projection = XMMatrixTranspose(lightProjectionMatrix);
 	}
+
+	desc.lightViewMatrix = XMMatrixTranspose(lightViewMatrix);
+	desc.lightProjectionMatrix = XMMatrixTranspose(lightProjectionMatrix);
+
+
 	desc.renderDepthForShadow = _depthForShadow;
 	MatrixBuffer.SetData(Graphic->GetDeviceContext(), desc);
 	auto buffer = MatrixBuffer.GetBuffer();

@@ -27,20 +27,13 @@ public:
 		float SpecularPower;
 		//float Padding = 0.f;
 	};
-	struct LightMatrixBufferType
-	{
-		Matrix ViewMatrix;
-		Matrix ProjMatrix;
-		Vector3 lightPosition;
-		float padding;
-	};
+
 
 public:
 	LIGHTDESC& GetLightInfo() { return LightInfo; }
 
 public:
 	void Render();
-	void MatrixBufferToShader();
 	Matrix* GetViewMatrix() { return &ViewMatrix; }
 	Matrix* GetProjectionMatrix() { return &ProjectMatrix; }
 	Matrix* GetOrthoMatrix() { return &OrthoMatrix; }
@@ -58,7 +51,6 @@ private:
 	LIGHTDESC LightInfo;
 
 	shared_ptr<ConstantBuffer<LightBufferType>> LightBuffer = nullptr;
-	shared_ptr<ConstantBuffer<LightMatrixBufferType>> lightMatrixBuffer = nullptr;
 
 	shared_ptr<RectangleBuffer> rectangleBuffer = nullptr;
 	shared_ptr<Transform> transform = nullptr;
@@ -66,6 +58,6 @@ private:
 	Matrix ViewMatrix;
 	Matrix ProjectMatrix;
 	Matrix OrthoMatrix;
-	Vector3 position = Vector3(0.f, 50.f, -50.f);
+	Vector3 position = Vector3(0.f, 0.f, 0.f);
 };
 

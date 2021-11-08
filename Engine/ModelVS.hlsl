@@ -23,13 +23,12 @@ struct VertexOutput
     float3 Tangent : TANGENT;
     float3 BiTangent : BITANGENT;
     float4 BlendWeights : BLENDWEIGHTS;
-    float4 BlendIndices : BLENDINDICES;  
-
+    float4 BlendIndices : BLENDINDICES;
     float4 WorldPos : TEXCOORD1;
     float4 ProjPos : TEXCOORD2;
    
-   
-
+    float4 lightViewPosition : TEXCOORD3;
+    bool renderDepthForShadow : BOOL;
 };
 
 struct AnimationFrame
@@ -51,8 +50,11 @@ cbuffer MatrixBuffer : register(b0)
     matrix WorldMatrix;
     matrix ViewMatrix;
     matrix ProjectionMatrix;
-	bool renderDepthForShadow;
-    
+    matrix lightViewMatrix;
+    matrix lightProjectionMatrix;
+
+    bool renderDepthForShadow;
+    bool padding3[3];
 }
 
 cbuffer CB_Bone : register(b1)
@@ -71,14 +73,6 @@ cbuffer CameraBuffer : register(b3)
     float3 CameraPosition;
     float padding;
 };
-
-cbuffer LightMatrixBuffer : register(b4)
-{
-    matrix lightViewMatrix;
-    matrix lightProjMatrix;
-    float3 lightPosition;
-    float padding2;
-}
 
 
 /*
@@ -147,13 +141,13 @@ VertexOutput main(VertexModel input)
     SetAnimationWorld(animationWorld, WorldMatrix, input);
 
 
-    if (renderDepthForShadow == false)
-    {
-        Out.Position = mul(float4(input.Position, 1.f), animationWorld);
-        float4 WorldforLight = Out.Position;
-        Out.Position = mul(Out.Position, ViewMatrix);
-        Out.Position = mul(Out.Position, ProjectionMatrix);
-    }
+
+    Out.Position = mul(float4(input.Position, 1.f), animationWorld);
+    float4 WorldforLight = Out.Position;
+    Out.Position = mul(Out.Position, ViewMatrix);
+    Out.Position = mul(Out.Position, ProjectionMatrix);
+    Out.ProjPos = Out.Position;
+
 
 
     Out.Uv = input.Uv;
@@ -162,16 +156,16 @@ VertexOutput main(VertexModel input)
     
     float4 WorldPosition = mul(float4(input.Position, 1.f), WorldMatrix);
     Out.WorldPos = WorldPosition;
-    Out.ProjPos = Out.Position;
-    //Out.ViewDirection = normalize(CameraPosition.xyz - WorldPosition.xyz);
+
 
     
     Out.Tangent = normalize(mul(float4(input.Tangent, 0.f), WorldMatrix));
     Out.BiTangent = normalize(mul(float4(input.BiTangent, 0.f), WorldMatrix));
     
-    //WorldforLight = mul(WorldforLight, lightViewMatrix);
-    //WorldforLight = mul(WorldforLight, lightProjMatrix);
-   
+    Out.renderDepthForShadow = renderDepthForShadow;
+
+    Out.lightViewPosition = mul(WorldforLight, lightViewMatrix);
+    Out.lightViewPosition = mul(Out.lightViewPosition, lightProjectionMatrix);
     
     return Out;
 }

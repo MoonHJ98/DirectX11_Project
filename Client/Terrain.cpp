@@ -6,6 +6,7 @@
 #include "Renderer.h"
 #include "Management.h"
 #include "Light.h"
+#include "GraphicDevice.h"
 #include "Material.h"
 
 Terrain::Terrain()
@@ -22,6 +23,7 @@ Terrain::~Terrain()
 
 HRESULT Terrain::Initialize(UINT _terrainWidth, UINT _terrainHeight, wstring _heightMapPath)
 {
+	Graphic = GraphicDevice::GetInstance();
 	terrainBuffer = TerrainBuffer::Create(_terrainWidth, _terrainHeight, _heightMapPath);
 	transform = Transform::Create(Transform::TRANSDESC());
 	
@@ -41,6 +43,7 @@ HRESULT Terrain::Initialize(UINT _terrainWidth, UINT _terrainHeight, wstring _he
 
 	material = Material::Create(desc);
 
+
 	return S_OK;
 }
 
@@ -55,8 +58,6 @@ void Terrain::Render()
 {
 	shader->Render();
 
-	auto light = Management::GetInstance()->FindLight(L"DirectionalLight", 0);
-	light->MatrixBufferToShader();
 
 	material->Render();
 	transform->Update(false, renderDepthForShadow);

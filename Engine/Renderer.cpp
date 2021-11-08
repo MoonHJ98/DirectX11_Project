@@ -26,6 +26,8 @@ HRESULT Renderer::Initialize()
 	deferredBuffer->AddMultiRenderTarget(L"Deferred", DeferredBuffer::NORMALMAP);
 	deferredBuffer->AddMultiRenderTarget(L"Deferred", DeferredBuffer::SPECULARMAP);
 	deferredBuffer->AddMultiRenderTarget(L"Deferred", DeferredBuffer::DEPTH);
+	deferredBuffer->AddMultiRenderTarget(L"Deferred", DeferredBuffer::LIGHTVIEWPOS);
+
 	
 
 	deferredBuffer->AddMultiRenderTarget(L"Light", DeferredBuffer::SHADE);
@@ -146,12 +148,18 @@ void Renderer::RenderLight()
 	
 	auto normal = deferredBuffer->GetShaderResourceView(DeferredBuffer::NORMALMAP);
 	auto specular = deferredBuffer->GetShaderResourceView(DeferredBuffer::SPECULARMAP);
-	auto viewDirection = deferredBuffer->GetShaderResourceView(DeferredBuffer::DEPTH);
+	auto depth = deferredBuffer->GetShaderResourceView(DeferredBuffer::DEPTH);
+	auto shadow = deferredBuffer->GetShaderResourceView(DeferredBuffer::DEPTHFORSHADOW);
+	auto lightViewPos = deferredBuffer->GetShaderResourceView(DeferredBuffer::LIGHTVIEWPOS);
+
 
 	
 	Graphic->GetDeviceContext()->PSSetShaderResources(0, 1, &normal);
 	Graphic->GetDeviceContext()->PSSetShaderResources(1, 1, &specular);
-	Graphic->GetDeviceContext()->PSSetShaderResources(2, 1, &viewDirection);
+	Graphic->GetDeviceContext()->PSSetShaderResources(2, 1, &depth);
+	Graphic->GetDeviceContext()->PSSetShaderResources(3, 1, &shadow);
+	Graphic->GetDeviceContext()->PSSetShaderResources(4, 1, &lightViewPos);
+
 
 
 

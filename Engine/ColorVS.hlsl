@@ -4,6 +4,10 @@ cbuffer MatrixBuffer
     matrix worldMatrix;
     matrix viewMatrix;
     matrix projectionMatrix;
+    matrix lightViewMatrix;
+    matrix lightProjectionMatrix;
+    bool renderDepthForShadow;
+    bool padding[3];
 };
 
 
@@ -21,36 +25,30 @@ struct PixelInputType
     float4 normal : NORMAL;
     float4 WorldPos : TEXCOORD1;
     float4 ProjPos : TEXCOORD2;
-    
-    
+    float4 lightViewPosition : TEXCOORD3;
+    bool renderDepthForShadow : BOOL;
 };
-
-cbuffer LightMatrixBuffer : register(b4)
-{
-    matrix lightViewMatrix;
-    matrix lightProjMatrix;
-    float3 lightPosition;
-    float padding2;
-}
 
 PixelInputType main(VertexInputType input)
 {
     PixelInputType output;
     
     output.position = mul(float4(input.position, 1.f), worldMatrix);
+    float4 WorldPosition = output.position;
     output.position = mul(output.position, viewMatrix);
     output.position = mul(output.position, projectionMatrix);
     
     output.uv = input.uv;
     output.normal = normalize(mul(float4(input.normal, 0.f), worldMatrix));
     
-    float4 WorldPosition = mul(float4(input.position, 1.f), worldMatrix);
+
     output.WorldPos = WorldPosition;
     output.ProjPos = output.position;
+   
+    output.renderDepthForShadow = renderDepthForShadow;
     
-    //float4 WorldforLight = mul(WorldPosition, lightViewMatrix);
-    //WorldforLight = mul(WorldforLight, lightProjMatrix);
-    
+    output.lightViewPosition = mul(WorldPosition, lightViewMatrix);
+    output.lightViewPosition = mul(output.lightViewPosition, lightProjectionMatrix);
     
     return output;
 }

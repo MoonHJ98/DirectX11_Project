@@ -40,7 +40,7 @@ public:
 	Vector3						GetScale();
 
 public:
-	void						Update(bool isOrtho = false, bool _depthForShadow = false);
+	void						Update(bool isOrtho = false, BOOL _depthForShadow = FALSE);
 
 public:
 	HRESULT						GoForward(float _Frametime);

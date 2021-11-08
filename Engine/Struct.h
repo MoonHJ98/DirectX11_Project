@@ -26,10 +26,14 @@ typedef struct MatrixBufferType
 	XMMATRIX World = {};
 	XMMATRIX View = {};
 	XMMATRIX Projection = {};
-	bool renderDepthForShadow;
+	XMMATRIX lightViewMatrix = {};
+	XMMATRIX lightProjectionMatrix = {};
+	BOOL renderDepthForShadow;
+	BOOL padding[3];
 
 
 }MATRIXBUFFERTYPE;
+
 
 typedef struct tagTexture
 {
