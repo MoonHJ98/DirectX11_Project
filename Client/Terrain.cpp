@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "Terrain.h"
-#include "TerrainBuffer.h"
+#include "HeightTerrainBuffer.h"
 #include "Transform.h"
 #include "Shader.h"
 #include "Renderer.h"
@@ -8,6 +8,7 @@
 #include "Light.h"
 #include "GraphicDevice.h"
 #include "Material.h"
+#include "TerrainBuffer.h"
 
 Terrain::Terrain()
 {
@@ -24,7 +25,7 @@ Terrain::~Terrain()
 HRESULT Terrain::Initialize(UINT _terrainWidth, UINT _terrainHeight, wstring _heightMapPath)
 {
 	Graphic = GraphicDevice::GetInstance();
-	terrainBuffer = TerrainBuffer::Create(_terrainWidth, _terrainHeight, _heightMapPath);
+	heightTerrainBuffer = HeightTerrainBuffer::Create(_terrainWidth, _terrainHeight, _heightMapPath);
 	transform = Transform::Create(Transform::TRANSDESC());
 	
 	D3D11_INPUT_ELEMENT_DESC InputLayout[] =
@@ -43,6 +44,7 @@ HRESULT Terrain::Initialize(UINT _terrainWidth, UINT _terrainHeight, wstring _he
 
 	material = Material::Create(desc);
 
+	terrainBuffer = TerrainBuffer::Create(100, 100);
 
 	return S_OK;
 }
@@ -62,6 +64,7 @@ void Terrain::Render()
 	material->Render();
 	transform->Update(false, renderDepthForShadow);
 	terrainBuffer->Render();
+	//heightTerrainBuffer->Render();
 }
 
 shared_ptr<Terrain> Terrain::Create(UINT _terrainWidth, UINT _terrainHeight, wstring _heightMapPath)

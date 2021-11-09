@@ -2,7 +2,9 @@
 
 #include "GameObject.h"
 
+class HeightTerrainBuffer;
 class TerrainBuffer;
+
 class Transform;
 class Shader;
 
@@ -28,7 +30,9 @@ public:
 	static shared_ptr<Terrain> Create(UINT _terrainWidth, UINT _terrainHeight, wstring _heightMapPath = L"");
 
 private:
+	shared_ptr<HeightTerrainBuffer> heightTerrainBuffer = nullptr;
 	shared_ptr<TerrainBuffer> terrainBuffer = nullptr;
+
 	shared_ptr<Transform> transform = nullptr;
 	shared_ptr<Shader> shader = nullptr;
 	shared_ptr<Material> material = nullptr;

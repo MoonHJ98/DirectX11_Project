@@ -240,6 +240,7 @@
     <ClInclude Include="RectangleBuffer.h">
       <Filter>01. Utility\03. Component\01. Buffer\00. Rectangle</Filter>
     </ClInclude>
+    <ClInclude Include="HeightTerrainBuffer.h" />
     <ClInclude Include="TerrainBuffer.h" />
   </ItemGroup>
   <ItemGroup>
@@ -345,6 +346,7 @@
     <ClCompile Include="RectangleBuffer.cpp">
       <Filter>01. Utility\03. Component\01. Buffer\00. Rectangle</Filter>
     </ClCompile>
+    <ClCompile Include="HeightTerrainBuffer.cpp" />
     <ClCompile Include="TerrainBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>

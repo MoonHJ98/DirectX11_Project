@@ -6,28 +6,11 @@ class GraphicDevice;
 
 class TerrainBuffer
 {
-	typedef struct VertexType
+	struct VertexType
 	{
-		Vector3	position;
-		Vector2 uv;
+		Vector3 position;
+		Vector2 Uv;
 		Vector3 normal;
-
-	}VERTEXTYPE;
-
-	struct HeightMapType
-	{
-		float x, y, z;
-		float nx, ny, nz;
-	};
-	struct ModelType
-	{
-		float x, y, z;
-		float u, v;
-		float nx, ny, nz;
-	};
-	struct VectorType
-	{
-		float x, y, z;
 	};
 
 private:
@@ -38,35 +21,37 @@ public:
 	~TerrainBuffer();
 
 private:
-	HRESULT Initialize(int _terrainWidth, int _terrainHeight, wstring _heightMapPath);
-	HRESULT InitializeBuffer();
-	HRESULT LoadHeightMap(wstring _heightMapPath);
-	void SetTerrainCoordinates();
-	HRESULT BuildTerrainModel();
-	HRESULT CalculateNormal();
-
-
-	void RenderBuffers();
+	HRESULT Initialize(UINT _terrainWidth, UINT _terrainHeight);
+	HRESULT InitializeBuffers();
 
 public:
 	void Render();
 
+private:
+	void RenderBuffers();
+
 public:
-	static shared_ptr<TerrainBuffer> Create(int _terrainWidth, int _terrainHeight, wstring _heightMapPath);
+	static shared_ptr<TerrainBuffer> Create(UINT _terrainWidth, UINT _terrainHeight);
 
 private:
 	shared_ptr<GraphicDevice> Graphic = nullptr;
-
 	ComPtr<ID3D11Buffer> vertexBuffer = nullptr;
 	ComPtr<ID3D11Buffer> indexBuffer = nullptr;
 
-	HeightMapType* heightMap = nullptr;
+	VertexType* vertices = nullptr;
+	UINT* indices = nullptr;
 
-	int vertexCount = 0;
-	int indexCount = 0;
-	int terrainWidth = 257;
-	int terrainHeight = 257;
-	float heightScale = 5.f;
-	ModelType* terrainModel = nullptr;
+
+	Vector3* Position = nullptr;
+
+	UINT terrainWidth = 0;
+	UINT terrainHeight = 0;
+
+	UINT vertexCount = 0;
+	UINT indexCount = 0;
+
+
+
+
 };
 

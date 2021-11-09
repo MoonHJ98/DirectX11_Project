@@ -187,6 +187,7 @@
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Struct.h" />
     <ClInclude Include="RenderTarget.h" />
+    <ClInclude Include="HeightTerrainBuffer.h" />
     <ClInclude Include="TerrainBuffer.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TimeManager.h" />
@@ -229,6 +230,7 @@
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Struct.cpp" />
     <ClCompile Include="RenderTarget.cpp" />
+    <ClCompile Include="HeightTerrainBuffer.cpp" />
     <ClCompile Include="TerrainBuffer.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TimeManager.cpp" />
