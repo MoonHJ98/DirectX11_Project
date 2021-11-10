@@ -45,7 +45,9 @@ HRESULT StaticCamera::KeyInput(float _TimeDelta)
 		transform->GoDown(_TimeDelta);
 	}
 
+	auto pos = transform->GetState(Transform::POSITION);
 
+	
 
 	return S_OK;
 }

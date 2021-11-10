@@ -10,6 +10,7 @@
 #include "Material.h"
 #include "TerrainBuffer.h"
 #include "Management.h"
+#include "StaticCamera.h"
 
 
 Terrain::Terrain()
@@ -81,12 +82,14 @@ int Terrain::Update(float _TimeDelta)
 	Matrix	matView;
 	matView = *Manage->GetTransform(D3DTRANSFORMSTATE_VIEW);
 	matView.Invert();
-	XMVector3TransformCoord(RayPos, matView);
-	XMVector3TransformNormal(RayDir, matView);
+	Vector3::Transform(RayPos, matView, RayPos);
+	Vector3::TransformNormal(RayDir, matView, RayDir);
 
+	
 
 	Ray ray;
 
+	float dist = 0.f;
 
 	for (int z = 0; z < 100 - 1; ++z)
 	{
@@ -100,16 +103,28 @@ int Terrain::Update(float _TimeDelta)
 			Vector3 vertex1 = vertices[index + 100 + 1].position;
 			Vector3 vertex2 = vertices[index + 1].position;
 			Vector3 vertex3 = vertices[index + 100].position;
+
+
+			Vector3 vertex4 = vertices[index].position;
+			Vector3 vertex5 = vertices[index + 100].position;
+			Vector3 vertex6 = vertices[index + 1].position;
 			
-			float dist = 0.f;
 			ray.position = RayPos;
 
 			ray.direction = RayDir;
-			if (ray.Intersects(vertex1, vertex2, vertex3, dist))
-			{
-				int a = 10;
-			}
 
+			//if (ray.Intersects(vertex1, vertex2, vertex3, dist))
+			//{
+			//	//3D¸¶¿ì½º ÁÂÇ¥ = vPickRayOrig + vPickRayDir * t ;
+			//	 
+			//	cout << dist << endl;
+			//}
+			if (ray.Intersects(vertex4, vertex5, vertex6, dist))
+			{
+				//3D¸¶¿ì½º ÁÂÇ¥ = vPickRayOrig + vPickRayDir * t ;
+		
+				cout << dist << endl;
+			}
 		}
 	}
 	
