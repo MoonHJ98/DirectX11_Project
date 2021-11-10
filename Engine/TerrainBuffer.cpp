@@ -38,11 +38,6 @@ HRESULT TerrainBuffer::InitializeBuffers()
 	{
 		for (UINT x = 0; x < terrainWidth; ++x)
 		{
-			//VertexType vertex;
-			//vertex.position = Vector3((float)x, 0.f, (float)z);
-			//vertex.normal = Vector3(0.f, 1.f, 0.f);
-			//
-			//v.push_back(vertex);
 
 			UINT index = terrainWidth * z + x;
 			vertices[index].position = Vector3((float)x, 0.f, (float)z);
@@ -51,12 +46,7 @@ HRESULT TerrainBuffer::InitializeBuffers()
 
 		}
 	}
-
-	//vertices = new VertexType[v.size()];
-	//vertexCount = v.size();
-
-	//copy(v.begin(), v.end(), vertices);
-
+	
 	vector<UINT> indices;
 
 	for (UINT z = 0; z < terrainHeight - 1; ++z)
@@ -88,6 +78,8 @@ HRESULT TerrainBuffer::InitializeBuffers()
 
 void TerrainBuffer::Render()
 {
+
+
 	RenderBuffers();
 }
 

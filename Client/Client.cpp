@@ -20,6 +20,12 @@ int  GX;
 int  GY;
 SCENEID GSceneID = SCENE_END;
 
+#ifdef UNICODE
+#pragma comment(linker, "/entry:wWinMainCRTStartup /subsystem:console")
+#else
+#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")-
+#endif
+
 
 // DLL 경로 설정 https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=sharonichoya&logNo=220817543315
 

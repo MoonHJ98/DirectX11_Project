@@ -9,6 +9,7 @@ class Transform;
 class Shader;
 
 class Material;
+class Management;
 
 class Terrain :public GameObject, public enable_shared_from_this<Terrain> 
 {
@@ -36,5 +37,7 @@ private:
 	shared_ptr<Transform> transform = nullptr;
 	shared_ptr<Shader> shader = nullptr;
 	shared_ptr<Material> material = nullptr;
+
+	shared_ptr<Management> Manage = nullptr;
 };
 

@@ -3,6 +3,7 @@
 #include "Includes.h"
 
 #include <dinput.h>
+#include <DirectXTK/Mouse.h>
 
 class InputDevice
 {
@@ -29,11 +30,11 @@ public:
 
 
 
-
 private:
 	ComPtr<IDirectInput8>			DirectInput = nullptr;
 	ComPtr<IDirectInputDevice8>	    Keyboard = nullptr;
-	ComPtr<IDirectInputDevice8>		Mouse = nullptr;
+	ComPtr<IDirectInputDevice8>		mouse = nullptr;
+	unique_ptr<Mouse> tkmouse;
 
 	UCHAR					KeyboardState[256];
 	DIMOUSESTATE			MouseState;

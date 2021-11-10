@@ -26,6 +26,7 @@ private:
 
 public:
 	void Render();
+	VertexType* GetVertices() { return vertices; }
 
 private:
 	void RenderBuffers();

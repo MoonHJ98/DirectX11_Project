@@ -86,7 +86,6 @@ int StaticCamera::Update(float _TimeDelta)
 	KeyInput(_TimeDelta);
 
 	MouseInput(_TimeDelta);
-	MouseInput(_TimeDelta);
 
 	XMMATRIX WorldMatrix = *transform->GetWorldMatrix();
 

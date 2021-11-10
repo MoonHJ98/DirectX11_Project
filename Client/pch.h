@@ -16,6 +16,9 @@
 #endif
 
 
+#include <iostream>
+using namespace std;
+
 
 //#pragma comment(lib, "Engine.lib")
 
