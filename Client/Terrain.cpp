@@ -27,9 +27,11 @@ Terrain::~Terrain()
 
 HRESULT Terrain::Initialize(UINT _terrainWidth, UINT _terrainHeight, wstring _heightMapPath)
 {
+	terrainWidth = _terrainWidth;
+	terrainHeight = _terrainHeight;
 	Graphic = GraphicDevice::GetInstance();
 	Manage = Management::GetInstance();
-	heightTerrainBuffer = HeightTerrainBuffer::Create(_terrainWidth, _terrainHeight, _heightMapPath);
+	heightTerrainBuffer = HeightTerrainBuffer::Create(terrainWidth, terrainHeight, _heightMapPath);
 	transform = Transform::Create(Transform::TRANSDESC());
 
 	D3D11_INPUT_ELEMENT_DESC InputLayout[] =
@@ -57,6 +59,24 @@ int Terrain::Update(float _TimeDelta)
 {
 	Renderer::GetInstance()->AddRenderGroup(Renderer::RENDER_NONALPHA, shared_from_this());
 
+
+
+	return 0;
+}
+
+void Terrain::Render()
+{
+	shader->Render();
+
+
+	material->Render();
+	transform->Update(false, renderDepthForShadow);
+	terrainBuffer->Render();
+	//heightTerrainBuffer->Render();
+}
+
+Vector3 Terrain::PickTerrain()
+{
 	POINT p;
 	GetCursorPos(&p);
 	ScreenToClient(GhWnd, &p);
@@ -81,66 +101,59 @@ int Terrain::Update(float _TimeDelta)
 	// 월드로 변환
 	Matrix	matView;
 	matView = *Manage->GetTransform(D3DTRANSFORMSTATE_VIEW);
-	matView.Invert();
-	Vector3::Transform(RayPos, matView, RayPos);
-	Vector3::TransformNormal(RayDir, matView, RayDir);
+	Matrix world = *transform->GetWorldMatrix();
+	Matrix WorldView = world * matView;
+	Matrix invmatrix = WorldView.Invert();
 
-	
+
+	Vector3::Transform(RayPos, invmatrix, RayPos);
+	Vector3::TransformNormal(RayDir, invmatrix, RayDir);
+
+
 
 	Ray ray;
 
 	float dist = 0.f;
 
-	for (int z = 0; z < 100 - 1; ++z)
+	auto vertices = terrainBuffer->GetVertices();
+
+
+	Vector3 Pos;
+
+	for (int z = 0; z < terrainHeight - 1; ++z)
 	{
-		for (int x = 0; x < 100 - 1; ++x)
+		for (int x = 0; x < terrainWidth - 1; ++x)
 		{
-			int	index = z * 100 + x;
-
-			auto vertices = terrainBuffer->GetVertices();
-
-
-			Vector3 vertex1 = vertices[index + 100 + 1].position;
-			Vector3 vertex2 = vertices[index + 1].position;
-			Vector3 vertex3 = vertices[index + 100].position;
+			int	index[4];
+			index[0] = terrainWidth * z + x;
+			index[1] = terrainWidth * (z + 1) + x;
+			index[2] = terrainWidth * z + x + 1;
+			index[3] = terrainWidth * (z + 1) + (x + 1);
 
 
-			Vector3 vertex4 = vertices[index].position;
-			Vector3 vertex5 = vertices[index + 100].position;
-			Vector3 vertex6 = vertices[index + 1].position;
-			
+			Vector3 vertex1 = vertices[index[0]].position;
+			Vector3 vertex2 = vertices[index[1]].position;
+			Vector3 vertex3 = vertices[index[2]].position;
+			Vector3 vertex4 = vertices[index[3]].position;
+
 			ray.position = RayPos;
 
 			ray.direction = RayDir;
 
-			//if (ray.Intersects(vertex1, vertex2, vertex3, dist))
-			//{
-			//	//3D마우스 좌표 = vPickRayOrig + vPickRayDir * t ;
-			//	 
-			//	cout << dist << endl;
-			//}
-			if (ray.Intersects(vertex4, vertex5, vertex6, dist))
+
+			if (ray.Intersects(vertex1, vertex2, vertex3, dist))
 			{
-				//3D마우스 좌표 = vPickRayOrig + vPickRayDir * t ;
-		
-				cout << dist << endl;
+				Pos = ray.position + ray.direction * dist;
+			}
+			if (ray.Intersects(vertex4, vertex2, vertex3, dist))
+			{
+				Pos = ray.position + ray.direction * dist;
 			}
 		}
 	}
-	
+	cout << Pos.x << " , " << Pos.y << " , " << Pos.z << endl;
 
-	return 0;
-}
-
-void Terrain::Render()
-{
-	shader->Render();
-
-
-	material->Render();
-	transform->Update(false, renderDepthForShadow);
-	terrainBuffer->Render();
-	//heightTerrainBuffer->Render();
+	return Pos;
 }
 
 shared_ptr<Terrain> Terrain::Create(UINT _terrainWidth, UINT _terrainHeight, wstring _heightMapPath)

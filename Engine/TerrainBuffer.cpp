@@ -46,7 +46,7 @@ HRESULT TerrainBuffer::InitializeBuffers()
 
 		}
 	}
-	
+
 	vector<UINT> indices;
 
 	for (UINT z = 0; z < terrainHeight - 1; ++z)
@@ -96,7 +96,7 @@ void TerrainBuffer::RenderBuffers()
 	Graphic->GetDeviceContext()->IASetIndexBuffer(indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 
 	// 이 버텍스 버퍼에서 렌더링되어야하는 프리미티브의 타입을 설정한다.이 경우 라인리스트이다.
-	Graphic->GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
+	Graphic->GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	Graphic->GetDeviceContext()->DrawIndexed(indexCount, 0, 0);
 }

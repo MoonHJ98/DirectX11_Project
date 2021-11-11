@@ -28,6 +28,9 @@ public:
 	virtual void Render() override;
 
 public:
+	Vector3 PickTerrain();
+
+public:
 	static shared_ptr<Terrain> Create(UINT _terrainWidth, UINT _terrainHeight, wstring _heightMapPath = L"");
 
 private:
@@ -39,5 +42,7 @@ private:
 	shared_ptr<Material> material = nullptr;
 
 	shared_ptr<Management> Manage = nullptr;
+
+	UINT terrainWidth, terrainHeight;
 };
 

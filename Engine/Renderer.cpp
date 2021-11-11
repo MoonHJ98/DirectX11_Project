@@ -17,7 +17,7 @@ HRESULT Renderer::Initialize()
 	UINT viewportNum = 1;
 	D3D11_VIEWPORT viewport;
 	Graphic->GetDeviceContext()->RSGetViewports(&viewportNum, &viewport);
-
+	
 	LightMgr = LightManager::GetInstance();
 
 	deferredBuffer = DeferredBuffer::Create((int)viewport.Width, (int)viewport.Height, SCREENDEPTH, SCREENNEAR);
