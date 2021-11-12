@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "ImguiManager.h"
 #include "GraphicDevice.h"
+#include "Renderer.h"
 
 HRESULT ImguiManager::Initialize()
 {
@@ -25,7 +26,7 @@ void ImguiManager::Render()
 
 	static int counter = 0;
 	// Create ImGui Test Window.
-	ImGui::Begin("Test");
+	ImGui::Begin("Test123");
 	ImGui::Text("This is example text.");
 	if (ImGui::Button("Click me"))
 		counter += 1;
@@ -33,6 +34,9 @@ void ImguiManager::Render()
 	string clickCount = "Click Count : " + to_string(counter);
 	ImGui::SameLine();
 	ImGui::Text(clickCount.c_str());
+
+	//ID3D11ShaderResourceView* texture = Renderer::GetInstance()->GetBlendTexture();
+	//ImGui::Image((void*)texture, ImVec2(800, 600));
 
 	ImGui::End();
 

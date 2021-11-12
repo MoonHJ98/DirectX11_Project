@@ -28,12 +28,15 @@ HRESULT Renderer::Initialize()
 	deferredBuffer->AddMultiRenderTarget(L"Deferred", DeferredBuffer::DEPTH);
 	deferredBuffer->AddMultiRenderTarget(L"Deferred", DeferredBuffer::LIGHTVIEWPOS);
 
+
 	
 
 	deferredBuffer->AddMultiRenderTarget(L"Light", DeferredBuffer::SHADE);
 	deferredBuffer->AddMultiRenderTarget(L"Light", DeferredBuffer::SPECULAR);
 
 	deferredBuffer->AddMultiRenderTarget(L"Shadow", DeferredBuffer::DEPTHFORSHADOW);
+
+
 
 	//deferredBuffer->AddMultiRenderTarget(L"Light", DeferredBuffer::SHADOW);
 
@@ -167,14 +170,14 @@ void Renderer::RenderLight()
 	Matrix View = *Manage->GetTransform(D3DTRANSFORMSTATE_VIEW);
 	Matrix Proj = *Manage->GetTransform(D3DTRANSFORMSTATE_PROJECTION);
 	Vector3 CamPos;
-	memcpy(&CamPos, &View(3, 0), sizeof(Vector3));
+
 
 	View = XMMatrixInverse(nullptr, View);
 	Proj = XMMatrixInverse(nullptr, Proj);
 
 	buffertype.ProjInv = XMMatrixTranspose(Proj);
 	buffertype.ViewInv = XMMatrixTranspose(View);
-	buffertype.CamPos = CamPos;
+	buffertype.CamPos = Manage->FindGameObject(0, L"Camera").get()->GetPosition();
 
 
 	projToWorld->SetData(Graphic->GetDeviceContext(), buffertype);
@@ -190,6 +193,8 @@ void Renderer::RenderLight()
 
 void Renderer::RenderBlend()
 {
+
+
 	// 모든 2D 렌더링을 시작하려면 Z 버퍼를 끕니다.
 	Graphic->TurnZBufferOff();
 
@@ -208,11 +213,14 @@ void Renderer::RenderBlend()
 
 	transform->Update(true);
 	rectangleBuffer->Render();
-
 	deferredBuffer->Render();
+
 	
 	// 모든 2D 렌더링이 완료되었으므로 Z 버퍼를 다시 켜십시오.
 	Graphic->TurnZBufferOn();
+
+
+
 
 	//ImGui::CreateContext();
 

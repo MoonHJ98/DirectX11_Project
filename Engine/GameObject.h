@@ -2,8 +2,10 @@
 
 #include "Base.h"
 
-class Transform;
+#include "Transform.h"
+
 class GraphicDevice;
+
 
 class GameObject abstract : public Base
 {
@@ -17,6 +19,8 @@ public:
 	virtual void Render() PURE;
 	void RenderDepthForShadow(BOOL _renderDepthForShadow) { renderDepthForShadow = _renderDepthForShadow; }
 
+public:
+	Vector3 GetPosition() { return transform->GetState(Transform::POSITION); }
 
 protected:
 	shared_ptr<GraphicDevice> Graphic = nullptr;

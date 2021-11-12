@@ -44,6 +44,7 @@ HRESULT DeferredBuffer::Initialize(int _textureWidth, int _textureHeight, float 
 	renderTargets.push_back(lightViewPos);
 
 
+
 	Graphic = GraphicDevice::GetInstance();
 
 	HRESULT hr;

@@ -36,6 +36,7 @@ private:
 	shared_ptr<GraphicDevice> Graphic = nullptr;
 	ComPtr<ID3D11Buffer> vertexBuffer = nullptr;
 	ComPtr<ID3D11Buffer> indexBuffer = nullptr;
+	ComPtr<ID3D11ShaderResourceView> resourceView = nullptr;
 	int vertexCount = 0;
 	int indexCount = 0;
 };

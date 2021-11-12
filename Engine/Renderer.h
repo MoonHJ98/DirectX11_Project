@@ -35,7 +35,6 @@ public:
 public:
 	void Render();
 
-
 private:
 	void RenderPriority();
 	void RenderNonAlpha();
