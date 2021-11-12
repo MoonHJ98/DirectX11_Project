@@ -1,12 +1,12 @@
 Texture2D DiffuseTexture : register(t0);
 SamplerState SampleType;
 
-//cbuffer RenderDepthForShadow : register(b1)
-//{
-//    bool renderDepthForShadow;
-//    bool padding[3];
-//
-//};
+cbuffer BrushDesc : register(b0)
+{
+    float4 terrainBrushColor;
+    float3 terrainBrushPosition;
+    uint terrainBrushRange;
+};
 
 struct PixelInputType
 {
@@ -31,10 +31,26 @@ struct Output
     
 };
 
+float4 GetBrushColor(float4 inputWorldPos)
+{
+    
+    float dx = inputWorldPos.x - terrainBrushPosition.x;
+    float dz = inputWorldPos.z - terrainBrushPosition.z;
+    
+    float dist = sqrt(dx * dx + dz * dz);
+    
+    if (dist <= (float) terrainBrushRange)
+        return terrainBrushColor;
+    
+    return float4(0.f, 0.f, 0.f, 0.f);
+}
+
 Output main(PixelInputType input)
 {
     Output Out;
     Out.color = DiffuseTexture.Sample(SampleType, input.uv);
+    Out.color += GetBrushColor(input.WorldPos);
+    
     Out.normal = input.normal;
 
     

@@ -14,13 +14,6 @@ void InputDevice::UpdateInputDev()
 
 HRESULT InputDevice::Initialize(HINSTANCE hInstance, HWND hWnd, int _ScreenWidth, int _ScreenHeight)
 {
-	tkmouse = make_unique<Mouse>();
-	tkmouse->SetWindow(hWnd);
-	tkmouse->SetMode(Mouse::MODE_RELATIVE);
-	
-	auto state = tkmouse->GetState();
-
-	
 	// DInput 컴객체를 생성하는 함수
 	if (FAILED((DirectInput8Create(hInstance,
 		DIRECTINPUT_VERSION,

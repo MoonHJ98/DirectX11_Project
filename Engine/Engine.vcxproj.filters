@@ -133,6 +133,12 @@
     <Filter Include="01. Utility\03. Component\01. Buffer\00. Rectangle">
       <UniqueIdentifier>{8c781712-5bc4-43aa-be3e-97d8110b434d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Utility\03. Component\01. Buffer\01. TerrainBuffer">
+      <UniqueIdentifier>{7217109f-5425-4120-a761-bed9a4212251}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\03. Component\01. Buffer\02. HeightTerrainBuffer">
+      <UniqueIdentifier>{7c4f5bef-ce49-4cd6-8d0b-2c808319bc59}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -240,8 +246,12 @@
     <ClInclude Include="RectangleBuffer.h">
       <Filter>01. Utility\03. Component\01. Buffer\00. Rectangle</Filter>
     </ClInclude>
-    <ClInclude Include="HeightTerrainBuffer.h" />
-    <ClInclude Include="TerrainBuffer.h" />
+    <ClInclude Include="TerrainBuffer.h">
+      <Filter>01. Utility\03. Component\01. Buffer\01. TerrainBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="HeightTerrainBuffer.h">
+      <Filter>01. Utility\03. Component\01. Buffer\02. HeightTerrainBuffer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -346,8 +356,12 @@
     <ClCompile Include="RectangleBuffer.cpp">
       <Filter>01. Utility\03. Component\01. Buffer\00. Rectangle</Filter>
     </ClCompile>
-    <ClCompile Include="HeightTerrainBuffer.cpp" />
-    <ClCompile Include="TerrainBuffer.cpp" />
+    <ClCompile Include="TerrainBuffer.cpp">
+      <Filter>01. Utility\03. Component\01. Buffer\01. TerrainBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="HeightTerrainBuffer.cpp">
+      <Filter>01. Utility\03. Component\01. Buffer\02. HeightTerrainBuffer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="ModelVS.hlsl">
@@ -374,7 +388,11 @@
     <FxCompile Include="BlendVS.hlsl">
       <Filter>02. Includes\01. HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="ColorVS.hlsl" />
-    <FxCompile Include="ColorPS.hlsl" />
+    <FxCompile Include="ColorPS.hlsl">
+      <Filter>02. Includes\01. HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="ColorVS.hlsl">
+      <Filter>02. Includes\01. HLSL</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

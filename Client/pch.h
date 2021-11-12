@@ -17,10 +17,17 @@
 
 
 #include <iostream>
+#include <string>
+
+#include "imgui.h"
+#include "imgui_impl_win32.h"
+#include "imgui_impl_dx11.h"
+
+
 using namespace std;
 
 
-//#pragma comment(lib, "Engine.lib")
+#pragma comment(lib, "Engine.lib")
 
 enum SCENEID { STATIC, LOGO, SCENE_END };
 
@@ -30,6 +37,20 @@ extern int GX;
 extern int GY;
 extern SCENEID GSceneID;
 
+#define SINGLETON(CLASSNAME)													\
+			private:																	\
+			CLASSNAME() {}																\
+			CLASSNAME(const CLASSNAME& Rhs) = delete;									\
+			CLASSNAME& operator=(const CLASSNAME& Rhs) = delete;						\
+			public:																		\
+			static shared_ptr<CLASSNAME> GetInstance()									\
+			{																			\
+					static shared_ptr<CLASSNAME> instance{ new CLASSNAME};				\
+					return instance;													\
+			};																						
+
+#define SAFEDELETE(Instance) { if(Instance) {delete Instance; Instance = nullptr;}}
+#define SAFEDELETEARRAY(Instance){ if(Instance){ delete [] Instance; Instance = nullptr; } }
 
 
 

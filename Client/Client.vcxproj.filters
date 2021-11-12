@@ -19,6 +19,12 @@
     <Filter Include="02. GameObject\01. Player">
       <UniqueIdentifier>{eedad099-f6cc-4127-9c93-f571c4e829b6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\02. Terrain">
+      <UniqueIdentifier>{96b940a3-acf4-4283-a5d5-6db2039901fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98. ImgUI">
+      <UniqueIdentifier>{ad961e2e-a704-412d-b385-9f151e289108}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -48,7 +54,34 @@
     <ClInclude Include="Player.h">
       <Filter>02. GameObject\01. Player</Filter>
     </ClInclude>
-    <ClInclude Include="Terrain.h" />
+    <ClInclude Include="Terrain.h">
+      <Filter>02. GameObject\02. Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="imconfig.h">
+      <Filter>98. ImgUI</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui.h">
+      <Filter>98. ImgUI</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui_impl_dx11.h">
+      <Filter>98. ImgUI</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui_impl_win32.h">
+      <Filter>98. ImgUI</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui_internal.h">
+      <Filter>98. ImgUI</Filter>
+    </ClInclude>
+    <ClInclude Include="imstb_rectpack.h">
+      <Filter>98. ImgUI</Filter>
+    </ClInclude>
+    <ClInclude Include="imstb_textedit.h">
+      <Filter>98. ImgUI</Filter>
+    </ClInclude>
+    <ClInclude Include="imstb_truetype.h">
+      <Filter>98. ImgUI</Filter>
+    </ClInclude>
+    <ClInclude Include="ImguiManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -69,7 +102,31 @@
     <ClCompile Include="Player.cpp">
       <Filter>02. GameObject\01. Player</Filter>
     </ClCompile>
-    <ClCompile Include="Terrain.cpp" />
+    <ClCompile Include="Terrain.cpp">
+      <Filter>02. GameObject\02. Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui.cpp">
+      <Filter>98. ImgUI</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_demo.cpp">
+      <Filter>98. ImgUI</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_draw.cpp">
+      <Filter>98. ImgUI</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_impl_dx11.cpp">
+      <Filter>98. ImgUI</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_impl_win32.cpp">
+      <Filter>98. ImgUI</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_tables.cpp">
+      <Filter>98. ImgUI</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_widgets.cpp">
+      <Filter>98. ImgUI</Filter>
+    </ClCompile>
+    <ClCompile Include="ImguiManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

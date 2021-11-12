@@ -6,6 +6,9 @@
 #include "Client.h"
 #include "MainApp.h"
 #include "TimeManager.h"
+#include "GraphicDevice.h"
+
+
 
 #define MAX_LOADSTRING 100
 
@@ -69,6 +72,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	TimeMgr->AddTimer(L"Timer_60");
 
 	float FrameTimeDefault = 0.f;
+
+
 
 	while (TRUE)
 	{
@@ -170,8 +175,12 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //  WM_DESTROY  - 종료 메시지를 게시하고 반환합니다.
 //
 //
+extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	if (ImGui_ImplWin32_WndProcHandler(hWnd, message, wParam, lParam))
+		return true;
+
     switch (message)
     {
     case WM_COMMAND:

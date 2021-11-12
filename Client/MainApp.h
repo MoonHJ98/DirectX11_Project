@@ -5,6 +5,7 @@
 class Management;
 
 class GraphicDevice;
+class ImguiManager;
 
 
 class MainApp : public Base
@@ -30,7 +31,7 @@ public:
 private:
 	shared_ptr<Management>      Manage = nullptr;
 	shared_ptr<GraphicDevice>	GraphicDev = nullptr;
-
+	shared_ptr<ImguiManager> imguiManager = nullptr;
 
 
 

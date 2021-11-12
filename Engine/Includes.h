@@ -23,6 +23,7 @@
 #include <vector>
 #include <list>
 #include <fstream>
+#include <iostream>
 #include <stdio.h>
 
 #include <DirectXTK/BufferHelpers.h>
@@ -35,7 +36,7 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 #pragma comment(lib, "assimp-vc140-mt.lib")
-
+#include <d3dcompiler.h>
 
 
 #pragma comment(lib, "d3d11.lib")
@@ -46,7 +47,6 @@
 #pragma comment(lib, "DirectXTK.lib")
 #pragma comment(lib, "DirectXTex.lib")
 //#pragma comment(lib, "assimp-vc141-mtd.lib")
-
 
 
 

@@ -34,7 +34,6 @@ void Player::Render()
 	transform->Update(false, renderDepthForShadow);
 
 	model->Render();
-
 }
 
 HRESULT Player::Initialize(ID3D11Device * _Device)

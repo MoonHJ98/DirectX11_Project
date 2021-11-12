@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "TerrainBuffer.h"
 #include "GraphicDevice.h"
+#include "Management.h"
 
 TerrainBuffer::TerrainBuffer()
 {
@@ -14,13 +15,26 @@ TerrainBuffer::~TerrainBuffer()
 {
 }
 
-HRESULT TerrainBuffer::Initialize(UINT _terrainWidth, UINT _terrainHeight)
+HRESULT TerrainBuffer::Initialize(HWND _hWnd, UINT _terrainWidth, UINT _terrainHeight)
 {
 	Graphic = GraphicDevice::GetInstance();
+	Manage = Management::GetInstance();
+	hWnd = _hWnd;
 	terrainWidth = _terrainWidth;
 	terrainHeight = _terrainHeight;
 
-	
+
+	UINT viewportNum = 1;
+	D3D11_VIEWPORT viewport;
+	Graphic->GetDeviceContext()->RSGetViewports(&viewportNum, &viewport);
+
+	screenWidth = (UINT)viewport.Width;
+	screenHeignt = (UINT)viewport.Height;
+
+	shared_ptr<ConstantBuffer<BrushDesc>> temp(new ConstantBuffer<BrushDesc>());
+	brushBuffer = temp;
+	brushBuffer->Create(Graphic->GetDevice());
+
 	return InitializeBuffers();
 }
 
@@ -30,7 +44,6 @@ HRESULT TerrainBuffer::InitializeBuffers()
 
 
 	vertexCount = terrainWidth * terrainHeight;
-	Position = new Vector3[vertexCount];
 	vertices = new VertexType[vertexCount];
 
 
@@ -83,6 +96,91 @@ void TerrainBuffer::Render()
 	RenderBuffers();
 }
 
+Vector3 TerrainBuffer::PickTerrain()
+{
+	POINT p;
+	GetCursorPos(&p);
+	ScreenToClient(hWnd, &p);
+
+
+	Matrix	matProj;
+	matProj = *Manage->GetTransform(D3DTRANSFORMSTATE_PROJECTION);
+
+
+	// 뷰포트의 마우스를 투영의 마우스로 변환 -> 뷰스페이스로 변환
+	Vector3		Temp;
+
+	Temp.x = (float(p.x) / (screenWidth >> 1) - 1.f) / matProj._11;
+	Temp.y = (float(-p.y) / (screenHeignt >> 1) + 1.f) / matProj._22;
+	Temp.z = 1.f;
+
+	// 뷰 스페이스 상의 rayPos, rayDir
+	Vector3 RayPos = Vector3(0.f, 0.f, 0.f);
+	Vector3 RayDir = Temp - RayPos;
+	RayDir.Normalize();
+
+	// 월드로 변환
+	Matrix	matView;
+	matView = *Manage->GetTransform(D3DTRANSFORMSTATE_VIEW);
+	//Matrix world = *transform->GetWorldMatrix();
+	//Matrix WorldView = world * matView;
+	//Matrix invmatrix = WorldView.Invert();
+	matView = matView.Invert();
+
+
+	Vector3::Transform(RayPos, matView, RayPos);
+	Vector3::TransformNormal(RayDir, matView, RayDir);
+
+
+
+	Ray ray;
+
+	float dist = 0.f;
+
+
+	Vector3 Pos;
+
+	for (UINT z = 0; z < terrainHeight - 1; ++z)
+	{
+		for (UINT x = 0; x < terrainWidth - 1; ++x)
+		{
+			int	index[4];
+			index[0] = terrainWidth * z + x;
+			index[1] = terrainWidth * (z + 1) + x;
+			index[2] = terrainWidth * z + x + 1;
+			index[3] = terrainWidth * (z + 1) + (x + 1);
+
+
+			Vector3 vertex1 = vertices[index[0]].position;
+			Vector3 vertex2 = vertices[index[1]].position;
+			Vector3 vertex3 = vertices[index[2]].position;
+			Vector3 vertex4 = vertices[index[3]].position;
+
+			ray.position = RayPos;
+
+			ray.direction = RayDir;
+
+
+			if (ray.Intersects(vertex1, vertex2, vertex3, dist))
+			{
+				Pos = ray.position + ray.direction * dist;
+			}
+			if (ray.Intersects(vertex4, vertex2, vertex3, dist))
+			{
+				Pos = ray.position + ray.direction * dist;
+			}
+		}
+	}
+
+	brushDesc.position = Pos;
+	brushBuffer->SetData(Graphic->GetDeviceContext(), brushDesc);
+	auto buffer = brushBuffer->GetBuffer();
+	Graphic->GetDeviceContext()->PSSetConstantBuffers(0, 1, &buffer);
+
+	//cout << Pos.x << " , " << Pos.y << " , " << Pos.z << endl;
+	return Pos;
+}
+
 void TerrainBuffer::RenderBuffers()
 {
 	// 정점 버퍼 보폭 및 오프셋을 설정합니다.
@@ -101,10 +199,10 @@ void TerrainBuffer::RenderBuffers()
 	Graphic->GetDeviceContext()->DrawIndexed(indexCount, 0, 0);
 }
 
-shared_ptr<TerrainBuffer> TerrainBuffer::Create(UINT _terrainWidth, UINT _terrainHeight)
+shared_ptr<TerrainBuffer> TerrainBuffer::Create(HWND _hWnd, UINT _terrainWidth, UINT _terrainHeight)
 {
 	shared_ptr<TerrainBuffer> Instance(new TerrainBuffer());
-	if (FAILED(Instance->Initialize(_terrainWidth, _terrainHeight)))
+	if (FAILED(Instance->Initialize(_hWnd, _terrainWidth, _terrainHeight)))
 	{
 		MSG_BOX("Failed to create TerrainBuffer.");
 		return nullptr;
