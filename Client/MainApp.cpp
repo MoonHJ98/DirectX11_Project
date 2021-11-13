@@ -117,29 +117,7 @@ void MainApp::Render()
 	Manage->Render();
 
 	imguiManager->Render();
-	//// Start ImGui frame.
-	//ImGui_ImplDX11_NewFrame();
-	//ImGui_ImplWin32_NewFrame();
-	//
-	//ImGui::NewFrame();
-	//
-	//static int counter = 0;
-	//// Create ImGui Test Window.
-	//ImGui::Begin("Test");
-	//ImGui::Text("This is example text.");
-	//if (ImGui::Button("Click me"))
-	//	counter += 1;
-	//
-	//string clickCount = "Click Count : " + to_string(counter);
-	//ImGui::SameLine();
-	//ImGui::Text(clickCount.c_str());
-	//
-	//ImGui::End();
-	//
-	//// Assemble Together Draw Data
-	//ImGui::Render();
-	//// Render Draw Data
-	//ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+
 
 	GraphicDev->EndScene();
 }

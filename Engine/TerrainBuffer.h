@@ -36,7 +36,8 @@ private:
 public:
 	void Render();
 	VertexType* GetVertices() { return vertices; }
-	Vector3 PickTerrain();
+	Vector3 PickTerrain(Vector2 screenPos);
+
 
 private:
 	void RenderBuffers();
@@ -65,5 +66,7 @@ private:
 
 	BrushDesc brushDesc;
 	shared_ptr<ConstantBuffer<BrushDesc>> brushBuffer = nullptr;
+
+	//Vector2 screenPos = Vector2(0.f, 0.f);
 };
 

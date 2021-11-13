@@ -28,7 +28,8 @@ public:
 	virtual void Render() override;
 
 public:
-	Vector3 PickTerrain();
+	Vector3 PickTerrain(Vector2 screenPos);
+	
 
 public:
 	static shared_ptr<Terrain> Create(UINT _terrainWidth, UINT _terrainHeight, wstring _heightMapPath = L"");

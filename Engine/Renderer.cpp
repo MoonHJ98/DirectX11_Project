@@ -20,13 +20,15 @@ HRESULT Renderer::Initialize()
 	
 	LightMgr = LightManager::GetInstance();
 
-	deferredBuffer = DeferredBuffer::Create((int)viewport.Width, (int)viewport.Height, SCREENDEPTH, SCREENNEAR);
+	deferredBuffer = DeferredBuffer::Create(SCREENSIZEX, SCREENSIZEY, SCREENDEPTH, SCREENNEAR);
 
 	deferredBuffer->AddMultiRenderTarget(L"Deferred", DeferredBuffer::DIFFUSEMAP);
 	deferredBuffer->AddMultiRenderTarget(L"Deferred", DeferredBuffer::NORMALMAP);
 	deferredBuffer->AddMultiRenderTarget(L"Deferred", DeferredBuffer::SPECULARMAP);
 	deferredBuffer->AddMultiRenderTarget(L"Deferred", DeferredBuffer::DEPTH);
 	deferredBuffer->AddMultiRenderTarget(L"Deferred", DeferredBuffer::LIGHTVIEWPOS);
+	
+
 
 
 	
@@ -36,7 +38,7 @@ HRESULT Renderer::Initialize()
 
 	deferredBuffer->AddMultiRenderTarget(L"Shadow", DeferredBuffer::DEPTHFORSHADOW);
 
-
+	deferredBuffer->AddMultiRenderTarget(L"Blend", DeferredBuffer::BLEND);
 
 	//deferredBuffer->AddMultiRenderTarget(L"Light", DeferredBuffer::SHADOW);
 
@@ -66,6 +68,11 @@ HRESULT Renderer::Initialize()
 
 	Manage = Management::GetInstance();
 	return S_OK;
+}
+
+ID3D11ShaderResourceView * Renderer::GetBlendTexture()
+{
+	return deferredBuffer->GetShaderResourceView(DeferredBuffer::BLEND);
 }
 
 void Renderer::Render()
@@ -193,9 +200,11 @@ void Renderer::RenderLight()
 
 void Renderer::RenderBlend()
 {
+	deferredBuffer->BeginMRT(L"Blend");
 
 
 	// 모든 2D 렌더링을 시작하려면 Z 버퍼를 끕니다.
+
 	Graphic->TurnZBufferOff();
 
 	blendShader->Render();
@@ -213,12 +222,15 @@ void Renderer::RenderBlend()
 
 	transform->Update(true);
 	rectangleBuffer->Render();
+
+
 	deferredBuffer->Render();
 
-	
+
 	// 모든 2D 렌더링이 완료되었으므로 Z 버퍼를 다시 켜십시오.
 	Graphic->TurnZBufferOn();
 
+	deferredBuffer->EndMRT();
 
 
 

@@ -23,10 +23,10 @@ HRESULT TerrainBuffer::Initialize(HWND _hWnd, UINT _terrainWidth, UINT _terrainH
 	terrainWidth = _terrainWidth;
 	terrainHeight = _terrainHeight;
 
-
 	UINT viewportNum = 1;
 	D3D11_VIEWPORT viewport;
 	Graphic->GetDeviceContext()->RSGetViewports(&viewportNum, &viewport);
+
 
 	screenWidth = (UINT)viewport.Width;
 	screenHeignt = (UINT)viewport.Height;
@@ -91,16 +91,14 @@ HRESULT TerrainBuffer::InitializeBuffers()
 
 void TerrainBuffer::Render()
 {
-
-
 	RenderBuffers();
 }
 
-Vector3 TerrainBuffer::PickTerrain()
+Vector3 TerrainBuffer::PickTerrain(Vector2 screenPos)
 {
-	POINT p;
-	GetCursorPos(&p);
-	ScreenToClient(hWnd, &p);
+	//POINT p;
+	//GetCursorPos(&p);
+	//ScreenToClient(hWnd, &p);
 
 
 	Matrix	matProj;
@@ -110,8 +108,8 @@ Vector3 TerrainBuffer::PickTerrain()
 	// 뷰포트의 마우스를 투영의 마우스로 변환 -> 뷰스페이스로 변환
 	Vector3		Temp;
 
-	Temp.x = (float(p.x) / (screenWidth >> 1) - 1.f) / matProj._11;
-	Temp.y = (float(-p.y) / (screenHeignt >> 1) + 1.f) / matProj._22;
+	Temp.x = (float(screenPos.x) / (screenWidth >> 1) - 1.f) / matProj._11;
+	Temp.y = (float(-screenPos.y) / (screenHeignt >> 1) + 1.f) / matProj._22;
 	Temp.z = 1.f;
 
 	// 뷰 스페이스 상의 rayPos, rayDir

@@ -31,6 +31,7 @@ public:
 
 public:
 	LIGHTDESC& GetLightInfo() { return LightInfo; }
+	void SetLightDirection(Vector3 _direction) { LightInfo.Direction = _direction; }
 
 public:
 	void Render();

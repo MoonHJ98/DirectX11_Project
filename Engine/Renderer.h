@@ -31,6 +31,7 @@ public:
 
 public:
 	HRESULT Initialize();
+	ID3D11ShaderResourceView* GetBlendTexture();
 
 public:
 	void Render();

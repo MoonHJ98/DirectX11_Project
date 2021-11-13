@@ -7,6 +7,9 @@
 
 #define VSYNC_ENABLE true
 #define FULLSCREEN false
+#define SCREENSIZEX 800
+#define SCREENSIZEY 600
+
 #define SCREENDEPTH 1000.f
 #define SCREENNEAR 0.1f
 #define FoV 3.141592654f / 4.f

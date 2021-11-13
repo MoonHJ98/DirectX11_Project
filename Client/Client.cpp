@@ -12,6 +12,7 @@
 
 #define MAX_LOADSTRING 100
 
+
 // 전역 변수:
 HINSTANCE hInst;                                // 현재 인스턴스입니다.
 WCHAR szTitle[MAX_LOADSTRING];                  // 제목 표시줄 텍스트입니다.
@@ -23,7 +24,6 @@ int  GX;
 int  GY;
 SCENEID GSceneID = SCENE_END;
 
-HWND hC1, hC2, hC3;
 
 #ifdef UNICODE
 #pragma comment(linker, "/entry:wWinMainCRTStartup /subsystem:console")
@@ -94,6 +94,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 			mainApp->Update(TimeMgr->ComputeTimer(L"Timer_60"));
 			mainApp->Render();
 
+
 			FrameTimeDefault = 0.f;
 		}
 
@@ -135,22 +136,7 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     wcex.lpszMenuName   = NULL;
     wcex.lpszClassName  = szWindowClass;
     wcex.hIconSm        = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
-	RegisterClassExW(&wcex);
 
-	// 분할 윈도우 관련
-	wcex.hbrBackground = redBrush;
-	wcex.lpfnWndProc = ChildLeftProc;
-	wcex.lpszClassName = L"ChildLeft";
-	RegisterClassExW(&wcex);
-
-	wcex.hbrBackground = greenBrush;
-	wcex.lpfnWndProc = ChildTopProc;
-	wcex.lpszClassName = L"ChildTop";
-	RegisterClassExW(&wcex);
-
-	wcex.hbrBackground = blueBrush;
-	wcex.lpfnWndProc = ChildBottomProc;
-	wcex.lpszClassName = L"ChildBottom";
 
     return RegisterClassExW(&wcex);
 }
@@ -168,7 +154,7 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
 
-	RECT rc = { 0, 0, 1600, 900 };
+	RECT rc = { 0, 0, 800, 600 };
 	GX = static_cast<int>(rc.right - rc.left);
 	GY = static_cast<int>(rc.bottom - rc.top);
 
@@ -184,8 +170,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
       return FALSE;
    }
 
-   //GhWnd = hWnd;
-   GhWnd = hC1;
+   GhWnd = hWnd;
    GInstance = hInstance;
 
    ShowWindow(hWnd, nCmdShow);
@@ -211,7 +196,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	if (ImGui_ImplWin32_WndProcHandler(hWnd, message, wParam, lParam))
 		return true;
 
-	RECT rect;
 
     switch (message)
     {
@@ -243,22 +227,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_DESTROY:
         PostQuitMessage(0);
         break;
-	case WM_CREATE:
-		hC1 = CreateWindow(L"ChildLeft", NULL, WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN, 0, 0, 0, 0, hWnd, 0, hInst, NULL);
-		hC2 = CreateWindow(L"ChildTop", NULL, WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN, 0, 0, 0, 0, hWnd, 0, hInst, NULL);
-		hC3 = CreateWindow(L"ChildBottom", NULL, WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN, 0, 0, 0, 0, hWnd, 0, hInst, NULL);
-		break;
 
-	case WM_SIZE:
-		if (wParam != SIZE_MINIMIZED)
-		{
-			GetClientRect(hWnd, &rect);
-			MoveWindow(hC1, 0, 0, 300, 300, TRUE);
-			MoveWindow(hC2, 300, 0, rect.right - 300, 300, TRUE);
-			MoveWindow(hC2, 0, 300, rect.right, rect.bottom, TRUE);
-
-		}
-		break;
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);
     }
@@ -269,6 +238,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 // 정보 대화 상자의 메시지 처리기입니다.
 INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
+
     UNREFERENCED_PARAMETER(lParam);
     switch (message)
     {
@@ -284,85 +254,4 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
         break;
     }
     return (INT_PTR)FALSE;
-}
-
-LRESULT CALLBACK ChildLeftProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
-{
-	int wmld, wmEvent;
-
-	HDC hdc;
-	switch (message)
-	{
-	case WM_COMMAND:
-		wmld = LOWORD(wParam);
-		wmEvent = HIWORD(wParam);
-		break;
-	case WM_PAINT:
-		PAINTSTRUCT ps;
-		hdc = BeginPaint(hWnd, &ps);
-		// TODO: 여기에 hdc를 사용하는 그리기 코드를 추가합니다...
-		EndPaint(hWnd, &ps);
-		break;
-	case WM_DESTROY:
-		PostQuitMessage(0);
-		break;
-	default:
-		return DefWindowProc(hWnd, message, wParam, lParam);
-
-	}
-	return 0;
-}
-
-LRESULT CALLBACK ChildTopProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
-{
-	int wmld, wmEvent;
-
-	HDC hdc;
-	switch (message)
-	{
-	case WM_COMMAND:
-		wmld = LOWORD(wParam);
-		wmEvent = HIWORD(wParam);
-		break;
-	case WM_PAINT:
-		PAINTSTRUCT ps;
-		hdc = BeginPaint(hWnd, &ps);
-		// TODO: 여기에 hdc를 사용하는 그리기 코드를 추가합니다...
-		EndPaint(hWnd, &ps);
-		break;
-	case WM_DESTROY:
-		PostQuitMessage(0);
-		break;
-	default:
-		return DefWindowProc(hWnd, message, wParam, lParam);
-
-	}
-	return 0;
-}
-
-LRESULT CALLBACK ChildBottomProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
-{
-	int wmld, wmEvent;
-
-	HDC hdc;
-	switch (message)
-	{
-	case WM_COMMAND:
-		wmld = LOWORD(wParam);
-		wmEvent = HIWORD(wParam);
-		break;
-	case WM_PAINT:
-		PAINTSTRUCT ps;
-		hdc = BeginPaint(hWnd, &ps);
-		// TODO: 여기에 hdc를 사용하는 그리기 코드를 추가합니다...
-		EndPaint(hWnd, &ps);
-		break;
-	case WM_DESTROY:
-		PostQuitMessage(0);
-		break;
-	default:
-		return DefWindowProc(hWnd, message, wParam, lParam);
-
-	}
-	return 0;
 }

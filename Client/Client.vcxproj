@@ -157,7 +157,6 @@
   <ItemGroup>
     <ClInclude Include="Client.h" />
     <ClInclude Include="framework.h" />
-    <ClInclude Include="imconfig.h" />
     <ClInclude Include="imgui.h" />
     <ClInclude Include="ImguiManager.h" />
     <ClInclude Include="imgui_impl_dx11.h" />

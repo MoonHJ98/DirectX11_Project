@@ -43,13 +43,16 @@ HRESULT DeferredBuffer::Initialize(int _textureWidth, int _textureHeight, float 
 	auto lightViewPos = RenderTarget::Create(Vector3(-250.f, -50.f, 0.1f), Vector3(50.f, 50.f, 1.f), Vector4(1.f, 1.f, 1.f, 1.f));
 	renderTargets.push_back(lightViewPos);
 
+	auto blend = RenderTarget::Create(Vector3(-350.f, -150.f, 0.1f), Vector3(50.f, 50.f, 1.f), Vector4(1.f, 1.f, 1.f, 1.f));
+	renderTargets.push_back(blend);
 
+	
 
 	Graphic = GraphicDevice::GetInstance();
 
 	HRESULT hr;
-	textureWidth = _textureWidth;
-	textureHeight = _textureHeight;
+	textureWidth = SCREENSIZEX;
+	textureHeight = SCREENSIZEY;
 
 	// 렌더 타겟 텍스처 구조체를 초기화합니다.
 	D3D11_TEXTURE2D_DESC textureDesc;
