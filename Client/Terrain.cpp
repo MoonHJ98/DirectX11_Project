@@ -81,8 +81,7 @@ Vector3 Terrain::PickTerrain(Vector2 screenPos)
 {
 	terrainBuffer->PickTerrain(screenPos);
 
-	Vector3 Pos;
-	return Pos;
+	return Vector3(0.f, 0.f, 0.f);
 }
 
 shared_ptr<Terrain> Terrain::Create(UINT _terrainWidth, UINT _terrainHeight, wstring _heightMapPath)

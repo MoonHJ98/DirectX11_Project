@@ -227,12 +227,11 @@ void Renderer::RenderBlend()
 	deferredBuffer->Render();
 
 
-	// 모든 2D 렌더링이 완료되었으므로 Z 버퍼를 다시 켜십시오.
-	Graphic->TurnZBufferOn();
 
 	deferredBuffer->EndMRT();
 
-
+	// 모든 2D 렌더링이 완료되었으므로 Z 버퍼를 다시 켜십시오.
+	Graphic->TurnZBufferOn();
 
 	//ImGui::CreateContext();
 

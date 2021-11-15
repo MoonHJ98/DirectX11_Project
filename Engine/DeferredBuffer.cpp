@@ -51,8 +51,8 @@ HRESULT DeferredBuffer::Initialize(int _textureWidth, int _textureHeight, float 
 	Graphic = GraphicDevice::GetInstance();
 
 	HRESULT hr;
-	textureWidth = SCREENSIZEX;
-	textureHeight = SCREENSIZEY;
+	textureWidth = _textureWidth;
+	textureHeight = _textureHeight;
 
 	// 렌더 타겟 텍스처 구조체를 초기화합니다.
 	D3D11_TEXTURE2D_DESC textureDesc;

@@ -142,7 +142,7 @@ Vector3 TerrainBuffer::PickTerrain(Vector2 screenPos)
 	{
 		for (UINT x = 0; x < terrainWidth - 1; ++x)
 		{
-			int	index[4];
+			int	index[4] = {-1};
 			index[0] = terrainWidth * z + x;
 			index[1] = terrainWidth * (z + 1) + x;
 			index[2] = terrainWidth * z + x + 1;

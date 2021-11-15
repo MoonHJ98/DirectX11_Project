@@ -11,7 +11,13 @@ public:
 	void Render();
 
 private:
-	void DirectionalLight();
+	void Frame();
+	void Scene();
+	void Menu1();
+	void Menu2();
+	void Menu3();
+	void Menu4();
+
 
 private:
 	shared_ptr<Management> Manage = nullptr;

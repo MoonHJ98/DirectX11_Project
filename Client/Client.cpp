@@ -79,6 +79,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	float FrameTimeDefault = 0.f;
 
 
+	CloseWindow(GhWnd);
 
 	while (TRUE)
 	{
