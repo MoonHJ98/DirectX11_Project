@@ -185,6 +185,7 @@
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="Sphere.h" />
     <ClInclude Include="Struct.h" />
     <ClInclude Include="RenderTarget.h" />
     <ClInclude Include="HeightTerrainBuffer.h" />
@@ -228,6 +229,7 @@
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="Sphere.cpp" />
     <ClCompile Include="Struct.cpp" />
     <ClCompile Include="RenderTarget.cpp" />
     <ClCompile Include="HeightTerrainBuffer.cpp" />

@@ -32,6 +32,7 @@
 #include <DirectXTK/BufferHelpers.h>
 #include <DirectXTK/SimpleMath.h>
 #include <DirectXTK/VertexTypes.h>
+#include <DirectXTK/GeometricPrimitive.h>
 #include "DirectXTex.h"
 
 

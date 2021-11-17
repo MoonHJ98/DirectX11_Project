@@ -64,7 +64,7 @@ HRESULT MainApp::Initialize()
 	Manage->AddLayer(SCENEID::STATIC, L"Terrain", terrain);
 
 
-
+	
 	if (FAILED(ReadyScene(LOGO)))
 	{
 		MSG_BOX("Failed to create Scene.");
