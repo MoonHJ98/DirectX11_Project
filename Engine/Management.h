@@ -36,6 +36,8 @@ public:
 
 	// Layer
 	void					AddLayer(int _Index, wstring _LayerKey, shared_ptr<GameObject> _Object);
+	void					AddLayerTest(int _Index, wstring _LayerKey, shared_ptr<GameObject> _Object);
+
 
 	// Scene
 	HRESULT					SetScene(shared_ptr<Scene> scene);

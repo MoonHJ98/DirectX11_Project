@@ -18,7 +18,9 @@ private:
 	void Menu2();
 	void Menu3();
 	void Menu4();
-
+	
+private:
+	void ObjectPopup();
 
 private:
 	shared_ptr<Management> Manage = nullptr;

@@ -119,45 +119,17 @@ void ImguiManager::Menu2()
 
 	if (ImGui::TreeNode("Scene"))
 	{
-		if (ImGui::IsItemClicked(ImGuiPopupFlags_MouseButtonRight))
-			ImGui::OpenPopup("Object");
-
-		if (ImGui::BeginPopupContextItem("Object"))
-		{
-
-			if (ImGui::MenuItem("Create Empty"))
-				ImGui::CloseCurrentPopup();
-
-			if (ImGui::BeginMenu("3D Object"))
-			{
-				ImGui::MenuItem("Cube");
-				if (ImGui::MenuItem("Sphere"))
-				{
-					auto sphere = SphereTest::Create();
-					Manage->AddLayer(SCENEID::STATIC, L"Sphere", sphere);
-					
-				}
-				ImGui::MenuItem("Capsule");
-				ImGui::MenuItem("Cylinder");
 
 
-				ImGui::EndMenu();
-			}
-			if (ImGui::MenuItem("Effects"))
-				ImGui::CloseCurrentPopup();
-
-			if (ImGui::MenuItem("Light"))
-				ImGui::CloseCurrentPopup();
-
-			if (ImGui::MenuItem("UI"))
-				ImGui::CloseCurrentPopup();
+		// For Popup.
+		ObjectPopup();
 
 
+		ImGui::Text("test1");
+		ImGui::Text("test2");
+		ImGui::Text("test3");
+		ImGui::Text("test4");
 
-
-
-			ImGui::EndPopup();
-		}
 		ImGui::TreePop();
 	}
 
@@ -178,6 +150,45 @@ void ImguiManager::Menu4()
 	ImGui::Begin("Menu4test");
 
 	ImGui::End();
+}
+
+void ImguiManager::ObjectPopup()
+{
+	if (ImGui::IsItemClicked(ImGuiPopupFlags_MouseButtonRight))
+		ImGui::OpenPopup("Object");
+
+	if (ImGui::BeginPopupContextItem("Object"))
+	{
+
+		if (ImGui::MenuItem("Create Empty"))
+			ImGui::CloseCurrentPopup();
+
+		if (ImGui::BeginMenu("3D Object"))
+		{
+			ImGui::MenuItem("Cube");
+			if (ImGui::MenuItem("Sphere"))
+			{
+				auto sphere = SphereTest::Create();
+				Manage->AddLayerTest(SCENEID::STATIC, L"Sphere", sphere);
+
+			}
+			ImGui::MenuItem("Capsule");
+			ImGui::MenuItem("Cylinder");
+
+
+			ImGui::EndMenu();
+		}
+		if (ImGui::MenuItem("Effects"))
+			ImGui::CloseCurrentPopup();
+
+		if (ImGui::MenuItem("Light"))
+			ImGui::CloseCurrentPopup();
+
+		if (ImGui::MenuItem("UI"))
+			ImGui::CloseCurrentPopup();
+
+		ImGui::EndPopup();
+	}
 }
 
 void ImguiManager::Frame()
