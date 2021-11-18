@@ -5,6 +5,7 @@
 #include "Management.h"
 #include "light.h"
 #include "Terrain.h"
+#include "SphereTest.h"
 
 HRESULT ImguiManager::Initialize()
 {
@@ -130,6 +131,12 @@ void ImguiManager::Menu2()
 			if (ImGui::BeginMenu("3D Object"))
 			{
 				ImGui::MenuItem("Cube");
+				if (ImGui::MenuItem("Sphere"))
+				{
+					auto sphere = SphereTest::Create();
+					Manage->AddLayer(SCENEID::STATIC, L"Sphere", sphere);
+					
+				}
 				ImGui::MenuItem("Capsule");
 				ImGui::MenuItem("Cylinder");
 

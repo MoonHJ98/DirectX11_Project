@@ -169,6 +169,7 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="SphereTest.h" />
     <ClInclude Include="Stage.h" />
     <ClInclude Include="StaticCamera.h" />
     <ClInclude Include="targetver.h" />
@@ -206,6 +207,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="SphereTest.cpp" />
     <ClCompile Include="Stage.cpp" />
     <ClCompile Include="StaticCamera.cpp" />
     <ClCompile Include="Terrain.cpp" />

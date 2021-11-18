@@ -42,14 +42,16 @@ float4 GetBrushColor(float4 inputWorldPos)
     if (dist <= (float) terrainBrushRange)
         return terrainBrushColor;
     
-    return float4(0.f, 0.f, 0.f, 0.f);
+    return float4(0.f, 0.f, 0.f, 1.f);
 }
 
 Output main(PixelInputType input)
 {
     Output Out;
-    Out.color = DiffuseTexture.Sample(SampleType, input.uv);
-    Out.color += GetBrushColor(input.WorldPos);
+    Out.color = float4(1.f, 1.f, 1.f, 1.f);
+    
+    //Out.color = DiffuseTexture.Sample(SampleType, input.uv);
+   //Out.color += GetBrushColor(input.WorldPos);
     
     Out.normal = input.normal;
 

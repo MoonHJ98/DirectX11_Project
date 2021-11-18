@@ -79,6 +79,7 @@
     <ClInclude Include="imstb_truetype.h">
       <Filter>98. ImgUI</Filter>
     </ClInclude>
+    <ClInclude Include="SphereTest.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -124,6 +125,7 @@
     <ClCompile Include="imgui_widgets.cpp">
       <Filter>98. ImgUI</Filter>
     </ClCompile>
+    <ClCompile Include="SphereTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

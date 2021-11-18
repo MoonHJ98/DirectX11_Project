@@ -10,8 +10,8 @@ class TerrainBuffer
 	struct VertexType
 	{
 		Vector3 position;
-		Vector2 Uv;
 		Vector3 normal;
+		Vector2 Uv;
 	};
 
 	struct BrushDesc

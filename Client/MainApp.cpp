@@ -8,6 +8,7 @@
 #include "Stage.h"
 #include "Terrain.h"
 #include "ImguiManager.h"
+#include "SphereTest.h"
 
 
 MainApp::MainApp()
@@ -57,8 +58,12 @@ HRESULT MainApp::Initialize()
 	auto camera = StaticCamera::Create(_decs);
 	Manage->AddLayer(SCENEID::STATIC, L"Camera", camera);
 
+
+
 	auto player = Player::Create(GraphicDev->GetDevice());
 	Manage->AddLayer(SCENEID::STATIC, L"Player", player);
+
+
 
 	auto terrain = Terrain::Create(100, 100, L"../Resources/heightmap.bmp");
 	Manage->AddLayer(SCENEID::STATIC, L"Terrain", terrain);
