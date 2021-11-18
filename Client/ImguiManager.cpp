@@ -171,6 +171,8 @@ void ImguiManager::ObjectPopup()
 				auto sphere = SphereTest::Create();
 				Manage->AddLayerTest(SCENEID::STATIC, L"Sphere", sphere);
 
+				// TODO : Layer 삭제하기.
+
 			}
 			ImGui::MenuItem("Capsule");
 			ImGui::MenuItem("Cylinder");
