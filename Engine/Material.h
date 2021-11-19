@@ -32,6 +32,7 @@ private:
 public:
 	virtual int Update(float _timeDelta) override;
 	virtual void Render() override;
+	virtual void RenderInspector() override;
 
 private:
 	HRESULT Initialize(MATERIALDESC& desc);

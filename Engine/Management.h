@@ -50,6 +50,9 @@ public:
 	list<shared_ptr<GameObject>>*  FindGameObjectList(int _Index, wstring _LayerKey);
 	shared_ptr<GameObject>         FindGameObject(int _SceneIndex, wstring _LayerKey, int _ObjectIndex = 0);
 
+	map<wstring, pair<wstring, shared_ptr<GameObject>>>*  FindGameObjectListTest(int _Index, wstring _LayerKey);
+	shared_ptr<GameObject>         FindGameObjectTest(int _SceneIndex, wstring _LayerKey, wstring _objKey);
+
 
 	map<wstring, shared_ptr<GameObject>>& GetObjectsForImgui();
 

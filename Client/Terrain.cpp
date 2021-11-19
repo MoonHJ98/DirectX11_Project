@@ -69,7 +69,7 @@ void Terrain::Render()
 	shader->Render();
 
 
-	transform->Update();
+	transform->Render();
 	material->Render();
 
 	terrainBuffer->Render();

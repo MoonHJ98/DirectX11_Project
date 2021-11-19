@@ -2,6 +2,7 @@
 
 
 class Management;
+class GameObject;
 
 class ImguiManager
 {
@@ -26,5 +27,6 @@ private:
 	shared_ptr<Management> Manage = nullptr;
 	bool isObjectInspector = false;
 
+	weak_ptr<GameObject> objectForInspector;
 };
 

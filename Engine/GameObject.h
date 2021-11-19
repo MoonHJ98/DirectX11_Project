@@ -5,6 +5,7 @@
 #include "Transform.h"
 
 class GraphicDevice;
+class Component;
 
 
 class GameObject abstract : public Base
@@ -17,6 +18,7 @@ public:
 public:
 	virtual int Update(float _TimeDelta) PURE;
 	virtual void Render() PURE;
+	void RenderComponentsIspector();
 	void RenderDepthForShadow(BOOL _renderDepthForShadow) { renderDepthForShadow = _renderDepthForShadow; }
 	bool GetisOrth() { return isOrtho; }
 	BOOL GetRenderDeptehForShadow() { return renderDepthForShadow; }
@@ -30,5 +32,8 @@ protected:
 
 	bool					isOrtho = false;
 	BOOL                    renderDepthForShadow = FALSE;
+
+	vector<shared_ptr<Component>> components;
+
 };
 

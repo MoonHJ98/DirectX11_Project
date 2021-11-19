@@ -34,7 +34,7 @@ void Light::Render()
 	Graphic->GetDeviceContext()->PSSetConstantBuffers(0, 1, &buffer);
 
 
-	transform->Update();
+	transform->Render();
 	
 	rectangleBuffer->Render();
 }

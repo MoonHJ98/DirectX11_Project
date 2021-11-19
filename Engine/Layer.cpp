@@ -4,29 +4,49 @@
 
 int Layer::Update(float _timeDelta)
 {
+	//int Res = 0;
+	//for (auto iter = GameObjects.begin(); iter != GameObjects.end();)
+	//{
+	//	Res = (*iter)->Update(_timeDelta);
+	//	if (Res & 0x80000000)
+	//	{
+	//		(*iter).reset();
+	//		
+	//		iter = GameObjects.erase(iter);
+	//	}
+	//	else
+	//	{
+	//		++iter;
+	//	}
+	//}
+	//return Res;
+
 	int Res = 0;
-	for (auto iter = GameObjects.begin(); iter != GameObjects.end();)
+	for (auto iter = objects.begin(); iter != objects.end();)
 	{
-		Res = (*iter)->Update(_timeDelta);
+		Res = (*iter).second.second->Update(_timeDelta);
 		if (Res & 0x80000000)
 		{
-			(*iter).reset();
-			
-			iter = GameObjects.erase(iter);
+			(*iter).second.second.reset();
+			iter = objects.erase(iter);
 		}
 		else
-		{
 			++iter;
-		}
 	}
+
 	return Res;
 }
 
 void Layer::Render()
 {
-	for (auto iter = GameObjects.begin(); iter != GameObjects.end(); ++iter)
+	//for (auto iter = GameObjects.begin(); iter != GameObjects.end(); ++iter)
+	//{
+	//	(*iter)->Render();
+	//}
+
+	for (auto iter = objects.begin(); iter != objects.end(); ++iter)
 	{
-		(*iter)->Render();
+		(*iter).second.second->Render();
 	}
 }
 
@@ -77,6 +97,16 @@ shared_ptr<GameObject> Layer::FindGameObject(int _ObjectIndex)
 	}
 
 	return *iter;
+}
+
+shared_ptr<GameObject> Layer::FindGameObjectTest(wstring _objKey)
+{
+	auto iter = objects.find(_objKey);
+
+	if (iter == objects.end())
+		return nullptr;
+
+	return (*iter).second.second;
 }
 
 shared_ptr<Layer> Layer::Create()

@@ -554,6 +554,10 @@ shared_ptr<HeightTerrainBuffer> HeightTerrainBuffer::Create(int _terrainWidth, i
 	return Instance;
 }
 
+void HeightTerrainBuffer::RenderInspector()
+{
+}
+
 int HeightTerrainBuffer::Update(float _timeDelta)
 {
 	return 0;

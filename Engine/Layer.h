@@ -17,6 +17,9 @@ public:
 	list<shared_ptr<GameObject>>* FindGameObjectList() { return &GameObjects; }
 	shared_ptr<GameObject> FindGameObject(int _ObjectIndex);
 
+	map<wstring, pair<wstring, shared_ptr<GameObject>>>* FindGameObjectListTest() { return &objects; }
+	shared_ptr<GameObject> FindGameObjectTest(wstring _objKey);
+
 public:
 	static shared_ptr<Layer> Create();
 

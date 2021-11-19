@@ -94,6 +94,10 @@ void TerrainBuffer::Render()
 	RenderBuffers();
 }
 
+void TerrainBuffer::RenderInspector()
+{
+}
+
 Vector3 TerrainBuffer::PickTerrain(Vector2 screenPos)
 {
 	//POINT p;

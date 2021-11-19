@@ -262,8 +262,33 @@ HRESULT Transform::RotationAxis(XMFLOAT3 _Axis, float _Frametime, float* _AngleA
 	return S_OK;
 }
 
-HRESULT Transform::SetRotation(XMFLOAT3 Axis, float Radian)
+HRESULT Transform::SetRotation(Vector3 angle)
 {
+	Vector3 Right(1.f, 0.f, 0.f), Look(0.f, 0.f, 1.f), Up(0.f, 1.f, 0.f);
+	rotationAngle = angle;
+
+	Matrix matRot;
+
+	Right *= GetScale().x;
+	Up *= GetScale().y;
+	Look *= GetScale().z;
+
+	Matrix rotX = XMMatrixRotationX(XMConvertToRadians(rotationAngle.x));
+	Matrix rotY = XMMatrixRotationY(XMConvertToRadians(rotationAngle.y));
+	Matrix rotZ = XMMatrixRotationZ(XMConvertToRadians(rotationAngle.z));
+
+
+
+	matRot = rotX * rotY * rotZ;
+
+	Right = XMVector3TransformNormal(Right, matRot);
+	Look = XMVector3TransformNormal(Look, matRot);
+	Up = XMVector3TransformNormal(Up, matRot);
+
+	SetState(Transform::RIGHT, Right);
+	SetState(Transform::LOOK, Look);
+	SetState(Transform::UP, Up);
+
 	return S_OK;
 }
 
@@ -283,6 +308,11 @@ shared_ptr<Transform> Transform::Create(TRANSDESC _TransDecs)
 }
 
 int Transform::Update(float _timeDelta)
+{
+	return 0;
+}
+
+void Transform::Render()
 {
 	auto obj = object.lock();
 
@@ -308,9 +338,9 @@ int Transform::Update(float _timeDelta)
 		auto buffer = MatrixBuffer.GetBuffer();
 		Graphic->GetDeviceContext()->VSSetConstantBuffers(0, 1, &buffer);
 
-		return 0;
+		return ;
 	}
-	
+
 	MATRIXBUFFERTYPE desc;
 	desc.World = XMMatrixTranspose(WorldMatrix);
 	desc.View = XMMatrixTranspose(*Manage->GetTransform(D3DTRANSFORMSTATE_VIEW));
@@ -353,10 +383,39 @@ int Transform::Update(float _timeDelta)
 	MatrixBuffer.SetData(Graphic->GetDeviceContext(), desc);
 	auto buffer = MatrixBuffer.GetBuffer();
 	Graphic->GetDeviceContext()->VSSetConstantBuffers(0, 1, &buffer);
-
-	return 0;
 }
 
-void Transform::Render()
+void Transform::RenderInspector()
 {
+	if (ImGui::CollapsingHeader("Transform"))
+	{
+
+
+		float pos[3];
+		pos[0] = GetState(POSITION).x;
+		pos[1] = GetState(POSITION).y;
+		pos[2] = GetState(POSITION).z;
+
+		ImGui::InputFloat3("Position", pos);
+		SetState(POSITION, Vector3(pos[0], pos[1], pos[2]));
+
+		float rot[3];
+		rot[0] = GetRotation().x;
+		rot[1] = GetRotation().y;
+		rot[2] = GetRotation().z;
+
+		ImGui::InputFloat3("Rotation", rot);
+		SetRotation(Vector3(rot[0], rot[1], rot[2]));
+
+
+		float scale[3];
+		scale[0] = GetScale().x;
+		scale[1] = GetScale().y;
+		scale[2] = GetScale().z;
+
+		ImGui::InputFloat3("Scale", scale);
+		if (scale[0] != 0 && scale[1] != 0 && scale[2] != 0)
+			SetScale(Vector3(scale[0], scale[1], scale[2]));
+	}
+
 }

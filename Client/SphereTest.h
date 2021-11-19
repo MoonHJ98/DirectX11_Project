@@ -3,6 +3,7 @@
 #include "GameObject.h"
 
 class Sphere;
+
 class Transform;
 class Shader;
 

@@ -17,11 +17,19 @@ public:
 
 public:
 	HRESULT					      ReserveLayerMap(int _Size);
+
 	void					      AddLayer(int _Index, wstring _LayerKey, shared_ptr<GameObject> _Object);
 	void					      AddLayerTest(int _Index, wstring _LayerKey, shared_ptr<GameObject> _Object);
+
 	shared_ptr<Layer>		      FindLayer(int _Index, wstring _LayerKey);
+
+
 	list<shared_ptr<GameObject>>* FindGameObjectList(int _SceneIndex, wstring _LayerKey);
 	shared_ptr<GameObject>        FindGameObject(int _SceneIndex, wstring _LayerKey, int _Objectindex);
+
+	map<wstring, pair<wstring, shared_ptr<GameObject>>>* FindGameObjectListTest(int _SceneIndex, wstring _LayerKey);
+	shared_ptr<GameObject>        FindGameObjectTest(int _SceneIndex, wstring _LayerKey, wstring _objKey);
+
 	void						  AddObjectsforImgui(wstring _key, shared_ptr<GameObject> _object);
 	map<wstring, shared_ptr<GameObject>>& GetObjectsForImgui() { return objectsForImgui; }
 

@@ -98,6 +98,28 @@ shared_ptr<GameObject> ObjectManager::FindGameObject(int _SceneIndex, wstring _L
 	return layer->FindGameObject(_Objectindex);
 }
 
+map<wstring, pair<wstring, shared_ptr<GameObject>>>* ObjectManager::FindGameObjectListTest(int _SceneIndex, wstring _LayerKey)
+{
+	auto layer = FindLayer(_SceneIndex, _LayerKey);
+	if (nullptr == layer)
+	{
+		MSG_BOX("Failed to find Layer.");
+		return nullptr;
+	}
+	return layer->FindGameObjectListTest();
+}
+
+shared_ptr<GameObject> ObjectManager::FindGameObjectTest(int _SceneIndex, wstring _LayerKey, wstring _objKey)
+{
+	auto layer = FindLayer(_SceneIndex, _LayerKey);
+	if (nullptr == layer)
+	{
+		MSG_BOX("Failed to find Layer.");
+		return nullptr;
+	}
+	return layer->FindGameObjectTest(_objKey);
+}
+
 void ObjectManager::AddObjectsforImgui(wstring _key, shared_ptr<GameObject> _object)
 {
 	auto iter = objectsForImgui.find(_key);

@@ -51,7 +51,7 @@ private:
 public:
 	virtual int Update(float _timeDelta) override;
 	virtual void Render() override;
-
+	virtual void RenderInspector() override;
 public:
 	static shared_ptr<HeightTerrainBuffer> Create(int _terrainWidth, int _terrainHeight, wstring _heightMapPath);
 

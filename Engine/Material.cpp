@@ -95,6 +95,10 @@ void Material::Render()
 
 }
 
+void Material::RenderInspector()
+{
+}
+
 shared_ptr<Material> Material::Create(MATERIALDESC& desc)
 {
 	shared_ptr<Material> Instance(new Material());

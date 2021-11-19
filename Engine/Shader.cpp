@@ -132,6 +132,14 @@ void Shader::Render()
 
 }
 
+void Shader::RenderInspector()
+{
+	if (ImGui::CollapsingHeader("Shader"))
+	{
+	}
+
+}
+
 shared_ptr<Shader> Shader::Create(D3D11_INPUT_ELEMENT_DESC InputlayoutDesc[], UINT layoutSize, wstring _VSPath, wstring _PSPath)
 {
 	shared_ptr<Shader> Instance(new Shader());

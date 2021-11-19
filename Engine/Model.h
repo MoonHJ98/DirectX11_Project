@@ -8,7 +8,6 @@ class Bone;
 class Mesh;
 class Clip;
 class Texture;
-class Shader;
 class Animator;
 class Material;
 
@@ -47,6 +46,7 @@ public:
 public:
 	virtual int							  Update(float _timeDelta) override;
 	virtual void						  Render() override;
+	virtual void RenderInspector() override;
 
 public:
 	static shared_ptr<Model>      Create();
@@ -60,7 +60,6 @@ private:
 	vector<shared_ptr<Texture>>	  textures;
 	vector<shared_ptr<Material>>  materials;
 
-	shared_ptr<Shader>			  shader = nullptr;
 
 
 

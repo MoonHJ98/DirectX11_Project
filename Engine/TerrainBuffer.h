@@ -36,6 +36,7 @@ private:
 public:
 	virtual int Update(float _timeDelta) override;
 	virtual void Render() override;
+	virtual void RenderInspector() override;
 	VertexType* GetVertices() { return vertices; }
 	Vector3 PickTerrain(Vector2 screenPos);
 

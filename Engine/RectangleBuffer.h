@@ -27,6 +27,7 @@ private:
 public:
 	virtual int Update(float _timeDelta) override;
 	virtual void Render() override;
+	virtual void RenderInspector() override;
 	int	 GetIndexCount() { return indexCount; }
 
 

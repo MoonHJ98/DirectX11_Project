@@ -56,17 +56,17 @@ HRESULT MainApp::Initialize()
 	_decs.ScreenHeight = (float)GY;
 
 	auto camera = StaticCamera::Create(_decs);
-	Manage->AddLayer(SCENEID::STATIC, L"Camera", camera);
+	Manage->AddLayerTest(SCENEID::STATIC, L"Camera", camera);
 
 
 
 	auto player = Player::Create(GraphicDev->GetDevice());
-	Manage->AddLayer(SCENEID::STATIC, L"Player", player);
+	Manage->AddLayerTest(SCENEID::STATIC, L"Player", player);
 
 
 
 	auto terrain = Terrain::Create(100, 100, L"../Resources/heightmap.bmp");
-	Manage->AddLayer(SCENEID::STATIC, L"Terrain", terrain);
+	Manage->AddLayerTest(SCENEID::STATIC, L"Terrain", terrain);
 
 
 	

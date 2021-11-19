@@ -4,7 +4,7 @@
 
 class GraphicDevice;
 
-class Shader : public Component
+class Shader : public Component, public enable_shared_from_this<Shader>
 {
 private:
 	Shader();
@@ -19,6 +19,7 @@ private:
 public:	
 	virtual int Update(float _timeDelta) override;
 	virtual void    Render() override;
+	virtual void RenderInspector() override;
 
 public:
 	static shared_ptr<Shader> Create(D3D11_INPUT_ELEMENT_DESC InputlayoutDesc[], UINT layoutSize, wstring _VSPath, wstring _PSPath);

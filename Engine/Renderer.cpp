@@ -181,7 +181,7 @@ void Renderer::RenderLight()
 
 	buffertype.ProjInv = XMMatrixTranspose(Proj);
 	buffertype.ViewInv = XMMatrixTranspose(View);
-	buffertype.CamPos = Manage->FindGameObject(0, L"Camera").get()->GetPosition();
+	buffertype.CamPos = Manage->FindGameObjectTest(0, L"Camera", L"Camera").get()->GetPosition();
 
 
 	projToWorld->SetData(Graphic->GetDeviceContext(), buffertype);

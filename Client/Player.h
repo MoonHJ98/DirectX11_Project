@@ -2,7 +2,7 @@
 #include "GameObject.h"
 
 class Model;
-
+class Shader;
 
 class Player : public GameObject, public enable_shared_from_this<Player>
 {
@@ -23,5 +23,7 @@ public:
 
 private:
 	shared_ptr<Model> model;
+	shared_ptr<Shader> shader = nullptr;
+
 };
 

@@ -90,6 +90,16 @@ shared_ptr<GameObject> Management::FindGameObject(int _SceneIndex, wstring _Laye
 	return ObjectMgr->FindGameObject(_SceneIndex, _LayerKey, _ObjectIndex);
 }
 
+map<wstring, pair<wstring, shared_ptr<GameObject>>>* Management::FindGameObjectListTest(int _Index, wstring _LayerKey)
+{
+	return ObjectMgr->FindGameObjectListTest(_Index, _LayerKey);
+}
+
+shared_ptr<GameObject> Management::FindGameObjectTest(int _SceneIndex, wstring _LayerKey, wstring _objKey)
+{
+	return ObjectMgr->FindGameObjectTest(_SceneIndex, _LayerKey, _objKey);
+}
+
 map<wstring, shared_ptr<GameObject>>& Management::GetObjectsForImgui()
 {
 	return ObjectMgr->GetObjectsForImgui();

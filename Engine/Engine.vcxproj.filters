@@ -139,6 +139,9 @@
     <Filter Include="01. Utility\03. Component\01. Buffer\02. HeightTerrainBuffer">
       <UniqueIdentifier>{7c4f5bef-ce49-4cd6-8d0b-2c808319bc59}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. Includes\05. Imgui">
+      <UniqueIdentifier>{5b97355f-037b-414b-ba60-5c5e829b3b31}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -254,6 +257,27 @@
     </ClInclude>
     <ClInclude Include="Sphere.h" />
     <ClInclude Include="Component.h" />
+    <ClInclude Include="imgui.h">
+      <Filter>02. Includes\05. Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui_impl_dx11.h">
+      <Filter>02. Includes\05. Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui_impl_win32.h">
+      <Filter>02. Includes\05. Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui_internal.h">
+      <Filter>02. Includes\05. Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imstb_rectpack.h">
+      <Filter>02. Includes\05. Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imstb_textedit.h">
+      <Filter>02. Includes\05. Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imstb_truetype.h">
+      <Filter>02. Includes\05. Imgui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -366,6 +390,27 @@
     </ClCompile>
     <ClCompile Include="Sphere.cpp" />
     <ClCompile Include="Component.cpp" />
+    <ClCompile Include="imgui.cpp">
+      <Filter>02. Includes\05. Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_demo.cpp">
+      <Filter>02. Includes\05. Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_draw.cpp">
+      <Filter>02. Includes\05. Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_impl_dx11.cpp">
+      <Filter>02. Includes\05. Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_impl_win32.cpp">
+      <Filter>02. Includes\05. Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_tables.cpp">
+      <Filter>02. Includes\05. Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_widgets.cpp">
+      <Filter>02. Includes\05. Imgui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="ModelVS.hlsl">

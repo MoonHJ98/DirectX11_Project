@@ -6,6 +6,7 @@
 #include "light.h"
 #include "Terrain.h"
 #include "SphereTest.h"
+#include "GameObject.h"
 
 HRESULT ImguiManager::Initialize()
 {
@@ -40,7 +41,6 @@ void ImguiManager::Render()
 
 	ImGui::NewFrame();
 
-	Frame();
 	Scene();
 	Menu1();
 	Hierarchy();
@@ -120,7 +120,7 @@ void ImguiManager::Hierarchy()
 	if (ImGui::TreeNode("Scene"))
 	{
 
-
+		
 		// For Popup.
 		ObjectPopup();
 
@@ -130,7 +130,11 @@ void ImguiManager::Hierarchy()
 		{
 			
 			if (ImGui::Selectable(ToString(iter->first).c_str()))
+			{
 				isObjectInspector = true;
+				objectForInspector = iter->second;
+				break;
+			}
 
 		}
 
@@ -146,7 +150,7 @@ void ImguiManager::Inspector()
 {
 	ImGui::Begin("Inspector");
 
-	//ObjectInspector();
+	ObjectInspector();
 
 	ImGui::End();
 }
@@ -169,8 +173,6 @@ void ImguiManager::ObjectPopup()
 			{
 				auto sphere = SphereTest::Create();
 				Manage->AddLayerTest(SCENEID::STATIC, L"Sphere", sphere);
-
-				// TODO : Layer 삭제하기.
 
 			}
 			ImGui::MenuItem("Capsule");
@@ -197,6 +199,9 @@ void ImguiManager::ObjectInspector()
 	if (isObjectInspector == false)
 		return;
 
+	auto obj = objectForInspector.lock();
+
+	obj->RenderComponentsIspector();
 
 }
 

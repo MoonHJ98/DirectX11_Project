@@ -7,7 +7,7 @@ class Management;
 class Camera;
 class GameObject;
 
-class Transform : public Component
+class Transform : public Component, public enable_shared_from_this<Transform>
 {
 public:
 	typedef struct tagTransDesc
@@ -41,11 +41,11 @@ public:
 	Vector3						GetScale();
 	void						SetObject(shared_ptr<GameObject> _object);
 
-public: // TODO : 여기 고치기
-	//void						Update(bool isOrtho = false, BOOL _depthForShadow = FALSE);
-		// Component을(를) 통해 상속됨
+public:
+	// Component을(를) 통해 상속됨
 	virtual int Update(float _timeDelta = 0) override;
 	virtual void Render() override;
+	virtual void RenderInspector() override;
 public:
 	HRESULT						GoForward(float _Frametime);
 	HRESULT						GoBackward(float _Frametime);
@@ -56,11 +56,11 @@ public:
 	HRESULT						LookTarget(XMFLOAT3 _TargetPos);
 	HRESULT						GoToTarget(XMFLOAT3 _TargetPos, float _Frametime);
 	HRESULT						RotationAxis(XMFLOAT3 _Axis, float _Frametime, float* _AngleAcc = nullptr);
-	HRESULT						SetRotation(XMFLOAT3 _Axis, float _Radian);
-
+	HRESULT						SetRotation(Vector3 angle);
+	Vector3						GetRotation() { return rotationAngle; }
 
 public:
-	static shared_ptr<Transform>		Create(TRANSDESC _TransDecs);
+	static shared_ptr<Transform>	Create(TRANSDESC _TransDecs);
 
 private:
 	shared_ptr<GraphicDevice>		 Graphic = nullptr;
@@ -72,6 +72,8 @@ private:
 	float						     TimeAcc = 0.f;
 
 	weak_ptr<GameObject>             object;
+
+	Vector3 rotationAngle = Vector3(0.f, 0.f, 0.f);
 
 
 };

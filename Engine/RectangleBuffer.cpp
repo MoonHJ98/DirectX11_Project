@@ -129,6 +129,10 @@ void RectangleBuffer::Render()
 	RenderBuffer();
 }
 
+void RectangleBuffer::RenderInspector()
+{
+}
+
 void RectangleBuffer::RenderBuffer()
 {
 	UINT stride;

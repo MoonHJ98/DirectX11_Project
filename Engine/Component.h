@@ -9,5 +9,6 @@ public:
 	// Base을(를) 통해 상속됨
 	virtual int Update(float _timeDelta) PURE;
 	virtual void Render() PURE;
+	virtual void RenderInspector() PURE;
 };
 
