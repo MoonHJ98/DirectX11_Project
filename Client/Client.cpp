@@ -79,7 +79,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	float FrameTimeDefault = 0.f;
 
 
-	CloseWindow(GhWnd);
+	//CloseWindow(GhWnd);
 
 	while (TRUE)
 	{
@@ -155,7 +155,7 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
 
-	RECT rc = { 0, 0, 800, 600 };
+	RECT rc = { 0, 0, 1200, 700 };
 	GX = static_cast<int>(rc.right - rc.left);
 	GY = static_cast<int>(rc.bottom - rc.top);
 

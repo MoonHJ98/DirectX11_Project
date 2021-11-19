@@ -41,6 +41,8 @@ void ImguiManager::Render()
 
 	ImGui::NewFrame();
 
+	ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
+
 	Scene();
 	Menu1();
 	Hierarchy();
