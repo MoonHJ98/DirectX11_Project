@@ -57,7 +57,7 @@ HRESULT Light::Initialize(LIGHTDESC _LightInfo)
 	D3D11_VIEWPORT viewport;
 	Graphic->GetDeviceContext()->RSGetViewports(&viewportNum, &viewport);
 
-	transform->SetScale(Vector3(viewport.Width/2.f, viewport.Height/2.f, 1.f));
+	transform->SetScale(Vector3(viewport.Width/2, viewport.Height/2, 1.f));
 	
 	CreateViewMatrix();
 
@@ -85,11 +85,11 @@ void Light::CreateProjMatrix()
 	D3D11_VIEWPORT viewport;
 	Graphic->GetDeviceContext()->RSGetViewports(&viewportNum, &viewport);
 
-	screenAspect = viewport.Width / viewport.Height;
+	screenAspect = SCREENSIZEX / SCREENSIZEY;
 
 	ProjectMatrix = XMMatrixPerspectiveFovLH(FoV, screenAspect, SCREENNEAR, SCREENDEPTH);
 
-	OrthoMatrix = XMMatrixOrthographicLH(viewport.Width/12.f, viewport.Height/12.f, 1.f, 100.f);
+	OrthoMatrix = XMMatrixOrthographicLH(SCREENSIZEX / 10.f, SCREENSIZEY / 10.f, 0.f, 100.f);
 
 }
 

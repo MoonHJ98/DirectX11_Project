@@ -51,7 +51,7 @@ HRESULT MainApp::Initialize()
 	_decs.Far = SCREENDEPTH;
 	_decs.Near = SCREENNEAR;
 	_decs.FiedOfView = FoV;
-	_decs.ScreenAspect = (float)GX / (float)GY;
+	_decs.ScreenAspect = (float)SCREENSIZEX / (float)SCREENSIZEY;
 	_decs.ScreenWidth = (float)GX;
 	_decs.ScreenHeight = (float)GY;
 
