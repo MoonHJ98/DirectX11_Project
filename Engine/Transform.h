@@ -1,12 +1,13 @@
 #pragma once
 
-#include "Includes.h"
+#include "Component.h"
 
 class GraphicDevice;
 class Management;
 class Camera;
+class GameObject;
 
-class Transform
+class Transform : public Component
 {
 public:
 	typedef struct tagTransDesc
@@ -38,10 +39,13 @@ public:
 	Matrix*						GetWorldMatrix();
 	void						SetScale(Vector3 scale);
 	Vector3						GetScale();
+	void						SetObject(shared_ptr<GameObject> _object);
 
-public:
-	void						Update(bool isOrtho = false, BOOL _depthForShadow = FALSE);
-
+public: // TODO : 여기 고치기
+	//void						Update(bool isOrtho = false, BOOL _depthForShadow = FALSE);
+		// Component을(를) 통해 상속됨
+	virtual int Update(float _timeDelta = 0) override;
+	virtual void Render() override;
 public:
 	HRESULT						GoForward(float _Frametime);
 	HRESULT						GoBackward(float _Frametime);
@@ -66,5 +70,9 @@ private:
 	XMFLOAT3					     Rotation;
 	TRANSDESC					     Status;
 	float						     TimeAcc = 0.f;
+
+	weak_ptr<GameObject>             object;
+
+
 };
 

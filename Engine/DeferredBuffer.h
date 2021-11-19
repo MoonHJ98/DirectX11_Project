@@ -46,7 +46,7 @@ private:
 	ComPtr<ID3D11Texture2D> renderTargetTextureArray[BUFFER_END] = {};
 	ComPtr<ID3D11RenderTargetView> renderTargetViewArray[BUFFER_END] = {};
 	ComPtr<ID3D11ShaderResourceView> shaderResourceViewArray[BUFFER_END] = {};
-	ComPtr<ID3D11Texture2D> depthStencilBuffer = nullptr;       // 이건 렌더타켓 매니저에서 갖고있기.
+	ComPtr<ID3D11Texture2D> depthStencilBuffer = nullptr;       
 	ComPtr<ID3D11DepthStencilView> depthStencilView = nullptr;
 	D3D11_VIEWPORT viewport;
 

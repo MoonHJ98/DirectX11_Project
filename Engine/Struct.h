@@ -337,3 +337,4 @@ string ToString(wstring value);
 
 string Format(const string format, ...);
 wstring Format(const wstring format, ...);
+

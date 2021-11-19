@@ -4,6 +4,7 @@
 #include "Management.h"
 #include "Camera.h"
 #include "Light.h"
+#include "GameObject.h"
 
 Transform::Transform()
 {
@@ -88,51 +89,56 @@ Vector3 Transform::GetScale()
 	return Vector3(right.Length(), up.Length(), look.Length());
 }
 
-void Transform::Update(bool isOrtho, BOOL _depthForShadow)
+void Transform::SetObject(shared_ptr<GameObject> _object)
 {
-	MATRIXBUFFERTYPE desc;
-	desc.World = XMMatrixTranspose(WorldMatrix);
-	desc.View = XMMatrixTranspose(*Manage->GetTransform(D3DTRANSFORMSTATE_VIEW));
-
-	if (isOrtho)
-	{
-		Matrix View = XMMatrixIdentity();
-		desc.World = XMMatrixIdentity();
-
-		Vector3 scale = GetScale();
-		View(0, 0) = scale.x;
-		View(1, 1) = scale.y;
-
-		Vector3 pos = GetState(POSITION);
-		View(3, 0) = pos.x;
-		View(3, 1) = pos.y;
-		View(3, 2) = pos.z;
-
-		desc.View = XMMatrixTranspose(View);
-		desc.Projection = XMMatrixTranspose(*Manage->GetTransform(D3DTRANSFORMSTATE_TEXTURE0));
-	}
-	else
-		desc.Projection = XMMatrixTranspose(*Manage->GetTransform(D3DTRANSFORMSTATE_PROJECTION));
-
-	auto light = Manage->FindLight(L"DirectionalLight", 0);
-	Matrix lightViewMatrix = *light->GetViewMatrix();
-	Matrix lightProjectionMatrix = *light->GetOrthoMatrix();
-
-	if (_depthForShadow == TRUE)
-	{
-		desc.View = XMMatrixTranspose(lightViewMatrix);
-		desc.Projection = XMMatrixTranspose(lightProjectionMatrix);
-	}
-
-	desc.lightViewMatrix = XMMatrixTranspose(lightViewMatrix);
-	desc.lightProjectionMatrix = XMMatrixTranspose(lightProjectionMatrix);
-
-
-	desc.renderDepthForShadow = _depthForShadow;
-	MatrixBuffer.SetData(Graphic->GetDeviceContext(), desc);
-	auto buffer = MatrixBuffer.GetBuffer();
-	Graphic->GetDeviceContext()->VSSetConstantBuffers(0, 1, &buffer);
+	object = _object;
 }
+
+//void Transform::Update(bool isOrtho, BOOL _depthForShadow)
+//{
+//	MATRIXBUFFERTYPE desc;
+//	desc.World = XMMatrixTranspose(WorldMatrix);
+//	desc.View = XMMatrixTranspose(*Manage->GetTransform(D3DTRANSFORMSTATE_VIEW));
+//
+//	if (isOrtho)
+//	{
+//		Matrix View = XMMatrixIdentity();
+//		desc.World = XMMatrixIdentity();
+//
+//		Vector3 scale = GetScale();
+//		View(0, 0) = scale.x;
+//		View(1, 1) = scale.y;
+//
+//		Vector3 pos = GetState(POSITION);
+//		View(3, 0) = pos.x;
+//		View(3, 1) = pos.y;
+//		View(3, 2) = pos.z;
+//
+//		desc.View = XMMatrixTranspose(View);
+//		desc.Projection = XMMatrixTranspose(*Manage->GetTransform(D3DTRANSFORMSTATE_TEXTURE0));
+//	}
+//	else
+//		desc.Projection = XMMatrixTranspose(*Manage->GetTransform(D3DTRANSFORMSTATE_PROJECTION));
+//
+//	auto light = Manage->FindLight(L"DirectionalLight", 0);
+//	Matrix lightViewMatrix = *light->GetViewMatrix();
+//	Matrix lightProjectionMatrix = *light->GetOrthoMatrix();
+//
+//	if (_depthForShadow == TRUE)
+//	{
+//		desc.View = XMMatrixTranspose(lightViewMatrix);
+//		desc.Projection = XMMatrixTranspose(lightProjectionMatrix);
+//	}
+//
+//	desc.lightViewMatrix = XMMatrixTranspose(lightViewMatrix);
+//	desc.lightProjectionMatrix = XMMatrixTranspose(lightProjectionMatrix);
+//
+//
+//	desc.renderDepthForShadow = _depthForShadow;
+//	MatrixBuffer.SetData(Graphic->GetDeviceContext(), desc);
+//	auto buffer = MatrixBuffer.GetBuffer();
+//	Graphic->GetDeviceContext()->VSSetConstantBuffers(0, 1, &buffer);
+//}
 
 HRESULT Transform::GoForward(float _Frametime)
 {
@@ -274,4 +280,83 @@ shared_ptr<Transform> Transform::Create(TRANSDESC _TransDecs)
 	}
 
 	return Instance;
+}
+
+int Transform::Update(float _timeDelta)
+{
+	auto obj = object.lock();
+
+	if (obj == nullptr)
+	{
+		MATRIXBUFFERTYPE desc;
+		desc.World = XMMatrixTranspose(WorldMatrix);
+		Matrix View = XMMatrixIdentity();
+		desc.World = XMMatrixIdentity();
+
+		Vector3 scale = GetScale();
+		View(0, 0) = scale.x;
+		View(1, 1) = scale.y;
+
+		Vector3 pos = GetState(POSITION);
+		View(3, 0) = pos.x;
+		View(3, 1) = pos.y;
+		View(3, 2) = pos.z;
+
+		desc.View = XMMatrixTranspose(View);
+		desc.Projection = XMMatrixTranspose(*Manage->GetTransform(D3DTRANSFORMSTATE_TEXTURE0));
+		MatrixBuffer.SetData(Graphic->GetDeviceContext(), desc);
+		auto buffer = MatrixBuffer.GetBuffer();
+		Graphic->GetDeviceContext()->VSSetConstantBuffers(0, 1, &buffer);
+
+		return 0;
+	}
+	
+	MATRIXBUFFERTYPE desc;
+	desc.World = XMMatrixTranspose(WorldMatrix);
+	desc.View = XMMatrixTranspose(*Manage->GetTransform(D3DTRANSFORMSTATE_VIEW));
+
+	if (obj->GetisOrth())
+	{
+		Matrix View = XMMatrixIdentity();
+		desc.World = XMMatrixIdentity();
+
+		Vector3 scale = GetScale();
+		View(0, 0) = scale.x;
+		View(1, 1) = scale.y;
+
+		Vector3 pos = GetState(POSITION);
+		View(3, 0) = pos.x;
+		View(3, 1) = pos.y;
+		View(3, 2) = pos.z;
+
+		desc.View = XMMatrixTranspose(View);
+		desc.Projection = XMMatrixTranspose(*Manage->GetTransform(D3DTRANSFORMSTATE_TEXTURE0));
+	}
+	else
+		desc.Projection = XMMatrixTranspose(*Manage->GetTransform(D3DTRANSFORMSTATE_PROJECTION));
+
+	auto light = Manage->FindLight(L"DirectionalLight", 0);
+	Matrix lightViewMatrix = *light->GetViewMatrix();
+	Matrix lightProjectionMatrix = *light->GetOrthoMatrix();
+
+	if (obj->GetRenderDeptehForShadow() == TRUE)
+	{
+		desc.View = XMMatrixTranspose(lightViewMatrix);
+		desc.Projection = XMMatrixTranspose(lightProjectionMatrix);
+	}
+
+	desc.lightViewMatrix = XMMatrixTranspose(lightViewMatrix);
+	desc.lightProjectionMatrix = XMMatrixTranspose(lightProjectionMatrix);
+
+
+	desc.renderDepthForShadow = obj->GetRenderDeptehForShadow();
+	MatrixBuffer.SetData(Graphic->GetDeviceContext(), desc);
+	auto buffer = MatrixBuffer.GetBuffer();
+	Graphic->GetDeviceContext()->VSSetConstantBuffers(0, 1, &buffer);
+
+	return 0;
+}
+
+void Transform::Render()
+{
 }

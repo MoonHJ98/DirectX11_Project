@@ -144,3 +144,8 @@ shared_ptr<Shader> Shader::Create(D3D11_INPUT_ELEMENT_DESC InputlayoutDesc[], UI
 
 	return Instance;
 }
+
+int Shader::Update(float _timeDelta)
+{
+	return 0;
+}

@@ -7,6 +7,10 @@
 #include "Light.h"
 #include "GraphicDevice.h"
 
+
+
+
+
 Player::Player()
 {
 }
@@ -23,15 +27,17 @@ int Player::Update(float _TimeDelta)
 {
 	TimeDelta += _TimeDelta;
 	model->Update(_TimeDelta);
-	
-	
+
+
 	Renderer::GetInstance()->AddRenderGroup(Renderer::RENDER_NONALPHA, shared_from_this());
 	return 0;
 }
 
 void Player::Render()
 {
-	transform->Update(false, renderDepthForShadow);
+
+	transform->Update();
+
 
 	model->Render();
 }
@@ -42,6 +48,7 @@ HRESULT Player::Initialize(ID3D11Device * _Device)
 
 
 	transform = Transform::Create(Transform::TRANSDESC(10.f, 10.f));
+	transform->SetObject(shared_from_this());
 	transform->SetScale(Vector3(0.1f, 0.1f, 0.1f));
 	transform->SetState(Transform::POSITION, Vector3(10.f, 0.f, 10.f));
 	model = Model::Create();
@@ -49,7 +56,7 @@ HRESULT Player::Initialize(ID3D11Device * _Device)
 
 
 
-	
+
 	return S_OK;
 }
 

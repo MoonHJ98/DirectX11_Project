@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Includes.h"
+#include "Component.h"
 
 class GraphicDevice;
 
-class RectangleBuffer
+class RectangleBuffer : public Component
 {
 private:
 	struct VertexType
@@ -25,7 +25,8 @@ private:
 	void	RenderBuffer();
 
 public:
-	void Render();
+	virtual int Update(float _timeDelta) override;
+	virtual void Render() override;
 	int	 GetIndexCount() { return indexCount; }
 
 
@@ -39,5 +40,7 @@ private:
 	ComPtr<ID3D11ShaderResourceView> resourceView = nullptr;
 	int vertexCount = 0;
 	int indexCount = 0;
+
+
 };
 

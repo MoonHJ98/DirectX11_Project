@@ -1,11 +1,11 @@
 #pragma once
 
-#include "Includes.h"
+#include "Component.h"
 
 class GraphicDevice;
 class Management;
 
-class TerrainBuffer
+class TerrainBuffer : public Component
 {
 	struct VertexType
 	{
@@ -34,7 +34,8 @@ private:
 
 
 public:
-	void Render();
+	virtual int Update(float _timeDelta) override;
+	virtual void Render() override;
 	VertexType* GetVertices() { return vertices; }
 	Vector3 PickTerrain(Vector2 screenPos);
 
@@ -66,6 +67,9 @@ private:
 
 	BrushDesc brushDesc;
 	shared_ptr<ConstantBuffer<BrushDesc>> brushBuffer = nullptr;
+
+
+
 
 	//Vector2 screenPos = Vector2(0.f, 0.f);
 };

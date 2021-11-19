@@ -27,7 +27,7 @@ int SphereTest::Update(float _TimeDelta)
 void SphereTest::Render()
 {
 	shader->Render();
-	transform->Update(false, renderDepthForShadow);
+	transform->Update();
 
 	sphere->Render();
 }
@@ -47,6 +47,8 @@ HRESULT SphereTest::Initialize()
 	shader = Shader::Create(InputLayout, sizeof(InputLayout), L"../Engine/ColorVS.hlsl", L"../Engine/ColorPS.hlsl");
 
 	transform = Transform::Create(Transform::TRANSDESC());
+	transform->SetObject(shared_from_this());
+
 	transform->SetState(Transform::POSITION, Vector3(3.f, 0.f, 5.f));
 
 	return S_OK;

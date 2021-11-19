@@ -59,7 +59,7 @@ private:
 	shared_ptr<Shader> blendShader = nullptr;
 
 	shared_ptr<RectangleBuffer> rectangleBuffer = nullptr;
-	shared_ptr<Transform> transform = nullptr;
+
 	shared_ptr<ConstantBuffer<ProjtoWorldType>> projToWorld;
 	shared_ptr<Management> Manage = nullptr;
 };

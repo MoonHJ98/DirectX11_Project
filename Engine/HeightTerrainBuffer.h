@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Includes.h"
+#include "Component.h"
 
 class GraphicDevice;
 
-class HeightTerrainBuffer
+class HeightTerrainBuffer : public Component
 {
 	typedef struct VertexType
 	{
@@ -49,7 +49,8 @@ private:
 	void RenderBuffers();
 
 public:
-	void Render();
+	virtual int Update(float _timeDelta) override;
+	virtual void Render() override;
 
 public:
 	static shared_ptr<HeightTerrainBuffer> Create(int _terrainWidth, int _terrainHeight, wstring _heightMapPath);
@@ -68,5 +69,7 @@ private:
 	int terrainHeight = 257;
 	float heightScale = 5.f;
 	ModelType* terrainModel = nullptr;
+
+
 };
 

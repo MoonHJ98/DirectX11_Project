@@ -57,9 +57,6 @@ HRESULT Renderer::Initialize()
 	blendShader = Shader::Create(InputLayout, sizeof(InputLayout), L"../Engine/BlendVS.hlsl", L"../Engine/BlendPS.hlsl");
 
 	rectangleBuffer = RectangleBuffer::Create();
-	transform = Transform::Create(Transform::TRANSDESC());
-	transform->SetState(Transform::POSITION, Vector3(0.f, 0.f, 0.3f));
-	transform->SetScale(Vector3(viewport.Width/2.f, viewport.Height/2.f, 1.f));
 
 
 	shared_ptr<ConstantBuffer<ProjtoWorldType>> temp(new ConstantBuffer<ProjtoWorldType>());
@@ -220,7 +217,7 @@ void Renderer::RenderBlend()
 
 
 
-	transform->Update(true);
+	
 	rectangleBuffer->Render();
 
 

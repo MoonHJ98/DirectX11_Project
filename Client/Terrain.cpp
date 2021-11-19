@@ -33,6 +33,7 @@ HRESULT Terrain::Initialize(UINT _terrainWidth, UINT _terrainHeight, wstring _he
 	Manage = Management::GetInstance();
 	heightTerrainBuffer = HeightTerrainBuffer::Create(terrainWidth, terrainHeight, _heightMapPath);
 	transform = Transform::Create(Transform::TRANSDESC());
+	transform->SetObject(shared_from_this());
 
 	D3D11_INPUT_ELEMENT_DESC InputLayout[] =
 	{
@@ -68,7 +69,7 @@ void Terrain::Render()
 	shader->Render();
 
 
-	transform->Update(false, renderDepthForShadow);
+	transform->Update();
 	material->Render();
 
 	terrainBuffer->Render();

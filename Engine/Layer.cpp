@@ -40,10 +40,11 @@ void Layer::AddGameObject(shared_ptr<GameObject> _GameObject)
 	GameObjects.push_back(_GameObject);
 }
 
-void Layer::AddGameObject(wstring _key, shared_ptr<GameObject> _GameObject)
+wstring Layer::AddGameObject(wstring _key, shared_ptr<GameObject> _GameObject)
 {
 	UINT count = 0;
 	wstring pairFirst = _key;
+	
 	for (auto& iter : objects)
 	{
 		if (iter.second.first == pairFirst)
@@ -56,16 +57,15 @@ void Layer::AddGameObject(wstring _key, shared_ptr<GameObject> _GameObject)
 		if (findkey == objects.end())
 		{
 			objects.emplace(key, make_pair(pairFirst, _GameObject));
-			return;
+			return key;
 		}
 
 	}
 
 	objects.emplace(_key, make_pair(pairFirst, _GameObject));
-
-
-
+	return _key;
 }
+
 
 shared_ptr<GameObject> Layer::FindGameObject(int _ObjectIndex)
 {

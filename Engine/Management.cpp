@@ -90,6 +90,12 @@ shared_ptr<GameObject> Management::FindGameObject(int _SceneIndex, wstring _Laye
 	return ObjectMgr->FindGameObject(_SceneIndex, _LayerKey, _ObjectIndex);
 }
 
+map<wstring, shared_ptr<GameObject>>& Management::GetObjectsForImgui()
+{
+	return ObjectMgr->GetObjectsForImgui();
+}
+
+
 void Management::Initialize(HINSTANCE hInst, HWND hWnd, int SceneCnt, int screenWidth, int screenHeight, bool vsync, bool fullscreen, float screenDepth, float screenNear)
 {
 	SceneMgr = SceneManager::GetInstance();

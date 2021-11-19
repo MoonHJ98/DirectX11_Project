@@ -1,11 +1,11 @@
 #pragma once
 
-#include "Includes.h"
+#include "Component.h"
 
 class Texture;
 class GraphicDevice;
 
-class Material
+class Material : public Component
 {
 private:
 	Material();
@@ -30,7 +30,8 @@ private:
 	void SetNormalMap(wstring file);
 
 public:
-	void Render();
+	virtual int Update(float _timeDelta) override;
+	virtual void Render() override;
 
 private:
 	HRESULT Initialize(MATERIALDESC& desc);
@@ -55,4 +56,5 @@ private:
 	shared_ptr<Texture> diffuseMap = nullptr;
 	shared_ptr<Texture> specularMap = nullptr;
 	shared_ptr<Texture> normalMap = nullptr;
+
 };

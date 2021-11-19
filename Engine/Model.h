@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Includes.h"
+#include "Component.h"
 
 
 class AssimpConverter;
@@ -14,7 +14,7 @@ class Material;
 
 class Light;
 
-class Model : public enable_shared_from_this<Model>
+class Model : public Component, public enable_shared_from_this<Model>
 {
 private:
 	Model();
@@ -45,8 +45,8 @@ public:
 	void						  SetTransformsSRV(ComPtr<ID3D11ShaderResourceView> srv);
 
 public:
-	int							  Update(float _timeDelta);
-	void						  Render();
+	virtual int							  Update(float _timeDelta) override;
+	virtual void						  Render() override;
 
 public:
 	static shared_ptr<Model>      Create();

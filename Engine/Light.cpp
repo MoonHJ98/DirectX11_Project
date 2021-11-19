@@ -33,8 +33,9 @@ void Light::Render()
 	auto buffer = LightBuffer->GetBuffer();
 	Graphic->GetDeviceContext()->PSSetConstantBuffers(0, 1, &buffer);
 
-	transform->Update(true);
 
+	transform->Update();
+	
 	rectangleBuffer->Render();
 }
 

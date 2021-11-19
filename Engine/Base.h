@@ -10,7 +10,7 @@ public:
 	~Base();
 
 protected:
-	virtual int Update(float _timeDelta) = 0;
+	virtual int Update(float _timeDelta = 0) = 0;
 	virtual void Render() = 0;
 };
 

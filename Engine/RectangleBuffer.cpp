@@ -162,3 +162,8 @@ shared_ptr<RectangleBuffer> RectangleBuffer::Create()
 	}
 	return Instance;
 }
+
+int RectangleBuffer::Update(float _timeDelta)
+{
+	return 0;
+}

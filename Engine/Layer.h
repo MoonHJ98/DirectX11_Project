@@ -12,7 +12,7 @@ public:
 public:
 	HRESULT		Initialize();
 	void		AddGameObject(shared_ptr<GameObject> _GameObject);
-	void		AddGameObject(wstring _key, shared_ptr<GameObject> _GameObject);
+	wstring		AddGameObject(wstring _key, shared_ptr<GameObject> _GameObject);
 
 	list<shared_ptr<GameObject>>* FindGameObjectList() { return &GameObjects; }
 	shared_ptr<GameObject> FindGameObject(int _ObjectIndex);

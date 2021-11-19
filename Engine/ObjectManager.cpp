@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "ObjectManager.h"
 #include "Layer.h"
+#include "Management.h"
 
 
 int ObjectManager::Update(float _timeDelta)
@@ -60,7 +61,9 @@ void ObjectManager::AddLayerTest(int _Index, wstring _LayerKey, shared_ptr<GameO
 		LayerMap[_Index].emplace(_LayerKey, layer);
 	}
 
-	LayerMap[_Index][_LayerKey]->AddGameObject(_LayerKey, _Object);
+	wstring key = LayerMap[_Index][_LayerKey]->AddGameObject(_LayerKey, _Object);
+	AddObjectsforImgui(key, _Object);
+
 }
 
 shared_ptr<Layer> ObjectManager::FindLayer(int _Index, wstring _LayerKey)
@@ -93,4 +96,13 @@ shared_ptr<GameObject> ObjectManager::FindGameObject(int _SceneIndex, wstring _L
 		return nullptr;
 	}
 	return layer->FindGameObject(_Objectindex);
+}
+
+void ObjectManager::AddObjectsforImgui(wstring _key, shared_ptr<GameObject> _object)
+{
+	auto iter = objectsForImgui.find(_key);
+	if (iter != objectsForImgui.end())
+		return;
+
+	objectsForImgui.emplace(make_pair(_key, _object));
 }

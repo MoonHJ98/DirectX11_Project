@@ -105,3 +105,8 @@ shared_ptr<Material> Material::Create(MATERIALDESC& desc)
 	}
 	return Instance;
 }
+
+int Material::Update(float _timeDelta)
+{
+	return 0;
+}

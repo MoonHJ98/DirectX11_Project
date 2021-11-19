@@ -6,7 +6,7 @@ class PipeLine;
 class Transform;
 class GraphicDevice;
 
-class Camera : public GameObject
+class Camera : public GameObject, public enable_shared_from_this<Camera>
 {
 public:
 	typedef struct CameraDecs

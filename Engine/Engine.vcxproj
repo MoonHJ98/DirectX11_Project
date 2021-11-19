@@ -163,6 +163,7 @@
     <ClInclude Include="Bone.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Clip.h" />
+    <ClInclude Include="Component.h" />
     <ClInclude Include="DeferredBuffer.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="GameObject.h" />
@@ -203,6 +204,7 @@
     <ClCompile Include="Bone.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Clip.cpp" />
+    <ClCompile Include="Component.cpp" />
     <ClCompile Include="DeferredBuffer.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="GameObject.cpp" />

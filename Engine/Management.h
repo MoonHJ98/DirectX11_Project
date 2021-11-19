@@ -51,6 +51,10 @@ public:
 	shared_ptr<GameObject>         FindGameObject(int _SceneIndex, wstring _LayerKey, int _ObjectIndex = 0);
 
 
+	map<wstring, shared_ptr<GameObject>>& GetObjectsForImgui();
+
+
+
 public:
 	void					Initialize(HINSTANCE hInst, HWND hWnd, int SceneCnt, int screenWidth, int screenHeight, bool vsync, bool fullscreen, float screenDepth, float screenNear);
 
@@ -60,7 +64,6 @@ private:
 	shared_ptr<PipeLine>			Pipeline = nullptr;
 	shared_ptr<LightManager>        LightMgr = nullptr;
 	shared_ptr<Renderer>            renderer = nullptr;
-
 
 };
 

@@ -48,7 +48,7 @@ void RenderTarget::Render(ID3D11ShaderResourceView* _ShaderResourceView)
 
 	shader->Render();
 
-	transform->Update(true);
+	transform->Update();
 
 	Graphic->GetDeviceContext()->PSSetShaderResources(0, 1, &_ShaderResourceView);
 

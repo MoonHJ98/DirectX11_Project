@@ -81,5 +81,4 @@ using namespace PackedVector;
 #define MAX_MODEL_KEYFRAMES 500
 
 
-
 #include "Struct.h"

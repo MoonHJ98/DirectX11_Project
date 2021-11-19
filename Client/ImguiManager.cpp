@@ -43,9 +43,9 @@ void ImguiManager::Render()
 	Frame();
 	Scene();
 	Menu1();
-	Menu2();
-	Menu3();
-	//Menu4();
+	Hierarchy();
+	Inspector();
+	
 
 
 
@@ -110,9 +110,9 @@ void ImguiManager::Menu1()
 
 }
 
-void ImguiManager::Menu2()
+void ImguiManager::Hierarchy()
 {
-	ImGui::Begin("Menu2");
+	ImGui::Begin("Hierarchy");
 
 	static bool popUp = false;
 
@@ -124,11 +124,15 @@ void ImguiManager::Menu2()
 		// For Popup.
 		ObjectPopup();
 
+		auto objects = Manage->GetObjectsForImgui();
 
-		ImGui::Text("test1");
-		ImGui::Text("test2");
-		ImGui::Text("test3");
-		ImGui::Text("test4");
+		for (auto iter = objects.begin(); iter != objects.end(); ++iter)
+		{
+			
+			if (ImGui::Selectable(ToString(iter->first).c_str()))
+				isObjectInspector = true;
+
+		}
 
 		ImGui::TreePop();
 	}
@@ -138,16 +142,11 @@ void ImguiManager::Menu2()
 	ImGui::End();
 }
 
-void ImguiManager::Menu3()
+void ImguiManager::Inspector()
 {
-	ImGui::Begin("Menu3");
+	ImGui::Begin("Inspector");
 
-	ImGui::End();
-}
-
-void ImguiManager::Menu4()
-{
-	ImGui::Begin("Menu4test");
+	//ObjectInspector();
 
 	ImGui::End();
 }
@@ -191,6 +190,14 @@ void ImguiManager::ObjectPopup()
 
 		ImGui::EndPopup();
 	}
+}
+
+void ImguiManager::ObjectInspector()
+{
+	if (isObjectInspector == false)
+		return;
+
+
 }
 
 void ImguiManager::Frame()

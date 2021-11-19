@@ -18,7 +18,8 @@ public:
 	virtual int Update(float _TimeDelta) PURE;
 	virtual void Render() PURE;
 	void RenderDepthForShadow(BOOL _renderDepthForShadow) { renderDepthForShadow = _renderDepthForShadow; }
-
+	bool GetisOrth() { return isOrtho; }
+	BOOL GetRenderDeptehForShadow() { return renderDepthForShadow; }
 public:
 	Vector3 GetPosition() { return transform->GetState(Transform::POSITION); }
 
@@ -26,6 +27,8 @@ protected:
 	shared_ptr<GraphicDevice> Graphic = nullptr;
 	shared_ptr<Transform>	transform = nullptr;
 	float					TimeDelta = 0;
+
+	bool					isOrtho = false;
 	BOOL                    renderDepthForShadow = FALSE;
 };
 

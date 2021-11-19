@@ -207,3 +207,8 @@ shared_ptr<TerrainBuffer> TerrainBuffer::Create(HWND _hWnd, UINT _terrainWidth, 
 	}
 	return Instance;
 }
+
+int TerrainBuffer::Update(float _timeDelta)
+{
+	return 0;
+}

@@ -15,14 +15,16 @@ private:
 	void Frame();
 	void Scene();
 	void Menu1();
-	void Menu2();
-	void Menu3();
-	void Menu4();
+	void Hierarchy();
+	void Inspector();
 	
 private:
 	void ObjectPopup();
+	void ObjectInspector();
 
 private:
 	shared_ptr<Management> Manage = nullptr;
+	bool isObjectInspector = false;
+
 };
 

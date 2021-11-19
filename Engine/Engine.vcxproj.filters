@@ -253,6 +253,7 @@
       <Filter>01. Utility\03. Component\01. Buffer\02. HeightTerrainBuffer</Filter>
     </ClInclude>
     <ClInclude Include="Sphere.h" />
+    <ClInclude Include="Component.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -364,6 +365,7 @@
       <Filter>01. Utility\03. Component\01. Buffer\02. HeightTerrainBuffer</Filter>
     </ClCompile>
     <ClCompile Include="Sphere.cpp" />
+    <ClCompile Include="Component.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="ModelVS.hlsl">
