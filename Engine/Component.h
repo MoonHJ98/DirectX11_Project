@@ -10,5 +10,11 @@ public:
 	virtual int Update(float _timeDelta) PURE;
 	virtual void Render() PURE;
 	virtual void RenderInspector() PURE;
+	
+public:
+	wstring GetComponentName() { return componentName; }
+
+protected:
+	wstring componentName = L"";
 };
 

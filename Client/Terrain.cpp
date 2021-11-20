@@ -52,6 +52,11 @@ HRESULT Terrain::Initialize(UINT _terrainWidth, UINT _terrainHeight, wstring _he
 
 	terrainBuffer = TerrainBuffer::Create(GhWnd, 100, 100);
 
+	components.push_back(transform);
+	components.push_back(shader);
+	components.push_back(material);
+
+
 	return S_OK;
 }
 
@@ -59,6 +64,10 @@ int Terrain::Update(float _TimeDelta)
 {
 	Renderer::GetInstance()->AddRenderGroup(Renderer::RENDER_NONALPHA, shared_from_this());
 
+	for (size_t i = 0; i < components.size(); ++i)
+	{
+			components[i]->Update(_TimeDelta);
+	}
 
 	//PickTerrain();
 	return 0;
@@ -66,11 +75,10 @@ int Terrain::Update(float _TimeDelta)
 
 void Terrain::Render()
 {
-	shader->Render();
-
-
-	transform->Render();
-	material->Render();
+	for (size_t i = 0; i < components.size(); ++i)
+	{
+		components[i]->Render();
+	}
 
 	terrainBuffer->Render();
 	//PickTerrain(Vector2());

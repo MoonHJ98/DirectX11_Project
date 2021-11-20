@@ -10,6 +10,7 @@ class Clip;
 class Texture;
 class Animator;
 class Material;
+class GameObject;
 
 class Light;
 
@@ -23,7 +24,7 @@ public:
 	~Model();
 
 private:
-	HRESULT						  Initialize();
+	HRESULT						  Initialize(shared_ptr<GameObject> _object);
 
 public:
 	UINT						  GetBoneCount() { return bones.size(); }
@@ -49,7 +50,7 @@ public:
 	virtual void RenderInspector() override;
 
 public:
-	static shared_ptr<Model>      Create();
+	static shared_ptr<Model>      Create(shared_ptr<GameObject> _object);
 
 private:
 	shared_ptr<Bone>              Root = nullptr;
@@ -60,10 +61,9 @@ private:
 	vector<shared_ptr<Texture>>	  textures;
 	vector<shared_ptr<Material>>  materials;
 
-
-
-
 	Matrix transforms[MAX_MODEL_TRANSFORMS]; // Bone¿« ¿¸√º matrix
+
+	weak_ptr<GameObject> object;
 
 };
 

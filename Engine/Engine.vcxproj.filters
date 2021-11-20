@@ -278,6 +278,8 @@
     <ClInclude Include="imstb_truetype.h">
       <Filter>02. Includes\05. Imgui</Filter>
     </ClInclude>
+    <ClInclude Include="ImGuiFileDialog.h" />
+    <ClInclude Include="ImGuiFileDialogConfig.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -411,6 +413,7 @@
     <ClCompile Include="imgui_widgets.cpp">
       <Filter>02. Includes\05. Imgui</Filter>
     </ClCompile>
+    <ClCompile Include="ImGuiFileDialog.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="ModelVS.hlsl">

@@ -16,6 +16,7 @@ Shader::~Shader()
 
 HRESULT Shader::Initialize(D3D11_INPUT_ELEMENT_DESC InputlayoutDesc[], UINT layoutSize, wstring _VSPath, wstring _PSPath)
 {
+	componentName = L"Shader";
 	Graphic = GraphicDevice::GetInstance();
 	ID3D10Blob* vertexShaderBuffer;
 	ID3D10Blob* pixelShaderBuffer;
@@ -134,9 +135,7 @@ void Shader::Render()
 
 void Shader::RenderInspector()
 {
-	if (ImGui::CollapsingHeader("Shader"))
-	{
-	}
+
 
 }
 

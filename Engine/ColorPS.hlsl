@@ -8,6 +8,14 @@ cbuffer BrushDesc : register(b0)
     uint terrainBrushRange;
 };
 
+cbuffer BrushDesc : register(b1)
+{
+    bool diffuse;
+    bool normal;
+    bool specular;
+    bool padding;
+};
+
 struct PixelInputType
 {
     float4 position : SV_POSITION;
@@ -50,7 +58,9 @@ Output main(PixelInputType input)
     Output Out;
     Out.color = float4(1.f, 1.f, 1.f, 1.f);
     
-    //Out.color = DiffuseTexture.Sample(SampleType, input.uv);
+    if(diffuse)
+        Out.color = DiffuseTexture.Sample(SampleType, input.uv);
+
    //Out.color += GetBrushColor(input.WorldPos);
     
     Out.normal = input.normal;

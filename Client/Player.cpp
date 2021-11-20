@@ -30,7 +30,8 @@ int Player::Update(float _TimeDelta)
 
 	for (size_t i = 0; i < components.size(); ++i)
 	{
-		components[i]->Update(_TimeDelta);
+		if (components[i]->GetComponentName() != L"Material")
+			components[i]->Update(_TimeDelta);
 	}
 
 	model->Update(_TimeDelta);
@@ -45,7 +46,8 @@ void Player::Render()
 
 	for (size_t i = 0; i < components.size(); ++i)
 	{
-		components[i]->Render();
+		if (components[i]->GetComponentName() != L"Material")
+			components[i]->Render();
 	}
 
 	model->Render();
@@ -60,7 +62,6 @@ HRESULT Player::Initialize(ID3D11Device * _Device)
 	transform->SetObject(shared_from_this());
 	transform->SetScale(Vector3(0.1f, 0.1f, 0.1f));
 	transform->SetState(Transform::POSITION, Vector3(10.f, 0.f, 10.f));
-	model = Model::Create();
 
 	D3D11_INPUT_ELEMENT_DESC InputLayout[] =
 	{
@@ -77,6 +78,8 @@ HRESULT Player::Initialize(ID3D11Device * _Device)
 
 	components.push_back(transform);
 	components.push_back(shader);
+
+	model = Model::Create(shared_from_this());
 
 	return S_OK;
 }

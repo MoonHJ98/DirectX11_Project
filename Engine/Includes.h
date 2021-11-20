@@ -38,6 +38,7 @@
 #include "imgui.h"
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx11.h"
+#include "ImGuiFileDialog.h"
 
 
 #include <assimp/Importer.hpp>
@@ -54,6 +55,7 @@
 #pragma comment(lib, "dinput8.lib")
 #pragma comment(lib, "DirectXTK.lib")
 #pragma comment(lib, "DirectXTex.lib")
+#pragma warning( disable : 4996)
 //#pragma comment(lib, "assimp-vc141-mtd.lib")
 
 

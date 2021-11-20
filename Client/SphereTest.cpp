@@ -4,6 +4,7 @@
 #include "Shader.h"
 #include "Sphere.h"
 #include "Renderer.h"
+#include "Material.h"
 
 SphereTest::SphereTest()
 {
@@ -57,8 +58,12 @@ HRESULT SphereTest::Initialize()
 
 	transform->SetState(Transform::POSITION, Vector3(3.f, 0.f, 5.f));
 
+	MATERIALDESC desc;
+	material = Material::Create(desc);
+
 	components.push_back(transform);
 	components.push_back(shader);
+	components.push_back(material);
 
 
 	return S_OK;

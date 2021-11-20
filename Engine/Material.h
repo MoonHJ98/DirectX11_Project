@@ -7,6 +7,15 @@ class GraphicDevice;
 
 class Material : public Component
 {
+public:
+	struct MaterialBufferDesc
+	{
+		BOOL diffuse = FALSE;
+		BOOL normal = FALSE;
+		BOOL specular = FALSE;
+		BOOL padding = FALSE;
+	};
+	enum MaterialButton { DIFFUSE_BUTTON, NORMAL_BUTTON, SPECULAR_BUTTON, BUTTON_END };
 private:
 	Material();
 	Material(const Material& Rhs);
@@ -28,6 +37,7 @@ private:
 	void SetDiffuseMap(wstring file);
 	void SetSpecularMap(wstring file);
 	void SetNormalMap(wstring file);
+	void NoImage();
 
 public:
 	virtual int Update(float _timeDelta) override;
@@ -36,6 +46,7 @@ public:
 
 private:
 	HRESULT Initialize(MATERIALDESC& desc);
+	void RenderBrowser();
 
 private:
 	struct ColorDesc
@@ -57,5 +68,15 @@ private:
 	shared_ptr<Texture> diffuseMap = nullptr;
 	shared_ptr<Texture> specularMap = nullptr;
 	shared_ptr<Texture> normalMap = nullptr;
+	shared_ptr<Texture> noImage = nullptr;
+
+
+	MaterialBufferDesc materialDesc;
+	shared_ptr<ConstantBuffer<MaterialBufferDesc>> materialBuffer = nullptr;
+
+	wstring diffuseName = L"";
+	wstring normalName = L"";
+	wstring specularName = L"";
+	MaterialButton button;
 
 };

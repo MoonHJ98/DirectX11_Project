@@ -14,6 +14,7 @@
 #include "Path.h"
 #include "Light.h"
 #include "Management.h"
+#include "GameObject.h"
 
 
 Model::Model()
@@ -28,10 +29,11 @@ Model::~Model()
 {
 }
 
-HRESULT Model::Initialize()
+HRESULT Model::Initialize(shared_ptr<GameObject> _object)
 {
 	AssimpConverter* converter = nullptr;
 
+	object = _object;
 
 	converter = new AssimpConverter();
 	converter->ReadFile(L"Player/Mesh.fbx");
@@ -138,7 +140,9 @@ void Model::ReadMaterial(wstring filePath)
 		matDesc.SpecularMap = folder + ToWString(r->ReadString());
 		matDesc.NormalMap = folder + ToWString(r->ReadString());
 
-		materials.push_back(Material::Create(matDesc));
+		auto material = Material::Create(matDesc);
+		materials.push_back(material);
+		object.lock()->GetComponents().push_back(material);
 	}
 
 	r->Close();
@@ -293,12 +297,12 @@ void Model::RenderInspector()
 {
 }
 
-shared_ptr<Model> Model::Create()
+shared_ptr<Model> Model::Create(shared_ptr<GameObject> _object)
 {
 	shared_ptr<Model> Instance(new Model());
 
 
-	if (FAILED(Instance->Initialize()))
+	if (FAILED(Instance->Initialize(_object)))
 	{
 		MSG_BOX("Failed to create Model.");
 		return nullptr;

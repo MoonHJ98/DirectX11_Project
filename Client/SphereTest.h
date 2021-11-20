@@ -6,6 +6,7 @@ class Sphere;
 
 class Transform;
 class Shader;
+class Material;
 
 class SphereTest : public GameObject, public enable_shared_from_this<SphereTest>
 {
@@ -28,6 +29,7 @@ public:
 
 private:
 	shared_ptr<Shader> shader = nullptr;
+	shared_ptr<Material> material = nullptr;
 	shared_ptr<Sphere> sphere = nullptr;
 
 };
