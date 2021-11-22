@@ -56,6 +56,11 @@
 #pragma comment(lib, "DirectXTK.lib")
 #pragma comment(lib, "DirectXTex.lib")
 #pragma warning( disable : 4996)
+
+//#pragma comment(lib, "PhysX/PhysX3CommonDEBUG_x86.lib")
+//#pragma comment(lib, "PhysX/PhysX3DEBUG_x86.lib")
+//#pragma comment(lib, "PhysX/PxFoundationDEBUG_x86.lib")
+
 //#pragma comment(lib, "assimp-vc141-mtd.lib")
 
 

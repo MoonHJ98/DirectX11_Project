@@ -25,7 +25,7 @@
 using namespace std;
 
 
-#pragma comment(lib, "Engine.lib")
+//#pragma comment(lib, "Engine.lib")
 
 enum SCENEID { STATIC, LOGO, SCENE_END };
 
