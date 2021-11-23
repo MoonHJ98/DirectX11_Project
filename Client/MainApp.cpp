@@ -10,7 +10,7 @@
 #include "ImguiManager.h"
 #include "SphereTest.h"
 
-
+#include "PhysX.h"
 
 
 
@@ -80,8 +80,11 @@ HRESULT MainApp::Initialize()
 		return E_FAIL;
 	}
 
-	imguiManager = ImguiManager::GetInstance();;
-	imguiManager->Initialize();
+
+
+
+	auto p = PhysX::Create();
+
 	return S_OK;
 }
 

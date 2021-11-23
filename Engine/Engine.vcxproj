@@ -93,6 +93,8 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <AdditionalIncludeDirectories>../PhysX/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -189,6 +191,7 @@
     <ClInclude Include="ObjectManager.h" />
     <ClInclude Include="Path.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="PhysX.h" />
     <ClInclude Include="PipeLine.h" />
     <ClInclude Include="RectangleBuffer.h" />
     <ClInclude Include="Renderer.h" />
@@ -258,6 +261,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="PhysX.cpp" />
     <ClCompile Include="PipeLine.cpp" />
     <ClCompile Include="RectangleBuffer.cpp" />
     <ClCompile Include="Renderer.cpp" />

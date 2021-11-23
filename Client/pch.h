@@ -24,7 +24,7 @@
 
 using namespace std;
 
-
+#pragma warning( disable : 4996)
 //#pragma comment(lib, "Engine.lib")
 
 enum SCENEID { STATIC, LOGO, SCENE_END };

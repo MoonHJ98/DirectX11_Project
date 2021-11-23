@@ -280,6 +280,7 @@
     </ClInclude>
     <ClInclude Include="ImGuiFileDialog.h" />
     <ClInclude Include="ImGuiFileDialogConfig.h" />
+    <ClInclude Include="PhysX.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -414,6 +415,7 @@
       <Filter>02. Includes\05. Imgui</Filter>
     </ClCompile>
     <ClCompile Include="ImGuiFileDialog.cpp" />
+    <ClCompile Include="PhysX.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="ModelVS.hlsl">
