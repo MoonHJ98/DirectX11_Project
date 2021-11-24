@@ -57,11 +57,23 @@
 #pragma comment(lib, "DirectXTex.lib")
 #pragma warning( disable : 4996)
 
-//#pragma comment(lib, "PhysX/PhysX3CommonDEBUG_x86.lib")
-//#pragma comment(lib, "PhysX/PhysX3DEBUG_x86.lib")
-//#pragma comment(lib, "PhysX/PxFoundationDEBUG_x86.lib")
-
-//#pragma comment(lib, "assimp-vc141-mtd.lib")
+#pragma comment(lib, "PxFoundationDEBUG_x86.lib")
+#pragma comment(lib, "PhysX3ExtensionsDEBUG.lib")
+#pragma comment(lib, "PhysX3DEBUG_x86.lib")
+#pragma comment(lib, "LowLevelAABBDEBUG.lib")
+#pragma comment(lib, "LowLevelClothDEBUG.lib")
+#pragma comment(lib, "LowLevelDEBUG.lib")
+#pragma comment(lib, "LowLevelDynamicsDEBUG.lib")
+#pragma comment(lib, "LowLevelParticlesDEBUG.lib")
+#pragma comment(lib, "PhysX3CharacterKinematicDEBUG_x86.lib")
+#pragma comment(lib, "PhysX3CommonDEBUG_x86.lib")
+#pragma comment(lib, "PhysX3CookingDEBUG_x86.lib")
+#pragma comment(lib, "PhysX3VehicleDEBUG.lib")
+#pragma comment(lib, "PsFastXmlDEBUG_x86.lib")
+#pragma comment(lib, "PxPvdSDKDEBUG_x86.lib")
+#pragma comment(lib, "PxTaskDEBUG_x86.lib")
+#pragma comment(lib, "SceneQueryDEBUG.lib")
+#pragma comment(lib, "SimulationControllerDEBUG.lib")
 
 
 

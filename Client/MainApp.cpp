@@ -85,7 +85,7 @@ HRESULT MainApp::Initialize()
 
 
 
-	auto p = PhysX::Create();
+	p = PhysX::Create();
 
 	return S_OK;
 }
@@ -121,6 +121,7 @@ int MainApp::Update(float _timeDelta)
 	
 	Manage->Update(_timeDelta);
 
+	p->RunSimulate();
 	return 0;
 }
 

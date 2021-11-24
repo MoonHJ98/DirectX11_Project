@@ -1,17 +1,11 @@
 #pragma once
 
-#include <Windows.h>
-#include <memory>
+#include "Includes.h"
+
 #include "PxPhysics.h"
 #include "PxPhysicsAPI.h"
 
-#pragma comment(lib, "PxFoundationDEBUG_x86.lib")
-#pragma comment(lib, "PhysX3ExtensionsDEBUG.lib")
-#pragma comment(lib, "PhysX3DEBUG_x86.lib")
-#pragma comment(lib, "PxPvdSDKDEBUG_x86.lib")
-#define MSG_BOX(MESSAGE) MessageBox(0, TEXT(MESSAGE), TEXT("System Message"), MB_OK)
 
-using namespace std;
 using namespace physx;
 
 class PhysX
@@ -25,17 +19,24 @@ public:
 
 private:
 	HRESULT Initialize();
+	HRESULT CreateSimulation();
+
+public:
+	void RunSimulate();
 
 public:
 	static shared_ptr<PhysX> Create();
 
 private:
 	PxDefaultAllocator allocator;
-	PxDefaultErrorCallback* errorCallBack = nullptr;
+	PxDefaultErrorCallback errorCallBack;
 	PxFoundation* foundation = nullptr;
 	PxPhysics* physics = nullptr;
 	PxDefaultCpuDispatcher* dispatcher = nullptr;
 	PxPvd* pvd = nullptr;
+	PxScene* scene = nullptr;
+	PxMaterial* material = nullptr;
+	
 
 };
 
