@@ -36,6 +36,8 @@ HRESULT MainApp::Initialize()
 		return E_FAIL;
 
 	Manage->Initialize(GInstance, GhWnd, SCENE_END, GX, GY, VSYNC_ENABLE, FULLSCREEN, SCREENDEPTH, SCREENNEAR);
+	imguiManager = ImguiManager::GetInstance();
+	imguiManager->Initialize();
 
 
 	//Light
