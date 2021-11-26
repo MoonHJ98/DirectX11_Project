@@ -5,6 +5,7 @@
 #include "Sphere.h"
 #include "Renderer.h"
 #include "Material.h"
+#include "Rigidbody.h"
 
 SphereTest::SphereTest()
 {
@@ -56,15 +57,19 @@ HRESULT SphereTest::Initialize()
 	transform = Transform::Create(Transform::TRANSDESC());
 	transform->SetObject(shared_from_this());
 
-	transform->SetState(Transform::POSITION, Vector3(3.f, 0.f, 5.f));
+	transform->SetState(Transform::POSITION, Vector3(10.f, 20.f, 15.f));
 
 	MATERIALDESC desc;
 	material = Material::Create(desc);
 
+	rigidbody = Rigidbody::Create(transform);
+	
+
+
 	components.push_back(transform);
 	components.push_back(shader);
 	components.push_back(material);
-
+	components.push_back(rigidbody);
 
 	return S_OK;
 }

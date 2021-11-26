@@ -165,6 +165,7 @@
     <ClInclude Include="Bone.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Clip.h" />
+    <ClInclude Include="Collider.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="DeferredBuffer.h" />
     <ClInclude Include="framework.h" />
@@ -191,7 +192,8 @@
     <ClInclude Include="ObjectManager.h" />
     <ClInclude Include="Path.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="PhysX.h" />
+    <ClInclude Include="Rigidbody.h" />
+    <ClInclude Include="PhysXManager.h" />
     <ClInclude Include="PipeLine.h" />
     <ClInclude Include="RectangleBuffer.h" />
     <ClInclude Include="Renderer.h" />
@@ -216,6 +218,7 @@
     <ClCompile Include="Bone.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Clip.cpp" />
+    <ClCompile Include="Collider.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="DeferredBuffer.cpp" />
     <ClCompile Include="Engine.cpp" />
@@ -261,7 +264,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="PhysX.cpp" />
+    <ClCompile Include="Rigidbody.cpp" />
+    <ClCompile Include="PhysXManager.cpp" />
     <ClCompile Include="PipeLine.cpp" />
     <ClCompile Include="RectangleBuffer.cpp" />
     <ClCompile Include="Renderer.cpp" />

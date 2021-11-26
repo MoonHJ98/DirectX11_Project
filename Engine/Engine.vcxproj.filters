@@ -280,7 +280,9 @@
     </ClInclude>
     <ClInclude Include="ImGuiFileDialog.h" />
     <ClInclude Include="ImGuiFileDialogConfig.h" />
-    <ClInclude Include="PhysX.h" />
+    <ClInclude Include="PhysXManager.h" />
+    <ClInclude Include="Rigidbody.h" />
+    <ClInclude Include="Collider.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -415,7 +417,9 @@
       <Filter>02. Includes\05. Imgui</Filter>
     </ClCompile>
     <ClCompile Include="ImGuiFileDialog.cpp" />
-    <ClCompile Include="PhysX.cpp" />
+    <ClCompile Include="PhysXManager.cpp" />
+    <ClCompile Include="Rigidbody.cpp" />
+    <ClCompile Include="Collider.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="ModelVS.hlsl">

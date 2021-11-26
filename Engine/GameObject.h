@@ -36,5 +36,6 @@ protected:
 
 	vector<shared_ptr<Component>> components;
 
+
 };
 

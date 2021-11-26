@@ -7,6 +7,7 @@
 #include "MainApp.h"
 #include "TimeManager.h"
 #include "GraphicDevice.h"
+#include "PhysXManager.h"
 
 
 
@@ -25,6 +26,11 @@ int  GY;
 SCENEID GSceneID = SCENE_END;
 
 
+#ifdef UNICODE
+#pragma comment(linker, "/entry:wWinMainCRTStartup /subsystem:console")
+#else
+#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
+#endif
 
 // DLL 경로 설정 https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=sharonichoya&logNo=220817543315
 
@@ -75,6 +81,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	//CloseWindow(GhWnd);
 
+	shared_ptr<PhysXManager> p = nullptr;
+	p = PhysXManager::GetInstance();
+	p->Initialize();
+
 	while (TRUE)
 	{
 		if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
@@ -84,6 +94,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		}
 		FrameTimeDefault += TimeMgr->ComputeTimer(L"Timer_Default");
 
+		p->RunSimulate();
 		if (1.f / 60.f <= FrameTimeDefault)
 		{
 			mainApp->Update(TimeMgr->ComputeTimer(L"Timer_60"));

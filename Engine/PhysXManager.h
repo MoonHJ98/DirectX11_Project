@@ -2,30 +2,19 @@
 
 #include "Includes.h"
 
-#include "PxPhysics.h"
-#include "PxPhysicsAPI.h"
 
-
-using namespace physx;
-
-class PhysX
+class PhysXManager
 {
-private:
-	PhysX();
-	PhysX(const PhysX& Rhs);
+	SINGLETON(PhysXManager)
 
 public:
-	~PhysX();
-
-private:
 	HRESULT Initialize();
 	HRESULT CreateSimulation();
+	PxRigidBody* AddRigidbody(Vector3 _pos);
+	PxShape* AddCollider(PxGeometryType::Enum _type, Vector3 _scale);
 
 public:
 	void RunSimulate();
-
-public:
-	static shared_ptr<PhysX> Create();
 
 private:
 	PxDefaultAllocator allocator;

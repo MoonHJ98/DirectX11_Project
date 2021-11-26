@@ -40,6 +40,11 @@
 #include "imgui_impl_dx11.h"
 #include "ImGuiFileDialog.h"
 
+#include "PxPhysics.h"
+#include "PxPhysicsAPI.h"
+
+
+
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
@@ -82,6 +87,7 @@ using namespace DirectX;
 using namespace Microsoft::WRL;
 using namespace SimpleMath;
 using namespace PackedVector;
+using namespace physx;
 
 
 #define MSG_BOX(MESSAGE) MessageBox(0, TEXT(MESSAGE), TEXT("System Message"), MB_OK)

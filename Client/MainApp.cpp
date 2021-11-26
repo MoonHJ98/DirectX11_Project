@@ -10,7 +10,6 @@
 #include "ImguiManager.h"
 #include "SphereTest.h"
 
-#include "PhysX.h"
 
 
 
@@ -85,8 +84,6 @@ HRESULT MainApp::Initialize()
 
 
 
-	p = PhysX::Create();
-
 	return S_OK;
 }
 
@@ -121,7 +118,6 @@ int MainApp::Update(float _timeDelta)
 	
 	Manage->Update(_timeDelta);
 
-	p->RunSimulate();
 	return 0;
 }
 

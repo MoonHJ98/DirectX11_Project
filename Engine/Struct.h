@@ -320,6 +320,12 @@ typedef struct LightDesc {
 	D3DVALUE        dvPhi = 0.f;				  /* Outer angle of spotlight cone */
 }LIGHTDESC;
 
+typedef struct ColliderDesc
+{
+	Vector3 scale;
+	UINT ridus;
+}COLLIDERDESC;
+
 void SplitString(vector<string>* result, string origin, string tok);
 void SplitString(vector<wstring>* result, wstring origin, wstring tok);
 

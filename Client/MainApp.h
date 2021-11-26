@@ -34,7 +34,6 @@ private:
 	shared_ptr<GraphicDevice>	GraphicDev = nullptr;
 	shared_ptr<ImguiManager> imguiManager = nullptr;
 
-	shared_ptr<PhysX> p = nullptr;
 
 };
 
