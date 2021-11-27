@@ -1,5 +1,8 @@
 #pragma once
+
 #include "Base.h"
+
+class GameObject;
 class Component : public Base
 {
 public:
@@ -12,9 +15,7 @@ public:
 	virtual void RenderInspector() PURE;
 	
 public:
-	wstring GetComponentName() { return componentName; }
-
-protected:
-	wstring componentName = L"";
+	ComponentType componentType = COMPONENT_END;
+	weak_ptr<GameObject>             object;
 };
 

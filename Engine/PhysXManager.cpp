@@ -1,3 +1,4 @@
+
 #include "pch.h"
 #include "PhysXManager.h"
 
@@ -61,7 +62,7 @@ HRESULT PhysXManager::CreateSimulation()
 	return S_OK;
 }
 
-PxRigidBody* PhysXManager::AddRigidbody(Vector3 _pos)
+PxRigidBody* PhysXManager::AddDynamicRigidbody(Vector3 _pos)
 {
 	PxTransform localTm(_pos.x, _pos.y, _pos.z);
 	PxTransform transform(PxVec3(0));
@@ -72,22 +73,22 @@ PxRigidBody* PhysXManager::AddRigidbody(Vector3 _pos)
 	return body;
 }
 
-PxShape* PhysXManager::AddCollider(PxGeometryType::Enum _type, Vector3 _scale)
+PxShape* PhysXManager::AddCollider(PxGeometryType::Enum _type, ColliderDesc _desc)
 {
 	PxShape* shape = nullptr;
 	
+	PxCapsuleGeometry
 	switch (_type)
 	{
 	case physx::PxGeometryType::eSPHERE:
-		shape = physics->createShape(PxSphereGeometry(PxReal(10)), *material);
+		shape = physics->createShape(PxSphereGeometry(PxReal(_desc.ridus)), *material);
 		break;
 	case physx::PxGeometryType::ePLANE:
-
 		break;
 	case physx::PxGeometryType::eCAPSULE:
 		break;
 	case physx::PxGeometryType::eBOX:
-		shape = physics->createShape(PxBoxGeometry(_scale.x, _scale.y, _scale.z), *material);
+		shape = physics->createShape(PxBoxGeometry(_desc.scale.x, _desc.scale.y, _desc.scale.z), *material);
 		break;
 	case physx::PxGeometryType::eCONVEXMESH:
 		break;

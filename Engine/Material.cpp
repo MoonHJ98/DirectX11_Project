@@ -19,7 +19,7 @@ Material::~Material()
 
 HRESULT Material::Initialize(MATERIALDESC& desc)
 {
-	componentName = L"Material";
+	componentType = MATERIAL;
 	shared_ptr<ConstantBuffer<MaterialBufferDesc>> temp(new ConstantBuffer<MaterialBufferDesc>());
 	materialBuffer = temp;
 

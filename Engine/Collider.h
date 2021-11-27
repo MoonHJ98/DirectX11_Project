@@ -1,5 +1,10 @@
 #pragma once
+
 #include "Component.h"
+
+class Rigidbody;
+
+class GameObject;
 class Collider : public Component
 {
 private:
@@ -10,8 +15,11 @@ public:
 	~Collider();
 
 private:
-	HRESULT Initialize();
-	HRESULT AddCollider();
+	HRESULT Initialize(shared_ptr<GameObject> _object, PxGeometryType::Enum _geoType);
+	PxShape* AddCollider();
+	shared_ptr<Rigidbody> FindRigidbody();
+	void AddColliderToRigidbody();
+	void AddRigidBodyForCollider();
 
 
 public:
@@ -21,9 +29,11 @@ public:
 	virtual void RenderInspector() override;
 
 public:
-	static shared_ptr<Collider> Create();
+	static shared_ptr<Collider> Create(shared_ptr<GameObject> _object, PxGeometryType::Enum _geoType);
 
 private:
 	PxShape* shape = nullptr;
+	weak_ptr<Rigidbody> rigidbody;
+	PxGeometryType::Enum geoType;
 };
 

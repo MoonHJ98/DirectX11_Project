@@ -9,7 +9,7 @@
 #include "Terrain.h"
 #include "ImguiManager.h"
 #include "SphereTest.h"
-
+#include "PhysXManager.h"
 
 
 
@@ -83,6 +83,8 @@ HRESULT MainApp::Initialize()
 
 
 
+	physxManager = PhysXManager::GetInstance();
+	physxManager->Initialize();
 
 	return S_OK;
 }
@@ -114,6 +116,7 @@ HRESULT MainApp::ReadyScene(SCENEID sceneID)
 
 int MainApp::Update(float _timeDelta)
 {
+	physxManager->RunSimulate();
 	Manage->UpdateInputDevice();
 	
 	Manage->Update(_timeDelta);

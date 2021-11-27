@@ -16,7 +16,7 @@ Shader::~Shader()
 
 HRESULT Shader::Initialize(D3D11_INPUT_ELEMENT_DESC InputlayoutDesc[], UINT layoutSize, wstring _VSPath, wstring _PSPath)
 {
-	componentName = L"Shader";
+	componentType = SHADER;
 	Graphic = GraphicDevice::GetInstance();
 	ID3D10Blob* vertexShaderBuffer;
 	ID3D10Blob* pixelShaderBuffer;

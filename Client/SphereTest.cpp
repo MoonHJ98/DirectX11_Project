@@ -6,6 +6,7 @@
 #include "Renderer.h"
 #include "Material.h"
 #include "Rigidbody.h"
+#include "Collider.h"
 
 SphereTest::SphereTest()
 {
@@ -25,7 +26,8 @@ int SphereTest::Update(float _TimeDelta)
 
 	for (size_t i = 0; i < components.size(); ++i)
 	{
-		components[i]->Update(_TimeDelta);
+		if (components[i])
+			components[i]->Update(_TimeDelta);
 	}
 	return 0;
 }
@@ -34,7 +36,8 @@ void SphereTest::Render()
 {
 	for (size_t i = 0; i < components.size(); ++i)
 	{
-		components[i]->Render();
+		if (components[i])
+			components[i]->Render();
 	}
 
 	sphere->Render();
@@ -53,23 +56,24 @@ HRESULT SphereTest::Initialize()
 	};
 
 	shader = Shader::Create(InputLayout, sizeof(InputLayout), L"../Engine/ColorVS.hlsl", L"../Engine/ColorPS.hlsl");
+	components[ComponentType::SHADER] = shader;
 
 	transform = Transform::Create(Transform::TRANSDESC());
 	transform->SetObject(shared_from_this());
-
 	transform->SetState(Transform::POSITION, Vector3(10.f, 20.f, 15.f));
+	components[ComponentType::TRANSFORM] = transform;
+
 
 	MATERIALDESC desc;
 	material = Material::Create(desc);
+	components[ComponentType::MATERIAL] = material;
 
-	rigidbody = Rigidbody::Create(transform);
-	
+	rigidbody = Rigidbody::Create(shared_from_this(), RigidbodyType::DYNAMICRIGID);
+	components[ComponentType::RIGIDBODY] = rigidbody;
 
+	collider = Collider::Create(shared_from_this(), PxGeometryType::eBOX);
+	components[ComponentType::COLLIDER] = collider;
 
-	components.push_back(transform);
-	components.push_back(shader);
-	components.push_back(material);
-	components.push_back(rigidbody);
 
 	return S_OK;
 }

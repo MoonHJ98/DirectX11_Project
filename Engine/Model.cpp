@@ -142,7 +142,7 @@ void Model::ReadMaterial(wstring filePath)
 
 		auto material = Material::Create(matDesc);
 		materials.push_back(material);
-		object.lock()->GetComponents().push_back(material);
+		object.lock()->GetComponents()[ComponentType::MATERIAL] = material;
 	}
 
 	r->Close();

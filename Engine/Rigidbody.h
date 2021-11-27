@@ -3,6 +3,8 @@
 #include "Component.h"
 
 class Transform;
+class GameObject;
+
 
 class Rigidbody : public Component
 {
@@ -14,8 +16,11 @@ public:
 	~Rigidbody();
 
 private:
-	HRESULT Initialize(shared_ptr<Transform> _transform);
-	PxRigidBody* AddRigidbody(Vector3 _pos);
+	HRESULT Initialize(shared_ptr<GameObject> _object, RigidbodyType _rigidbodyType);
+	PxRigidBody* AddDynamicRigidbody(Vector3 _pos);
+	PxRigidBody* AddStaticRigidbody(Vector3 _pos);
+	void AddCollider();
+	bool FindCollider();
 
 public:
 	// Component을(를) 통해 상속됨
@@ -23,15 +28,18 @@ public:
 	virtual void Render() override;
 	virtual void RenderInspector() override;
 
+public:
+	PxRigidBody& GetRigidBody() { return *body; }
+	
 private:
 	void SetPosition();
 
 public:
-	static shared_ptr<Rigidbody> Create(shared_ptr<Transform> _transform);
+	static shared_ptr<Rigidbody> Create(shared_ptr<GameObject> _object, RigidbodyType _rigidbodyType);
 
 private:
 	PxRigidBody* body = nullptr;
-	shared_ptr<Transform> transform = nullptr;
+	weak_ptr<Transform> transform;
 
 };
 

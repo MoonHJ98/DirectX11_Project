@@ -326,6 +326,9 @@ typedef struct ColliderDesc
 	UINT ridus;
 }COLLIDERDESC;
 
+enum ComponentType { TRANSFORM, SHADER, MATERIAL, RIGIDBODY, COLLIDER, COMPONENT_END };
+enum RigidbodyType { DYNAMICRIGID, STATICRIGID, RIGIDBODY_END };
+
 void SplitString(vector<string>* result, string origin, string tok);
 void SplitString(vector<wstring>* result, wstring origin, wstring tok);
 

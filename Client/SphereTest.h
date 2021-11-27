@@ -8,6 +8,7 @@ class Transform;
 class Shader;
 class Material;
 class Rigidbody;
+class Collider;
 
 class SphereTest : public GameObject, public enable_shared_from_this<SphereTest>
 {
@@ -33,5 +34,6 @@ private:
 	shared_ptr<Material> material = nullptr;
 	shared_ptr<Sphere> sphere = nullptr;
 	shared_ptr<Rigidbody> rigidbody = nullptr;
+	shared_ptr<Collider> collider = nullptr;
 };
 

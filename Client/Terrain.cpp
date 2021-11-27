@@ -52,9 +52,9 @@ HRESULT Terrain::Initialize(UINT _terrainWidth, UINT _terrainHeight, wstring _he
 
 	terrainBuffer = TerrainBuffer::Create(GhWnd, 100, 100);
 
-	components.push_back(transform);
-	components.push_back(shader);
-	components.push_back(material);
+	components[ComponentType::TRANSFORM] = transform;
+	components[ComponentType::SHADER] = shader;
+	components[ComponentType::MATERIAL] = material;
 
 
 	return S_OK;
@@ -66,6 +66,7 @@ int Terrain::Update(float _TimeDelta)
 
 	for (size_t i = 0; i < components.size(); ++i)
 	{
+		if(components[i])
 			components[i]->Update(_TimeDelta);
 	}
 
@@ -77,7 +78,8 @@ void Terrain::Render()
 {
 	for (size_t i = 0; i < components.size(); ++i)
 	{
-		components[i]->Render();
+		if (components[i])
+			components[i]->Render();
 	}
 
 	terrainBuffer->Render();

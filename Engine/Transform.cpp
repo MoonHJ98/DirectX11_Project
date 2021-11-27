@@ -21,7 +21,7 @@ Transform::~Transform()
 
 HRESULT Transform::Initialize(TRANSDESC _TransDecs)
 {
-	componentName = L"Transform";
+	componentType = TRANSFORM;
 	Graphic = GraphicDevice::GetInstance();
 	Manage = Management::GetInstance();
 

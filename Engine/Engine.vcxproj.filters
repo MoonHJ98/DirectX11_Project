@@ -283,6 +283,7 @@
     <ClInclude Include="PhysXManager.h" />
     <ClInclude Include="Rigidbody.h" />
     <ClInclude Include="Collider.h" />
+    <ClInclude Include="ColliderRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -420,6 +421,7 @@
     <ClCompile Include="PhysXManager.cpp" />
     <ClCompile Include="Rigidbody.cpp" />
     <ClCompile Include="Collider.cpp" />
+    <ClCompile Include="ColliderRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="ModelVS.hlsl">

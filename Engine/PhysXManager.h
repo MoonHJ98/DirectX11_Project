@@ -10,8 +10,8 @@ class PhysXManager
 public:
 	HRESULT Initialize();
 	HRESULT CreateSimulation();
-	PxRigidBody* AddRigidbody(Vector3 _pos);
-	PxShape* AddCollider(PxGeometryType::Enum _type, Vector3 _scale);
+	PxRigidBody* AddDynamicRigidbody(Vector3 _pos);
+	PxShape* AddCollider(PxGeometryType::Enum _type, ColliderDesc _desc);
 
 public:
 	void RunSimulate();

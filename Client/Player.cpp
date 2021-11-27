@@ -30,7 +30,7 @@ int Player::Update(float _TimeDelta)
 
 	for (size_t i = 0; i < components.size(); ++i)
 	{
-		if (components[i]->GetComponentName() != L"Material")
+		if (components[i] && i != ComponentType::MATERIAL)
 			components[i]->Update(_TimeDelta);
 	}
 
@@ -46,7 +46,7 @@ void Player::Render()
 
 	for (size_t i = 0; i < components.size(); ++i)
 	{
-		if (components[i]->GetComponentName() != L"Material")
+		if (components[i] && i != ComponentType::MATERIAL)
 			components[i]->Render();
 	}
 
@@ -76,8 +76,8 @@ HRESULT Player::Initialize(ID3D11Device * _Device)
 
 	shader = Shader::Create(InputLayout, sizeof(InputLayout), L"../Engine/ModelVS.hlsl", L"../Engine/ModelPS.hlsl");
 
-	components.push_back(transform);
-	components.push_back(shader);
+	components[ComponentType::TRANSFORM] = transform;
+	components[ComponentType::SHADER] = shader;
 
 	model = Model::Create(shared_from_this());
 

@@ -4,6 +4,7 @@
 
 GameObject::GameObject()
 {
+	components.resize(COMPONENT_END);
 }
 
 GameObject::GameObject(const GameObject & Rhs)
