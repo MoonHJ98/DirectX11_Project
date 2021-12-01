@@ -284,6 +284,7 @@
     <ClInclude Include="Rigidbody.h" />
     <ClInclude Include="Collider.h" />
     <ClInclude Include="ColliderRenderer.h" />
+    <ClInclude Include="Capsule.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -422,6 +423,7 @@
     <ClCompile Include="Rigidbody.cpp" />
     <ClCompile Include="Collider.cpp" />
     <ClCompile Include="ColliderRenderer.cpp" />
+    <ClCompile Include="Capsule.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="ModelVS.hlsl">

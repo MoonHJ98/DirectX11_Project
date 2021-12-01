@@ -164,6 +164,7 @@
     <ClInclude Include="BinaryFile.h" />
     <ClInclude Include="Bone.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Capsule.h" />
     <ClInclude Include="Clip.h" />
     <ClInclude Include="Collider.h" />
     <ClInclude Include="ColliderRenderer.h" />
@@ -218,6 +219,7 @@
     <ClCompile Include="BinaryFile.cpp" />
     <ClCompile Include="Bone.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Capsule.cpp" />
     <ClCompile Include="Clip.cpp" />
     <ClCompile Include="Collider.cpp" />
     <ClCompile Include="ColliderRenderer.cpp" />

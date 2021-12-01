@@ -77,7 +77,6 @@ PxShape* PhysXManager::AddCollider(PxGeometryType::Enum _type, ColliderDesc _des
 {
 	PxShape* shape = nullptr;
 	
-	PxCapsuleGeometry
 	switch (_type)
 	{
 	case physx::PxGeometryType::eSPHERE:
@@ -89,10 +88,6 @@ PxShape* PhysXManager::AddCollider(PxGeometryType::Enum _type, ColliderDesc _des
 		break;
 	case physx::PxGeometryType::eBOX:
 		shape = physics->createShape(PxBoxGeometry(_desc.scale.x, _desc.scale.y, _desc.scale.z), *material);
-		break;
-	case physx::PxGeometryType::eCONVEXMESH:
-		break;
-	case physx::PxGeometryType::eTRIANGLEMESH:
 		break;
 	case physx::PxGeometryType::eHEIGHTFIELD:
 		break;

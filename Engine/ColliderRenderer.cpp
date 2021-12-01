@@ -30,21 +30,21 @@ HRESULT ColliderRenderer::CreateBuffer(PxGeometryType::Enum _geoType)
 	case physx::PxGeometryType::eSPHERE:
 		GeometricPrimitive::CreateSphere(vertices, indices, 10.f, 16, false);
 		break;
+
 	case physx::PxGeometryType::ePLANE:
-		GeometricPrimitive::CreateSphere(vertices, indices, 10.f, 16, false);
 		break;
+
 	case physx::PxGeometryType::eCAPSULE:
+
 		break;
+
 	case physx::PxGeometryType::eBOX:
+		GeometricPrimitive::CreateBox(vertices, indices, XMFLOAT3(10.f, 10.f, 10.f), false);
 		break;
-	case physx::PxGeometryType::eCONVEXMESH:
-		break;
-	case physx::PxGeometryType::eTRIANGLEMESH:
-		break;
+
 	case physx::PxGeometryType::eHEIGHTFIELD:
 		break;
-	case physx::PxGeometryType::eGEOMETRY_COUNT:
-		break;
+
 	case physx::PxGeometryType::eINVALID:
 		break;
 	default:
@@ -52,7 +52,6 @@ HRESULT ColliderRenderer::CreateBuffer(PxGeometryType::Enum _geoType)
 	}
 
 	CreateStaticBuffer(Graphic->GetDevice(), &vertices[0], vertices.size(), sizeof(GeometricPrimitive::VertexType), D3D11_BIND_VERTEX_BUFFER, vertexBuffer.GetAddressOf());
-	CreateStaticBuffer(Graphic->GetDevice(), &indices[0], indices.size(), sizeof(uint16_t), D3D11_BIND_INDEX_BUFFER, indexBuffer.GetAddressOf());
 
 	return E_NOTIMPL;
 }
