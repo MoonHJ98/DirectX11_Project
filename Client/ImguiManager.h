@@ -22,6 +22,7 @@ private:
 private:
 	void ObjectPopup();
 	void ObjectInspector();
+	void ComponentPopup();
 
 private:
 	shared_ptr<Management> Manage = nullptr;

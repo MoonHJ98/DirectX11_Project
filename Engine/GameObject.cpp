@@ -19,7 +19,8 @@ void GameObject::RenderComponentsIspector()
 {
 	for (size_t i = 0; i < components.size(); ++i)
 	{
-		components[i]->RenderInspector();
+		if (components[i])
+			components[i]->RenderInspector();
 	}
 }
 

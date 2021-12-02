@@ -70,12 +70,6 @@ void ImguiManager::Scene()
 	static int counter = 0;
 
 	ImGui::Begin("Scene");
-	//ImGui::Text("Light Direction");
-	//auto light = Manage->FindLight(L"DirectionalLight", 0);
-	//Vector3 direction = light->GetLightInfo().Direction;
-	//float dir[3]{ direction.x, direction.y, direction.z };
-	//ImGui::DragFloat3("", dir, 0.1f, -1.f, 1.f, nullptr, 1);
-	//light->SetLightDirection(Vector3(dir[0], dir[1], dir[2]));
 
 
 	ID3D11ShaderResourceView* my_texture = Renderer::GetInstance()->GetBlendTexture();
@@ -204,6 +198,37 @@ void ImguiManager::ObjectInspector()
 	auto obj = objectForInspector.lock();
 
 	obj->RenderComponentsIspector();
+
+	ImGui::Spacing();
+	ImGui::Spacing();
+	ImGui::SetCursorPosX((float)ImGui::GetWindowSize().x/4);
+	
+	ComponentPopup();
+
+}
+
+void ImguiManager::ComponentPopup()
+{
+	if (ImGui::Button("Add Component", ImVec2((float)ImGui::GetWindowSize().x / 2.f, 30.f)))
+		ImGui::OpenPopup("ComponentPopup");
+
+	if (ImGui::BeginPopupContextItem("ComponentPopup"))
+	{
+		if (ImGui::BeginMenu("Physics"))
+		{
+			auto obj = objectForInspector.lock();
+
+			ImGui::MenuItem("Rigidbody");
+
+			ImGui::MenuItem("Sphere Collider");
+			ImGui::MenuItem("Box Collider");
+			ImGui::MenuItem("Capsule Collider");
+
+
+			ImGui::EndMenu();
+		}
+		ImGui::EndPopup();
+	}
 
 }
 
