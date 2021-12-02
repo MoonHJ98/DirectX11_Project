@@ -3,8 +3,9 @@
 #include "Component.h"
 
 class Rigidbody;
-
 class GameObject;
+class ColliderRenderer;
+
 class Collider : public Component
 {
 private:
@@ -35,5 +36,7 @@ private:
 	PxShape* shape = nullptr;
 	weak_ptr<Rigidbody> rigidbody;
 	PxGeometryType::Enum geoType;
+	
+	shared_ptr<ColliderRenderer> colliderRenderer = nullptr;
 };
 

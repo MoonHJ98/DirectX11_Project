@@ -3,6 +3,7 @@
 #include "PhysXManager.h"
 #include "GameObject.h"
 #include "Rigidbody.h"
+#include "ColliderRenderer.h"
 
 
 Collider::Collider()
@@ -32,7 +33,7 @@ HRESULT Collider::Initialize(shared_ptr<GameObject> _object, PxGeometryType::Enu
 	else
 		AddRigidBodyForCollider();
 
-
+	colliderRenderer = ColliderRenderer::Create(object.lock(), geoType);
 
 	return S_OK;
 }
@@ -41,6 +42,9 @@ PxShape* Collider::AddCollider()
 {
 	ColliderDesc desc;
 	desc.scale = Vector3(5.f, 5.f, 5.f);
+	desc.radius = 5.f;
+	desc.halfHeight = 10.f;
+
 	return PhysXManager::GetInstance()->AddCollider(geoType, desc);
 }
 
@@ -67,12 +71,13 @@ void Collider::AddRigidBodyForCollider()
 
 int Collider::Update(float _timeDelta)
 {
+	colliderRenderer->Update(_timeDelta);
 	return 0;
 }
 
 void Collider::Render()
 {
-
+	colliderRenderer->Render();
 }
 
 void Collider::RenderInspector()

@@ -1,5 +1,9 @@
 #pragma once
 #include "GameObject.h"
+
+class Shader;
+class Transform;
+
 class ColliderRenderer : public GameObject, public enable_shared_from_this<ColliderRenderer>
 {
 private:
@@ -10,7 +14,7 @@ public:
 	~ColliderRenderer();
 
 private:
-	HRESULT Initialize(PxGeometryType::Enum _geoType);
+	HRESULT Initialize(shared_ptr<GameObject> _object, PxGeometryType::Enum _geoType);
 	HRESULT CreateBuffer(PxGeometryType::Enum _geoType);
 
 public:
@@ -18,11 +22,15 @@ public:
 	virtual int Update(float _TimeDelta) override;
 	virtual void Render() override;
 
+private:
+	void RenderBuffer();
+
 public:
-	static shared_ptr<ColliderRenderer> Create(PxGeometryType::Enum _geoType);
+	static shared_ptr<ColliderRenderer> Create(shared_ptr<GameObject> _object, PxGeometryType::Enum _geoType);
 
 private:
 	shared_ptr<GraphicDevice> Graphic = nullptr;
+
 	vector<GeometricPrimitive::VertexType> vertices;
 	vector<uint16_t> indices;
 	ComPtr<ID3D11Buffer> vertexBuffer = nullptr;
@@ -30,6 +38,10 @@ private:
 
 	PxGeometryType::Enum geoType;
 
+	shared_ptr<Shader> shader = nullptr;
 
+	weak_ptr<GameObject> object;
+	weak_ptr<Transform> objectTransform;
+	 
 };
 

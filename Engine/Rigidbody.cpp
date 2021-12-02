@@ -29,7 +29,7 @@ HRESULT Rigidbody::Initialize(shared_ptr<GameObject> _object, RigidbodyType _rig
 	{
 	case DYNAMICRIGID:
 		body = AddDynamicRigidbody(transform.lock()->GetState(Transform::POSITION));
-		body->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, true);
+		//body->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, true);
 		break;
 	case STATICRIGID:
 		body = AddStaticRigidbody(transform.lock()->GetState(Transform::POSITION));
@@ -53,8 +53,8 @@ PxRigidBody* Rigidbody::AddDynamicRigidbody(Vector3 _pos)
 PxRigidBody * Rigidbody::AddStaticRigidbody(Vector3 _pos)
 {
 	auto _body = PhysXManager::GetInstance()->AddDynamicRigidbody(_pos);
-	_body->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, true);
-	_body->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, true);
+	//_body->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, true);
+	//_body->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, true);
 
 	
 	return _body;

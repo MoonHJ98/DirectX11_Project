@@ -456,5 +456,11 @@
     <FxCompile Include="ColorVS.hlsl">
       <Filter>02. Includes\01. HLSL</Filter>
     </FxCompile>
+    <FxCompile Include="ColliderPS.hlsl">
+      <Filter>02. Includes\01. HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="ColliderVS.hlsl">
+      <Filter>02. Includes\01. HLSL</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

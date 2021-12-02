@@ -137,18 +137,20 @@ PSOut main(PSInput input)
         }
     }
     else
-    {
+	{
         
-        lightIntensity = saturate(dot(normal, lightDir));
-        if (lightIntensity > 0.f)
-        {
-            color += saturate(DiffuseColor * lightIntensity);
+		lightIntensity = saturate(dot(normal, lightDir));
+		
+		if (lightIntensity > 0.f)
+		{
+			color += saturate(DiffuseColor * lightIntensity);
+		}
+		if (normal.x == 0.f && normal.y == 0.f && normal.z == 0.f)
+		{
+			color = DiffuseColor;
+		}
 
-                
-        }
-    }
-
- 
+	}
 
 
     Out.shade = color;

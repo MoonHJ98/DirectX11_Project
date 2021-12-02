@@ -80,11 +80,12 @@ PxShape* PhysXManager::AddCollider(PxGeometryType::Enum _type, ColliderDesc _des
 	switch (_type)
 	{
 	case physx::PxGeometryType::eSPHERE:
-		shape = physics->createShape(PxSphereGeometry(PxReal(_desc.ridus)), *material);
+		shape = physics->createShape(PxSphereGeometry(PxReal(_desc.radius)), *material);
 		break;
 	case physx::PxGeometryType::ePLANE:
 		break;
 	case physx::PxGeometryType::eCAPSULE:
+		shape = physics->createShape(PxCapsuleGeometry(PxReal(_desc.radius), PxReal(_desc.halfHeight)), *material);
 		break;
 	case physx::PxGeometryType::eBOX:
 		shape = physics->createShape(PxBoxGeometry(_desc.scale.x, _desc.scale.y, _desc.scale.z), *material);

@@ -323,10 +323,11 @@ typedef struct LightDesc {
 typedef struct ColliderDesc
 {
 	Vector3 scale;
-	UINT ridus;
+	float radius;
+	float halfHeight;
 }COLLIDERDESC;
 
-enum ComponentType { TRANSFORM, SHADER, MATERIAL, RIGIDBODY, COLLIDER, COMPONENT_END };
+enum ComponentType { COLLIDER, TRANSFORM, SHADER, MATERIAL, RIGIDBODY, COMPONENT_END };
 enum RigidbodyType { DYNAMICRIGID, STATICRIGID, RIGIDBODY_END };
 
 void SplitString(vector<string>* result, string origin, string tok);

@@ -25,6 +25,11 @@ public:
 public:
 	Vector3 GetPosition() { return transform->GetState(Transform::POSITION); }
 	vector<shared_ptr<Component>>& GetComponents() { return components; }
+	shared_ptr<Component> GetComponent(ComponentType componentType);
+
+protected:
+	void UpdateComponent(float _timeDelta);
+	void RenderComponent();
 
 protected:
 	shared_ptr<GraphicDevice> Graphic = nullptr;

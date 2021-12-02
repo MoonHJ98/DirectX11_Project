@@ -19,8 +19,6 @@ private:
 	HRESULT Initialize(shared_ptr<GameObject> _object, RigidbodyType _rigidbodyType);
 	PxRigidBody* AddDynamicRigidbody(Vector3 _pos);
 	PxRigidBody* AddStaticRigidbody(Vector3 _pos);
-	void AddCollider();
-	bool FindCollider();
 
 public:
 	// Component을(를) 통해 상속됨

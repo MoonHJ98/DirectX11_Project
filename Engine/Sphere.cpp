@@ -20,12 +20,12 @@ HRESULT Sphere::Initialize()
 	Graphic = GraphicDevice::GetInstance();
 	
 	
-	//GeometricPrimitive::CreateSphere(vertices, indices, 10.f, 16, false);
+	GeometricPrimitive::CreateSphere(vertices, indices, 10.f, 16, false);
 
-	Capsule::CreateCapsule(vertices, indices, 5.f, 10.f);
 	
 	CreateStaticBuffer(Graphic->GetDevice(), &vertices[0], vertices.size(), sizeof(GeometricPrimitive::VertexType), D3D11_BIND_VERTEX_BUFFER, vertexBuffer.GetAddressOf());
-	//CreateStaticBuffer(Graphic->GetDevice(), &indices[0], indices.size(), sizeof(uint16_t), D3D11_BIND_INDEX_BUFFER, indexBuffer.GetAddressOf());
+	
+	CreateStaticBuffer(Graphic->GetDevice(), &indices[0], indices.size(), sizeof(uint16_t), D3D11_BIND_INDEX_BUFFER, indexBuffer.GetAddressOf());
 	
 	return S_OK;
 }
@@ -43,10 +43,10 @@ void Sphere::Render()
 	Graphic->GetDeviceContext()->IASetIndexBuffer(indexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0);
 
 	// 이 버텍스 버퍼에서 렌더링되어야하는 프리미티브의 타입을 설정한다.이 경우 라인리스트이다.
-	Graphic->GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
+	Graphic->GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	Graphic->GetDeviceContext()->Draw(vertices.size(), 0);
-	//Graphic->GetDeviceContext()->DrawIndexed(indices.size(), 0, 0);
+	//Graphic->GetDeviceContext()->Draw(vertices.size(), 0);
+	Graphic->GetDeviceContext()->DrawIndexed(indices.size(), 0, 0);
 }
 
 shared_ptr<Sphere> Sphere::Create()
