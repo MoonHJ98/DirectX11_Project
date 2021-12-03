@@ -22,6 +22,10 @@ private:
 	void AddColliderToRigidbody();
 	void AddRigidBodyForCollider();
 
+private:
+	void IsTrigger();
+	void Transform();
+
 
 public:
 	// Component을(를) 통해 상속됨
@@ -38,5 +42,8 @@ private:
 	PxGeometryType::Enum geoType;
 	
 	shared_ptr<ColliderRenderer> colliderRenderer = nullptr;
+
+	bool isTrigger = false;
+	PxTransform transform;
 };
 

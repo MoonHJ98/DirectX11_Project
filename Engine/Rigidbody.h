@@ -16,8 +16,12 @@ public:
 	~Rigidbody();
 
 private:
-	HRESULT Initialize(shared_ptr<GameObject> _object, RigidbodyType _rigidbodyType);
-	PxRigidBody* AddDynamicRigidbody(Vector3 _pos);
+	HRESULT Initialize(shared_ptr<GameObject> _object);
+	PxRigidDynamic* AddRigidbody(Vector3 _pos);
+
+	void Mass();
+	void Gravity();
+	void Kinematic();
 	
 
 public:
@@ -27,17 +31,20 @@ public:
 	virtual void RenderInspector() override;
 
 public:
-	PxRigidBody& GetRigidBody() { return *body; }
+	PxRigidDynamic& GetRigidBody() { return *body; }
 	
 private:
 	void SetPosition();
 
 public:
-	static shared_ptr<Rigidbody> Create(shared_ptr<GameObject> _object, RigidbodyType _rigidbodyType);
+	static shared_ptr<Rigidbody> Create(shared_ptr<GameObject> _object);
 
 private:
-	PxRigidBody* body = nullptr;
+	PxRigidDynamic* body = nullptr;
 	weak_ptr<Transform> transform;
+
+	bool useGravity = false;
+	bool isKinematic = false;
 
 };
 

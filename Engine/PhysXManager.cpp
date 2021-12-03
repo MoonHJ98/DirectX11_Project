@@ -40,33 +40,35 @@ HRESULT PhysXManager::CreateSimulation()
 	auto groundPlane = PxCreatePlane(*physics, PxPlane(0, 1, 0, 1), *material);
 	scene->addActor(*groundPlane);
 
-	//float halfExtent = 0.5f;
-	//PxU32 size = 20;
-	//
-	//const PxTransform t(PxVec3(0));
-	//
-	//PxShape* shape = physics->createShape(PxBoxGeometry(1.f, 1.f, 1.f), *material);
-	//for (PxU32 i = 0; i < size; i++)
-	//{
-	//	for (PxU32 j = 0; j < size - i; j++)
-	//	{
-	//		PxTransform localTm(PxVec3(PxReal(j * 2) - PxReal(size - i), PxReal(i * 2 + 1) + 50, 0));
-	//		PxRigidDynamic* body = physics->createRigidDynamic(t.transform(localTm));
-	//		body->attachShape(*shape);
-	//		PxRigidBodyExt::updateMassAndInertia(*body, 10.f);
-	//		scene->addActor(*body);
-	//	}
-	//}
-	//shape->release();
+	float halfExtent = 0.5f;
+	PxU32 size = 20;
+	
+	const PxTransform t(PxVec3(0));
+	
+	PxShape* shape = physics->createShape(PxBoxGeometry(1.f, 1.f, 1.f), *material);
+
+	for (PxU32 i = 0; i < size; i++)
+	{
+		for (PxU32 j = 0; j < size - i; j++)
+		{
+			PxTransform localTm(PxVec3(PxReal(j * 2) - PxReal(size - i), PxReal(i * 2 + 1) + 50, 0));
+			PxRigidDynamic* body = physics->createRigidDynamic(t.transform(localTm));
+			body->attachShape(*shape);
+
+			PxRigidBodyExt::updateMassAndInertia(*body, 10.f);
+			scene->addActor(*body);
+		}
+	}
+	shape->release();
 
 	return S_OK;
 }
 
-PxRigidBody* PhysXManager::AddDynamicRigidbody(Vector3 _pos)
+PxRigidDynamic* PhysXManager::AddRigidbody(Vector3 _pos)
 {
 	PxTransform localTm(_pos.x, _pos.y, _pos.z);
 	PxTransform transform(PxVec3(0));
-	PxRigidBody* body = physics->createRigidDynamic(transform.transform(localTm));
+	PxRigidDynamic* body = physics->createRigidDynamic(transform.transform(localTm));
 	PxRigidBodyExt::updateMassAndInertia(*body, 10.f);
 	scene->addActor(*body);
 

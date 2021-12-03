@@ -16,7 +16,7 @@ Rigidbody::~Rigidbody()
 {
 }
 
-HRESULT Rigidbody::Initialize(shared_ptr<GameObject> _object, RigidbodyType _rigidbodyType)
+HRESULT Rigidbody::Initialize(shared_ptr<GameObject> _object)
 {
 	object = _object;
 
@@ -25,35 +25,67 @@ HRESULT Rigidbody::Initialize(shared_ptr<GameObject> _object, RigidbodyType _rig
 	auto transComponent = object.lock()->GetComponents()[ComponentType::TRANSFORM];
 	transform = dynamic_pointer_cast<Transform>(transComponent);
 
-	switch (_rigidbodyType)
-	{
-	case DYNAMICRIGID:
-		body = AddDynamicRigidbody(transform.lock()->GetState(Transform::POSITION));
-		body->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, true);
-		break;
-	case STATICRIGID:
-		
-		break;
-	case RIGIDBODY_END:
-		break;
-	default:
-		break;
-	}
-	
+	Vector3 pos = transform.lock()->GetState(Transform::POSITION);
+	body = AddRigidbody(pos);
+	body->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, true);
+
+
 
 
 	return S_OK;
 }
 
-PxRigidBody* Rigidbody::AddDynamicRigidbody(Vector3 _pos)
+PxRigidDynamic* Rigidbody::AddRigidbody(Vector3 _pos)
 {
-	return PhysXManager::GetInstance()->AddDynamicRigidbody(_pos);
+	return PhysXManager::GetInstance()->AddRigidbody(_pos);
+}
+
+void Rigidbody::Mass()
+{
+	float mass = body->getMass();
+	ImGui::InputFloat("Mass", &mass);
+	body->setMass(PxReal(mass));
+
+}
+
+void Rigidbody::Gravity()
+{
+	if (ImGui::Checkbox("Use Gravity", &useGravity))
+	{
+		if (useGravity)
+		{
+			body->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, false);
+			body->wakeUp();
+		}
+		else
+		{
+			body->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, true);
+			body->putToSleep();
+		}
+
+	}
+
+}
+
+void Rigidbody::Kinematic()
+{
+	if (ImGui::Checkbox("is Kinematic", &isKinematic))
+	{
+		if (isKinematic)
+			body->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, isKinematic);
+		else
+			body->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, isKinematic);
+	}
+
+	
+
 }
 
 
 
 int Rigidbody::Update(float _timeDelta)
 {
+
 	SetPosition();
 	return 0;
 }
@@ -64,6 +96,12 @@ void Rigidbody::Render()
 
 void Rigidbody::RenderInspector()
 {
+	if (ImGui::CollapsingHeader("Rigidbody"))
+	{
+		Mass();
+		Gravity();
+		Kinematic();
+	}
 }
 
 void Rigidbody::SetPosition()
@@ -72,10 +110,10 @@ void Rigidbody::SetPosition()
 }
 
 
-shared_ptr<Rigidbody> Rigidbody::Create(shared_ptr<GameObject> _object, RigidbodyType _rigidbodyType)
+shared_ptr<Rigidbody> Rigidbody::Create(shared_ptr<GameObject> _object)
 {
 	shared_ptr<Rigidbody> Instance(new Rigidbody());
-	if (FAILED(Instance->Initialize(_object, _rigidbodyType)))
+	if (FAILED(Instance->Initialize(_object)))
 	{
 		MSG_BOX("Failed to create Rigidbody.");
 		return nullptr;

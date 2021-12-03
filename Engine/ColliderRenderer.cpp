@@ -54,7 +54,7 @@ HRESULT ColliderRenderer::CreateBuffer(PxGeometryType::Enum _geoType)
 	switch (_geoType)
 	{
 	case physx::PxGeometryType::eSPHERE:
-		GeometricPrimitive::CreateSphere(vertices, indices, 10.f, 16, false);
+		GeometricPrimitive::CreateSphere(vertices, indices, 20, 8, false);
 		break;
 
 	case physx::PxGeometryType::ePLANE:
@@ -79,7 +79,7 @@ HRESULT ColliderRenderer::CreateBuffer(PxGeometryType::Enum _geoType)
 
 	for (UINT i = 0; i < vertices.size(); ++i)
 	{
-		vertices[i].normal = Vector3(1.f, 1.f, 1.f);
+		vertices[i].normal = Vector3(0.f, 1.f, 0.f);
 	}
 
 	CreateStaticBuffer(Graphic->GetDevice(), &vertices[0], vertices.size(), sizeof(GeometricPrimitive::VertexType), D3D11_BIND_VERTEX_BUFFER, vertexBuffer.GetAddressOf());
@@ -92,6 +92,9 @@ HRESULT ColliderRenderer::CreateBuffer(PxGeometryType::Enum _geoType)
 
 int ColliderRenderer::Update(float _TimeDelta)
 {
+	Vector3 position = objectTransform.lock()->GetState(Transform::POSITION);
+	transform->SetState(Transform::POSITION, position);
+
 	UpdateComponent(_TimeDelta);
 
 	return 0;

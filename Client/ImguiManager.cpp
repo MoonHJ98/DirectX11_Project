@@ -7,6 +7,8 @@
 #include "Terrain.h"
 #include "SphereTest.h"
 #include "GameObject.h"
+#include "Rigidbody.h"
+#include "Collider.h"
 
 HRESULT ImguiManager::Initialize()
 {
@@ -47,7 +49,7 @@ void ImguiManager::Render()
 	Menu1();
 	Hierarchy();
 	Inspector();
-	
+
 
 
 
@@ -116,7 +118,7 @@ void ImguiManager::Hierarchy()
 	if (ImGui::TreeNode("Scene"))
 	{
 
-		
+
 		// For Popup.
 		ObjectPopup();
 
@@ -124,7 +126,7 @@ void ImguiManager::Hierarchy()
 
 		for (auto iter = objects.begin(); iter != objects.end(); ++iter)
 		{
-			
+
 			if (ImGui::Selectable(ToString(iter->first).c_str()))
 			{
 				isObjectInspector = true;
@@ -201,8 +203,8 @@ void ImguiManager::ObjectInspector()
 
 	ImGui::Spacing();
 	ImGui::Spacing();
-	ImGui::SetCursorPosX((float)ImGui::GetWindowSize().x/4);
-	
+	ImGui::SetCursorPosX((float)ImGui::GetWindowSize().x / 4);
+
 	ComponentPopup();
 
 }
@@ -218,11 +220,18 @@ void ImguiManager::ComponentPopup()
 		{
 			auto obj = objectForInspector.lock();
 
-			ImGui::MenuItem("Rigidbody");
+			if (ImGui::MenuItem("Rigidbody"))
+				obj->AddComponent(ComponentType::RIGIDBODY, Rigidbody::Create(obj));
 
-			ImGui::MenuItem("Sphere Collider");
-			ImGui::MenuItem("Box Collider");
-			ImGui::MenuItem("Capsule Collider");
+			if (ImGui::MenuItem("Sphere Collider"))
+				obj->AddComponent(ComponentType::COLLIDER, Collider::Create(obj, PxGeometryType::eSPHERE));
+
+			if(ImGui::MenuItem("Box Collider"))
+				obj->AddComponent(ComponentType::COLLIDER, Collider::Create(obj, PxGeometryType::eBOX));
+
+			if(ImGui::MenuItem("Capsule Collider"))
+				obj->AddComponent(ComponentType::COLLIDER, Collider::Create(obj, PxGeometryType::eCAPSULE));
+
 
 
 			ImGui::EndMenu();

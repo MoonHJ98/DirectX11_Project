@@ -26,6 +26,7 @@ public:
 	Vector3 GetPosition() { return transform->GetState(Transform::POSITION); }
 	vector<shared_ptr<Component>>& GetComponents() { return components; }
 	shared_ptr<Component> GetComponent(ComponentType componentType);
+	void AddComponent(ComponentType _componentType, shared_ptr<Component> _component);
 
 protected:
 	void UpdateComponent(float _timeDelta);

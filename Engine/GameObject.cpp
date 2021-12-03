@@ -32,6 +32,15 @@ shared_ptr<Component> GameObject::GetComponent(ComponentType componentType)
 	return nullptr;
 }
 
+void GameObject::AddComponent(ComponentType _componentType, shared_ptr<Component> _component)
+{
+	if (components[_componentType])
+		return;
+
+	components[_componentType] = _component;
+
+}
+
 void GameObject::UpdateComponent(float _timeDelta)
 {
 	for (UINT i = 0; i < components.size(); ++i)

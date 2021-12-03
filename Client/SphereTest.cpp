@@ -24,21 +24,13 @@ int SphereTest::Update(float _TimeDelta)
 {
 	Renderer::GetInstance()->AddRenderGroup(Renderer::RENDER_NONALPHA, shared_from_this());
 
-	for (size_t i = 0; i < components.size(); ++i)
-	{
-		if (components[i])
-			components[i]->Update(_TimeDelta);
-	}
+	UpdateComponent(_TimeDelta);
 	return 0;
 }
 
 void SphereTest::Render()
 {
-	for (size_t i = 0; i < components.size(); ++i)
-	{
-		if (components[i])
-			components[i]->Render();
-	}
+	RenderComponent();
 
 	sphere->Render();
 
@@ -61,7 +53,7 @@ HRESULT SphereTest::Initialize()
 
 	transform = Transform::Create(Transform::TRANSDESC());
 	transform->SetObject(shared_from_this());
-	transform->SetState(Transform::POSITION, Vector3(10.f, 15.f, 15.f));
+	transform->SetState(Transform::POSITION, Vector3(10.f, 30.f, 15.f));
 	components[ComponentType::TRANSFORM] = transform;
 
 
@@ -69,11 +61,11 @@ HRESULT SphereTest::Initialize()
 	material = Material::Create(desc);
 	components[ComponentType::MATERIAL] = material;
 
-	rigidbody = Rigidbody::Create(shared_from_this(), RigidbodyType::DYNAMICRIGID);
-	components[ComponentType::RIGIDBODY] = rigidbody;
-
-	collider = Collider::Create(shared_from_this(), PxGeometryType::eBOX);
-	components[ComponentType::COLLIDER] = collider;
+	//rigidbody = Rigidbody::Create(shared_from_this(), RigidbodyType::DYNAMICRIGID);
+	//components[ComponentType::RIGIDBODY] = rigidbody;
+	//
+	//collider = Collider::Create(shared_from_this(), PxGeometryType::eBOX);
+	//components[ComponentType::COLLIDER] = collider;
 
 
 	return S_OK;
