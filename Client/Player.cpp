@@ -55,13 +55,16 @@ void Player::Render()
 
 HRESULT Player::Initialize(ID3D11Device * _Device)
 {
+
+	model = Model::Create(shared_from_this());
+
 	Graphic = GraphicDevice::GetInstance();
 
 
 	transform = Transform::Create(Transform::TRANSDESC(10.f, 10.f));
 	transform->SetObject(shared_from_this());
 	transform->SetScale(Vector3(0.1f, 0.1f, 0.1f));
-	transform->SetState(Transform::POSITION, Vector3(10.f, 0.f, 10.f));
+	transform->SetState(Transform::POSITION, Vector3(10.f, 10.f, 10.f));
 
 	D3D11_INPUT_ELEMENT_DESC InputLayout[] =
 	{
@@ -79,7 +82,6 @@ HRESULT Player::Initialize(ID3D11Device * _Device)
 	components[ComponentType::TRANSFORM] = transform;
 	components[ComponentType::SHADER] = shader;
 
-	model = Model::Create(shared_from_this());
 
 	return S_OK;
 }

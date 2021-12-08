@@ -33,9 +33,10 @@ HRESULT Collider::Initialize(shared_ptr<GameObject> _object, PxGeometryType::Enu
 	else
 		AddRigidBodyForCollider();
 
-	colliderRenderer = ColliderRenderer::Create(object.lock(), geoType);
+	colliderRenderer = ColliderRenderer::Create(object.lock(), shared_from_this(), geoType);
 
-	transform = shape->getLocalPose();
+
+	localTransform = shape->getLocalPose();
 
 	return S_OK;
 }
@@ -44,7 +45,7 @@ PxShape* Collider::AddCollider()
 {
 	ColliderDesc desc;
 	desc.scale = Vector3(5.f, 5.f, 5.f);
-	desc.radius = 10.f;
+	desc.radius = 5.f;
 	desc.halfHeight = 10.f;
 
 	return PhysXManager::GetInstance()->AddCollider(geoType, desc);
@@ -78,9 +79,15 @@ void Collider::IsTrigger()
 	if (ImGui::Checkbox("Is Trigger", &isTrigger))
 	{
 		if (isTrigger)
-			rigidbody.lock()->GetRigidBody().detachShape(*shape);
+		{
+			shape->setFlag(PxShapeFlag::eSIMULATION_SHAPE, false);
+			shape->setFlag(PxShapeFlag::eTRIGGER_SHAPE, true);
+		}
 		else
-			rigidbody.lock()->GetRigidBody().attachShape(*shape);
+		{
+			shape->setFlag(PxShapeFlag::eSIMULATION_SHAPE, true);
+			shape->setFlag(PxShapeFlag::eTRIGGER_SHAPE, false);
+		}
 
 	}
 
@@ -88,15 +95,15 @@ void Collider::IsTrigger()
 
 void Collider::Transform()
 {
-	float pos[3] = { transform.p.x, transform.p.y, transform.p.z };
+	float pos[3] = { localTransform.p.x, localTransform.p.y, localTransform.p.z };
 	
 	ImGui::InputFloat3("Center", pos);
-	transform.p = PxVec3(pos[0], pos[1], pos[2]);
+	localTransform.p = PxVec3(pos[0], pos[1], pos[2]);
 
 	PxTransform localTm(pos[0], pos[1], pos[2]);
-	PxTransform transform(PxVec3(0));
+	PxTransform _transform(PxVec3(0));
 
-	shape->setLocalPose(transform.transform(localTm));
+	shape->setLocalPose(_transform.transform(localTm));
 	
 	float size[3] = {};
 	ImGui::InputFloat3("Size", size);

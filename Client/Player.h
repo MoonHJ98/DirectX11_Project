@@ -1,5 +1,6 @@
 #pragma once
 #include "GameObject.h"
+#include "Model.h"
 
 class Model;
 class Shader;
@@ -15,6 +16,9 @@ public:
 public:
 	virtual int Update(float _TimeDelta) override;
 	virtual void Render() override;
+
+public:
+	vector<shared_ptr<Bone>> GetBones() { return model->GetBones(); }
 
 public:
 	HRESULT Initialize(ID3D11Device* _Device);

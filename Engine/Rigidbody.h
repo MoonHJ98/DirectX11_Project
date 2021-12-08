@@ -41,6 +41,7 @@ public:
 
 private:
 	PxRigidDynamic* body = nullptr;
+	PxRigidActor* actor = nullptr;
 	weak_ptr<Transform> transform;
 
 	bool useGravity = false;

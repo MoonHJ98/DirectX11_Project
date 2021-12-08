@@ -3,6 +3,7 @@
 #include "PhysXManager.h"
 #include "Transform.h"
 #include "GameObject.h"
+#include "Collider.h"
 
 Rigidbody::Rigidbody()
 {
@@ -76,12 +77,7 @@ void Rigidbody::Kinematic()
 		else
 			body->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, isKinematic);
 	}
-
-	
-
 }
-
-
 
 int Rigidbody::Update(float _timeDelta)
 {
@@ -106,7 +102,13 @@ void Rigidbody::RenderInspector()
 
 void Rigidbody::SetPosition()
 {
-	transform.lock()->SetState(Transform::POSITION, Vector3(body->getGlobalPose().p.x, body->getGlobalPose().p.y, body->getGlobalPose().p.z));
+	//auto collider = dynamic_pointer_cast<Collider>(object.lock()->GetComponent(ComponentType::COLLIDER));
+	//PxVec3 localPos = collider->GetShape()->getLocalPose().p;
+	PxVec3 bodyPos = body->getGlobalPose().p;
+
+	PxVec3 pos = bodyPos;
+
+	transform.lock()->SetState(Transform::POSITION, Vector3(pos.x, pos.y, pos.z));
 }
 
 

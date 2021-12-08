@@ -43,6 +43,7 @@ public:
 	void						  UpdateBones(shared_ptr<Bone> bone, const Matrix& matrix);
 
 	void						  SetTransformsSRV(ComPtr<ID3D11ShaderResourceView> srv);
+	vector<shared_ptr<Bone>>	  GetBones() { return bones; }
 
 public:
 	virtual int							  Update(float _timeDelta) override;

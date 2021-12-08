@@ -4,6 +4,7 @@
 #include "Capsule.h"
 #include "Shader.h"
 #include "Transform.h"
+#include "Collider.h"
 
 ColliderRenderer::ColliderRenderer()
 {
@@ -17,9 +18,11 @@ ColliderRenderer::~ColliderRenderer()
 {
 }
 
-HRESULT ColliderRenderer::Initialize(shared_ptr<GameObject> _object, PxGeometryType::Enum _geoType)
+HRESULT ColliderRenderer::Initialize(shared_ptr<GameObject> _object, shared_ptr<Collider> _collider, PxGeometryType::Enum _geoType)
 {
 	object = _object;
+	collider = _collider;
+	
 	geoType = _geoType;
 	Graphic = GraphicDevice::GetInstance();
 
@@ -30,6 +33,9 @@ HRESULT ColliderRenderer::Initialize(shared_ptr<GameObject> _object, PxGeometryT
 	transform->SetObject(shared_from_this());
 	objectTransform = dynamic_pointer_cast<Transform>(object.lock()->GetComponent(ComponentType::TRANSFORM));
 	Vector3 position = objectTransform.lock()->GetState(Transform::POSITION);
+	auto localTransform = collider.lock()->GetLocalTransform();
+	position += Vector3(localTransform.p.x, localTransform.p.y, localTransform.p.z);
+
 	transform->SetState(Transform::POSITION, position);
 
 
@@ -54,7 +60,7 @@ HRESULT ColliderRenderer::CreateBuffer(PxGeometryType::Enum _geoType)
 	switch (_geoType)
 	{
 	case physx::PxGeometryType::eSPHERE:
-		GeometricPrimitive::CreateSphere(vertices, indices, 20, 8, false);
+		GeometricPrimitive::CreateSphere(vertices, indices, 10, 8, false);
 		break;
 
 	case physx::PxGeometryType::ePLANE:
@@ -93,6 +99,9 @@ HRESULT ColliderRenderer::CreateBuffer(PxGeometryType::Enum _geoType)
 int ColliderRenderer::Update(float _TimeDelta)
 {
 	Vector3 position = objectTransform.lock()->GetState(Transform::POSITION);
+	auto localTransform = collider.lock()->GetLocalTransform();
+	position += Vector3(localTransform.p.x, localTransform.p.y, localTransform.p.z);
+
 	transform->SetState(Transform::POSITION, position);
 
 	UpdateComponent(_TimeDelta);
@@ -128,10 +137,10 @@ void ColliderRenderer::RenderBuffer()
 
 }
 
-shared_ptr<ColliderRenderer> ColliderRenderer::Create(shared_ptr<GameObject> _object, PxGeometryType::Enum _geoType)
+shared_ptr<ColliderRenderer> ColliderRenderer::Create(shared_ptr<GameObject> _object, shared_ptr<Collider> _collider, PxGeometryType::Enum _geoType)
 {
 	shared_ptr<ColliderRenderer> Instance(new ColliderRenderer());
-	if (FAILED(Instance->Initialize(_object, _geoType)))
+	if (FAILED(Instance->Initialize(_object, _collider, _geoType)))
 	{
 		MSG_BOX("Failed to create ColliderRenderer.");
 		return nullptr;

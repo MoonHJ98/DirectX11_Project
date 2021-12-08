@@ -3,6 +3,7 @@
 
 class Shader;
 class Transform;
+class Collider;
 
 class ColliderRenderer : public GameObject, public enable_shared_from_this<ColliderRenderer>
 {
@@ -14,7 +15,7 @@ public:
 	~ColliderRenderer();
 
 private:
-	HRESULT Initialize(shared_ptr<GameObject> _object, PxGeometryType::Enum _geoType);
+	HRESULT Initialize(shared_ptr<GameObject> _object, shared_ptr<Collider> _collider, PxGeometryType::Enum _geoType);
 	HRESULT CreateBuffer(PxGeometryType::Enum _geoType);
 
 public:
@@ -26,7 +27,7 @@ private:
 	void RenderBuffer();
 
 public:
-	static shared_ptr<ColliderRenderer> Create(shared_ptr<GameObject> _object, PxGeometryType::Enum _geoType);
+	static shared_ptr<ColliderRenderer> Create(shared_ptr<GameObject> _object, shared_ptr<Collider> _collider, PxGeometryType::Enum _geoType);
 
 private:
 	shared_ptr<GraphicDevice> Graphic = nullptr;
@@ -41,6 +42,7 @@ private:
 	shared_ptr<Shader> shader = nullptr;
 
 	weak_ptr<GameObject> object;
+	weak_ptr<Collider> collider;
 	weak_ptr<Transform> objectTransform;
 	 
 };

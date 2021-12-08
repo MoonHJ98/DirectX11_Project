@@ -47,19 +47,19 @@ HRESULT PhysXManager::CreateSimulation()
 	
 	PxShape* shape = physics->createShape(PxBoxGeometry(1.f, 1.f, 1.f), *material);
 
-	for (PxU32 i = 0; i < size; i++)
-	{
-		for (PxU32 j = 0; j < size - i; j++)
-		{
-			PxTransform localTm(PxVec3(PxReal(j * 2) - PxReal(size - i), PxReal(i * 2 + 1) + 50, 0));
-			PxRigidDynamic* body = physics->createRigidDynamic(t.transform(localTm));
-			body->attachShape(*shape);
-
-			PxRigidBodyExt::updateMassAndInertia(*body, 10.f);
-			scene->addActor(*body);
-		}
-	}
-	shape->release();
+	//for (PxU32 i = 0; i < size; i++)
+	//{
+	//	for (PxU32 j = 0; j < size - i; j++)
+	//	{
+	//		PxTransform localTm(PxVec3(PxReal(j * 2) - PxReal(size - i), PxReal(i * 2 + 1) + 50, 0));
+	//		PxRigidDynamic* body = physics->createRigidDynamic(t.transform(localTm));
+	//		body->attachShape(*shape);
+	//
+	//		PxRigidBodyExt::updateMassAndInertia(*body, 10.f);
+	//		scene->addActor(*body);
+	//	}
+	//}
+	//shape->release();
 
 	return S_OK;
 }
@@ -72,6 +72,7 @@ PxRigidDynamic* PhysXManager::AddRigidbody(Vector3 _pos)
 	PxRigidBodyExt::updateMassAndInertia(*body, 10.f);
 	scene->addActor(*body);
 
+
 	return body;
 }
 
@@ -83,15 +84,15 @@ PxShape* PhysXManager::AddCollider(PxGeometryType::Enum _type, ColliderDesc _des
 	switch (_type)
 	{
 	case physx::PxGeometryType::eSPHERE:
-		shape = physics->createShape(PxSphereGeometry(PxReal(_desc.radius)), *material);
+		shape = physics->createShape(PxSphereGeometry(PxReal(_desc.radius)), *material, true);
 		break;
 	case physx::PxGeometryType::ePLANE:
 		break;
 	case physx::PxGeometryType::eCAPSULE:
-		shape = physics->createShape(PxCapsuleGeometry(PxReal(_desc.radius), PxReal(_desc.halfHeight)), *material);
+		shape = physics->createShape(PxCapsuleGeometry(PxReal(_desc.radius), PxReal(_desc.halfHeight)), *material, true);
 		break;
 	case physx::PxGeometryType::eBOX:
-		shape = physics->createShape(PxBoxGeometry(_desc.scale.x, _desc.scale.y, _desc.scale.z), *material);
+		shape = physics->createShape(PxBoxGeometry(_desc.scale.x, _desc.scale.y, _desc.scale.z), *material, true);
 		break;
 	case physx::PxGeometryType::eHEIGHTFIELD:
 		break;

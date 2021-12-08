@@ -6,7 +6,7 @@ class Rigidbody;
 class GameObject;
 class ColliderRenderer;
 
-class Collider : public Component
+class Collider : public Component, public enable_shared_from_this<Collider>
 {
 private:
 	Collider();
@@ -22,6 +22,9 @@ private:
 	void AddColliderToRigidbody();
 	void AddRigidBodyForCollider();
 
+public:
+	PxTransform& GetLocalTransform() { return localTransform; }
+
 private:
 	void IsTrigger();
 	void Transform();
@@ -34,6 +37,9 @@ public:
 	virtual void RenderInspector() override;
 
 public:
+	PxShape* GetShape() { return shape; }
+
+public:
 	static shared_ptr<Collider> Create(shared_ptr<GameObject> _object, PxGeometryType::Enum _geoType);
 
 private:
@@ -44,6 +50,6 @@ private:
 	shared_ptr<ColliderRenderer> colliderRenderer = nullptr;
 
 	bool isTrigger = false;
-	PxTransform transform;
+	PxTransform localTransform;
 };
 
