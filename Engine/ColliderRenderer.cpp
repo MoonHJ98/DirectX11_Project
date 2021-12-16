@@ -147,3 +147,11 @@ shared_ptr<ColliderRenderer> ColliderRenderer::Create(shared_ptr<GameObject> _ob
 	}
 	return Instance;
 }
+
+void ColliderRenderer::OnContact()
+{
+}
+
+void ColliderRenderer::OnTrigger()
+{
+}

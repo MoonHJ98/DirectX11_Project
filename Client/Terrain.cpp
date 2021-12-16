@@ -8,9 +8,11 @@
 #include "Light.h"
 #include "GraphicDevice.h"
 #include "Material.h"
+#include "TerrainComponent.h"
 #include "TerrainBuffer.h"
 #include "Management.h"
 #include "StaticCamera.h"
+#include "ImguiManager.h"
 
 
 Terrain::Terrain()
@@ -52,9 +54,12 @@ HRESULT Terrain::Initialize(UINT _terrainWidth, UINT _terrainHeight, wstring _he
 
 	terrainBuffer = TerrainBuffer::Create(GhWnd, 100, 100);
 
+	terrainComponent = TerrainComponent::Create();
+
 	components[ComponentType::TRANSFORM] = transform;
 	components[ComponentType::SHADER] = shader;
 	components[ComponentType::MATERIAL] = material;
+	components[ComponentType::TERRAIN] = terrainComponent;
 
 
 	return S_OK;
@@ -70,7 +75,9 @@ int Terrain::Update(float _TimeDelta)
 			components[i]->Update(_TimeDelta);
 	}
 
-	//PickTerrain();
+	if(terrainComponent != nullptr && terrainComponent->IsTerrainComponentOpened())
+		PickTerrain(screenPos);
+
 	return 0;
 }
 
@@ -87,11 +94,25 @@ void Terrain::Render()
 	//heightTerrainBuffer->Render();
 }
 
+void Terrain::OnContact()
+{
+}
+
+void Terrain::OnTrigger()
+{
+}
+
 Vector3 Terrain::PickTerrain(Vector2 screenPos)
 {
-	terrainBuffer->PickTerrain(screenPos);
+	Vector3 Pos = terrainBuffer->PickTerrain(screenPos);
 
-	return Vector3(0.f, 0.f, 0.f);
+	//cout << Pos.x << " , " << Pos.y << " , " << Pos.z << endl;
+	return Pos;
+}
+
+void Terrain::SetScreenSize(Vector2 _screenSize)
+{
+	terrainBuffer->SetScreenSize(_screenSize);
 }
 
 shared_ptr<Terrain> Terrain::Create(UINT _terrainWidth, UINT _terrainHeight, wstring _heightMapPath)

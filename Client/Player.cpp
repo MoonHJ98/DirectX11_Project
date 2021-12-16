@@ -53,6 +53,14 @@ void Player::Render()
 	model->Render();
 }
 
+void Player::OnContact()
+{
+}
+
+void Player::OnTrigger()
+{
+}
+
 HRESULT Player::Initialize(ID3D11Device * _Device)
 {
 

@@ -24,6 +24,7 @@ private:
 	void ObjectInspector();
 	void ComponentPopup();
 
+
 private:
 	shared_ptr<Management> Manage = nullptr;
 	bool isObjectInspector = false;

@@ -22,11 +22,16 @@ public:
 	void RenderDepthForShadow(BOOL _renderDepthForShadow) { renderDepthForShadow = _renderDepthForShadow; }
 	bool GetisOrth() { return isOrtho; }
 	BOOL GetRenderDeptehForShadow() { return renderDepthForShadow; }
+
 public:
 	Vector3 GetPosition() { return transform->GetState(Transform::POSITION); }
 	vector<shared_ptr<Component>>& GetComponents() { return components; }
 	shared_ptr<Component> GetComponent(ComponentType componentType);
 	void AddComponent(ComponentType _componentType, shared_ptr<Component> _component);
+
+public:
+	virtual void OnContact() PURE;
+	virtual void OnTrigger() PURE;
 
 protected:
 	void UpdateComponent(float _timeDelta);

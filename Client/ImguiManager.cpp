@@ -72,25 +72,29 @@ void ImguiManager::Scene()
 	static int counter = 0;
 
 	ImGui::Begin("Scene");
-
+	
 
 	ID3D11ShaderResourceView* my_texture = Renderer::GetInstance()->GetBlendTexture();
 	ImGui::Image((void*)my_texture, ImVec2(ImGui::GetWindowSize().x, ImGui::GetWindowSize().y - 35.f));
 
 	ImVec2 MinPos;
-
-	Vector2 MousePos = Vector2(-1.f, -1.f);
-
+	
+	Vector2 MousePos = Vector2();
+	
 	MinPos = ImGui::GetItemRectMin();
+	ImVec2 sceneSize = ImGui::GetItemRectSize();
 
+	
+	//cout << MinPos.x << " , " << MinPos.y << endl;
 
 	MousePos = Vector2(ImGui::GetMousePos().x - MinPos.x, ImGui::GetMousePos().y - MinPos.y);
-
+	
+	//cout << MousePos.x << " , " << MousePos.y << endl;
 	// TODO : 이거 없애면 디퓨즈 빠지는거 해결하기.
-	//auto tempTerrain = Manage->FindGameObject(STATIC, L"Terrain");
-	//auto terrain = dynamic_pointer_cast<Terrain>(tempTerrain);
-	//
-	//terrain->PickTerrain(MousePos);
+	auto tempTerrain = Manage->FindGameObjectTest(STATIC, L"Terrain", L"Terrain");
+	auto terrain = dynamic_pointer_cast<Terrain>(tempTerrain);
+	terrain->SetScreenSize(Vector2(sceneSize.x, sceneSize.y));
+	terrain->SetScreenPos(MousePos);
 
 
 
@@ -205,6 +209,7 @@ void ImguiManager::ObjectInspector()
 	ImGui::Spacing();
 	ImGui::SetCursorPosX((float)ImGui::GetWindowSize().x / 4);
 
+	
 	ComponentPopup();
 
 }

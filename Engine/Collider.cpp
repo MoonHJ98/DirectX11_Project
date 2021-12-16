@@ -25,6 +25,10 @@ HRESULT Collider::Initialize(shared_ptr<GameObject> _object, PxGeometryType::Enu
 
 	geoType = _geoType;
 	shape = AddCollider();
+	shape->setContactOffset(PxReal(0.f));
+	shape->setRestOffset(PxReal(0.f));
+
+	
 
 	rigidbody = FindRigidbody();
 
@@ -60,7 +64,7 @@ shared_ptr<Rigidbody> Collider::FindRigidbody()
 
 void Collider::AddColliderToRigidbody()
 {
-	rigidbody.lock()->GetRigidBody().attachShape(*shape);
+	rigidbody.lock()->GetRigidBody()->attachShape(*shape);
 }
 
 void Collider::AddRigidBodyForCollider()
@@ -68,7 +72,12 @@ void Collider::AddRigidBodyForCollider()
 	auto rigid = Rigidbody::Create(object.lock());
 	rigidbody = rigid;
 
-	rigidbody.lock()->GetRigidBody().attachShape(*shape);
+
+	rigidbody.lock()->GetRigidBody()->attachShape(*shape);
+
+	auto actor = rigidbody.lock()->GetRigidBody();
+
+	PhysXManager::GetInstance()->SetupFiltering(actor, FilterGroup::eSUBMARINE, FilterGroup::eHEIGHTFIELD | FilterGroup::eSUBMARINE);
 
 	object.lock()->GetComponents()[ComponentType::RIGIDBODY] = rigidbody.lock();
 
@@ -90,7 +99,7 @@ void Collider::IsTrigger()
 		}
 
 	}
-
+	
 }
 
 void Collider::Transform()
@@ -142,3 +151,5 @@ shared_ptr<Collider> Collider::Create(shared_ptr<GameObject> _object, PxGeometry
 
 	return Instance;
 }
+
+

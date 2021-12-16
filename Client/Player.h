@@ -16,6 +16,8 @@ public:
 public:
 	virtual int Update(float _TimeDelta) override;
 	virtual void Render() override;
+	virtual void OnContact() override;
+	virtual void OnTrigger() override;
 
 public:
 	vector<shared_ptr<Bone>> GetBones() { return model->GetBones(); }

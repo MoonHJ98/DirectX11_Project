@@ -29,6 +29,8 @@ private:
 public:
 	virtual int Update(float _TimeDelta) override;
 	virtual void Render() override;
+	virtual void OnContact() override;
+	virtual void OnTrigger() override;
 
 public:
 	static shared_ptr<StaticCamera>	Create(CAMERADECS _Decs);

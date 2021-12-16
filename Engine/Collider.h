@@ -51,5 +51,6 @@ private:
 
 	bool isTrigger = false;
 	PxTransform localTransform;
+
 };
 

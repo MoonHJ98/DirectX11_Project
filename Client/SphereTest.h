@@ -22,6 +22,8 @@ public:
 public:
 	virtual int Update(float _TimeDelta) override;
 	virtual void Render() override;
+	virtual void OnContact() override;
+	virtual void OnTrigger() override;
 
 private:
 	HRESULT Initialize();

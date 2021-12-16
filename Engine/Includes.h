@@ -109,5 +109,9 @@ using namespace physx;
 #define MAX_MODEL_TRANSFORMS 250
 #define MAX_MODEL_KEYFRAMES 500
 
+#define ALLOC(x)	getSampleAllocator()->allocate(x, 0, __FILE__, __LINE__)
+#define	FREE(x)	if(x)	{ getSampleAllocator()->deallocate(x); x = NULL;	}
+#define NEW(x)	new(#x, __FILE__, __LINE__) x
+
 
 #include "Struct.h"

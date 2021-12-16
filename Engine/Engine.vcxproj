@@ -207,6 +207,7 @@
     <ClInclude Include="RenderTarget.h" />
     <ClInclude Include="HeightTerrainBuffer.h" />
     <ClInclude Include="TerrainBuffer.h" />
+    <ClInclude Include="TerrainComponent.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TimeManager.h" />
     <ClInclude Include="Timer.h" />
@@ -281,6 +282,7 @@
     <ClCompile Include="RenderTarget.cpp" />
     <ClCompile Include="HeightTerrainBuffer.cpp" />
     <ClCompile Include="TerrainBuffer.cpp" />
+    <ClCompile Include="TerrainComponent.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TimeManager.cpp" />
     <ClCompile Include="Timer.cpp" />

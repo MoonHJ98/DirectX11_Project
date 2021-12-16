@@ -39,6 +39,7 @@ public:
 	virtual void RenderInspector() override;
 	VertexType* GetVertices() { return vertices; }
 	Vector3 PickTerrain(Vector2 screenPos);
+	void SetScreenSize(Vector2 _screenSize) { screenWidth = (UINT)_screenSize.x; screenHeignt = (UINT)_screenSize.y; }
 
 
 private:

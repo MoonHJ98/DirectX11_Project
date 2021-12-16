@@ -7,6 +7,7 @@
 #include "MainApp.h"
 #include "TimeManager.h"
 #include "GraphicDevice.h"
+#include "PhysXManager.h"
 
 
 
@@ -80,7 +81,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 
 	//CloseWindow(GhWnd);
-
+	shared_ptr<PhysXManager> physxManager = PhysXManager::GetInstance();
+	physxManager->Initialize();
 
 	while (TRUE)
 	{
@@ -91,11 +93,16 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		}
 		FrameTimeDefault += TimeMgr->ComputeTimer(L"Timer_Default");
 
+
+		
+
 		if (1.f / 60.f <= FrameTimeDefault)
 		{
 			mainApp->Update(TimeMgr->ComputeTimer(L"Timer_60"));
 			mainApp->Render();
+			physxManager->RunSimulate(TimeMgr->ComputeTimer(L"Timer_60"));
 
+			
 
 			FrameTimeDefault = 0.f;
 		}

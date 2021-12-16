@@ -22,6 +22,9 @@ public:
 	// GameObject을(를) 통해 상속됨
 	virtual int Update(float _TimeDelta) override;
 	virtual void Render() override;
+	virtual void OnContact() override;
+	virtual void OnTrigger() override;
+
 
 private:
 	void RenderBuffer();
@@ -45,5 +48,7 @@ private:
 	weak_ptr<Collider> collider;
 	weak_ptr<Transform> objectTransform;
 	 
+
+
 };
 

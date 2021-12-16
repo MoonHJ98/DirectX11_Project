@@ -251,7 +251,7 @@ PxGroupsMask PxGetGroupsMask(const PxActor& actor);
 \param[in] actor The actor
 \param[in] mask The group mask to set for the actor.
 
-@see PxGetGroupsMask()
+@see PxGetGroupsMas
 */
 void PxSetGroupsMask(PxActor& actor, const PxGroupsMask& mask);
 

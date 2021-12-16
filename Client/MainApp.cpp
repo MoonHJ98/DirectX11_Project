@@ -65,8 +65,8 @@ HRESULT MainApp::Initialize()
 
 
 
-	auto player = Player::Create(GraphicDev->GetDevice());
-	Manage->AddLayerTest(SCENEID::STATIC, L"Player", player);
+	//auto player = Player::Create(GraphicDev->GetDevice());
+	//Manage->AddLayerTest(SCENEID::STATIC, L"Player", player);
 
 
 
@@ -83,8 +83,8 @@ HRESULT MainApp::Initialize()
 
 
 
-	physxManager = PhysXManager::GetInstance();
-	physxManager->Initialize();
+	//physxManager = PhysXManager::GetInstance();
+	//physxManager->Initialize();
 
 	return S_OK;
 }
@@ -116,7 +116,6 @@ HRESULT MainApp::ReadyScene(SCENEID sceneID)
 
 int MainApp::Update(float _timeDelta)
 {
-	physxManager->RunSimulate();
 	Manage->UpdateInputDevice();
 	
 	Manage->Update(_timeDelta);
@@ -134,6 +133,9 @@ void MainApp::Render()
 
 
 	GraphicDev->EndScene();
+
+	//physxManager->RunSimulate(10.f);
+
 }
 
 MainApp * MainApp::Create()

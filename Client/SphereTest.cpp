@@ -22,9 +22,10 @@ SphereTest::~SphereTest()
 
 int SphereTest::Update(float _TimeDelta)
 {
+	UpdateComponent(_TimeDelta);
+
 	Renderer::GetInstance()->AddRenderGroup(Renderer::RENDER_NONALPHA, shared_from_this());
 
-	UpdateComponent(_TimeDelta);
 	return 0;
 }
 
@@ -34,6 +35,15 @@ void SphereTest::Render()
 
 	sphere->Render();
 
+}
+
+void SphereTest::OnContact()
+{
+
+}
+
+void SphereTest::OnTrigger()
+{
 }
 
 HRESULT SphereTest::Initialize()

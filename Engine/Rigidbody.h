@@ -31,7 +31,7 @@ public:
 	virtual void RenderInspector() override;
 
 public:
-	PxRigidDynamic& GetRigidBody() { return *body; }
+	PxRigidDynamic* GetRigidBody() { return body; }
 	
 private:
 	void SetPosition();

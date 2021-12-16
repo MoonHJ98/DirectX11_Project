@@ -56,17 +56,21 @@ HRESULT StaticCamera::MouseInput(float _TimeDelta)
 {
 	LONG MouseMove = 0;
 
-	if (MouseMove = InputDevice::GetInstance()->GetDIMouseMove(InputDevice::DIMS_X))
-	{
-		transform->RotationAxis(XMFLOAT3(0.f, 1.f, 0.f), _TimeDelta * (float)MouseMove / 100.f);
-	}
 
-	if (MouseMove = InputDevice::GetInstance()->GetDIMouseMove(InputDevice::DIMS_Y))
+	if (InputDevice::GetInstance()->GetDIMouseState(InputDevice::DIM_RB) & 0x80)
 	{
-		XMFLOAT3 Right;
-		XMStoreFloat3(&Right, transform->GetState(Transform::RIGHT));
+		if (MouseMove = InputDevice::GetInstance()->GetDIMouseMove(InputDevice::DIMS_X))
+		{
+			transform->RotationAxis(XMFLOAT3(0.f, 1.f, 0.f), _TimeDelta * (float)MouseMove / 100.f);
+		}
 
-		transform->RotationAxis(Right, _TimeDelta * (float)MouseMove / 100.f);
+		if (MouseMove = InputDevice::GetInstance()->GetDIMouseMove(InputDevice::DIMS_Y))
+		{
+			XMFLOAT3 Right;
+			XMStoreFloat3(&Right, transform->GetState(Transform::RIGHT));
+
+			transform->RotationAxis(Right, _TimeDelta * (float)MouseMove / 100.f);
+		}
 	}
 
 	return S_OK;
@@ -113,6 +117,14 @@ void StaticCamera::Render()
 	CameraBuffer->SetData(Graphic->GetDeviceContext(), CameraBufferDesc);
 	auto buffer = CameraBuffer->GetBuffer();
 	Graphic->GetDeviceContext()->VSSetConstantBuffers(3, 1, &buffer);
+}
+
+void StaticCamera::OnContact()
+{
+}
+
+void StaticCamera::OnTrigger()
+{
 }
 
 shared_ptr<StaticCamera> StaticCamera::Create(CAMERADECS _Decs)

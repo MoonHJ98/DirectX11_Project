@@ -166,21 +166,23 @@ Vector3 TerrainBuffer::PickTerrain(Vector2 screenPos)
 			if (ray.Intersects(vertex1, vertex2, vertex3, dist))
 			{
 				Pos = ray.position + ray.direction * dist;
+				return Pos;
 			}
 			if (ray.Intersects(vertex4, vertex2, vertex3, dist))
 			{
 				Pos = ray.position + ray.direction * dist;
+				return Pos;
 			}
 		}
 	}
 
-	brushDesc.position = Pos;
-	brushBuffer->SetData(Graphic->GetDeviceContext(), brushDesc);
-	auto buffer = brushBuffer->GetBuffer();
-	Graphic->GetDeviceContext()->PSSetConstantBuffers(0, 1, &buffer);
+	//brushDesc.position = Pos;
+	//brushBuffer->SetData(Graphic->GetDeviceContext(), brushDesc);
+	//auto buffer = brushBuffer->GetBuffer();
+	//Graphic->GetDeviceContext()->PSSetConstantBuffers(0, 1, &buffer);
 
 	//cout << Pos.x << " , " << Pos.y << " , " << Pos.z << endl;
-	return Pos;
+	return Vector3(0.f, 0.f ,0.f);
 }
 
 void TerrainBuffer::RenderBuffers()

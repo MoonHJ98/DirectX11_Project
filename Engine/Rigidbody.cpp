@@ -29,6 +29,8 @@ HRESULT Rigidbody::Initialize(shared_ptr<GameObject> _object)
 	Vector3 pos = transform.lock()->GetState(Transform::POSITION);
 	body = AddRigidbody(pos);
 	body->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, true);
+	body->userData = object.lock().get();
+	
 
 
 
@@ -102,13 +104,10 @@ void Rigidbody::RenderInspector()
 
 void Rigidbody::SetPosition()
 {
-	//auto collider = dynamic_pointer_cast<Collider>(object.lock()->GetComponent(ComponentType::COLLIDER));
-	//PxVec3 localPos = collider->GetShape()->getLocalPose().p;
 	PxVec3 bodyPos = body->getGlobalPose().p;
 
-	PxVec3 pos = bodyPos;
-
-	transform.lock()->SetState(Transform::POSITION, Vector3(pos.x, pos.y, pos.z));
+	cout << bodyPos.y << endl;
+	transform.lock()->SetState(Transform::POSITION, Vector3(bodyPos.x, bodyPos.y, bodyPos.z));
 }
 
 

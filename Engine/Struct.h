@@ -327,8 +327,20 @@ typedef struct ColliderDesc
 	float halfHeight;
 }COLLIDERDESC;
 
-enum ComponentType { COLLIDER, TRANSFORM, SHADER, MATERIAL, RIGIDBODY, COMPONENT_END };
+enum ComponentType { COLLIDER, TRANSFORM, SHADER, MATERIAL, RIGIDBODY, TERRAIN, COMPONENT_END };
 enum RigidbodyType { DYNAMICRIGID, STATICRIGID, RIGIDBODY_END };
+
+struct FilterGroup
+{
+	enum Enum
+	{
+		eSUBMARINE = (1 << 0),
+		eMINE_HEAD = (1 << 1),
+		eMINE_LINK = (1 << 2),
+		eCRAB = (1 << 3),
+		eHEIGHTFIELD = (1 << 4),
+	};
+};
 
 void SplitString(vector<string>* result, string origin, string tok);
 void SplitString(vector<wstring>* result, wstring origin, wstring tok);
