@@ -342,6 +342,13 @@ struct FilterGroup
 	};
 };
 
+struct TerrainVertexType
+{
+	Vector3 position;
+	Vector3 normal;
+	Vector2 Uv;
+};
+
 void SplitString(vector<string>* result, string origin, string tok);
 void SplitString(vector<wstring>* result, wstring origin, wstring tok);
 

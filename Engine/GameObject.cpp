@@ -24,6 +24,12 @@ void GameObject::RenderComponentsIspector()
 	}
 }
 
+Vector3 GameObject::GetPosition()
+{
+	Vector3 pos = transform->GetState(Transform::POSITION);
+	return pos;
+}
+
 shared_ptr<Component> GameObject::GetComponent(ComponentType componentType)
 {
 	if (components[componentType])

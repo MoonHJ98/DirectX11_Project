@@ -7,12 +7,6 @@ class Management;
 
 class TerrainBuffer : public Component
 {
-	struct VertexType
-	{
-		Vector3 position;
-		Vector3 normal;
-		Vector2 Uv;
-	};
 
 	struct BrushDesc
 	{
@@ -37,7 +31,9 @@ public:
 	virtual int Update(float _timeDelta) override;
 	virtual void Render() override;
 	virtual void RenderInspector() override;
-	VertexType* GetVertices() { return vertices; }
+	TerrainVertexType* GetVertices() { return vertices; }
+	void CopyVertexArray(shared_ptr<TerrainVertexType>& _vertexList);
+	UINT GetVertexCount() { return vertexCount; }
 	Vector3 PickTerrain(Vector2 screenPos);
 	void SetScreenSize(Vector2 _screenSize) { screenWidth = (UINT)_screenSize.x; screenHeignt = (UINT)_screenSize.y; }
 
@@ -53,7 +49,7 @@ private:
 	ComPtr<ID3D11Buffer> vertexBuffer = nullptr;
 	ComPtr<ID3D11Buffer> indexBuffer = nullptr;
 
-	VertexType* vertices = nullptr;
+	TerrainVertexType* vertices = nullptr;
 	UINT* indices = nullptr;
 
 	UINT terrainWidth = 0;

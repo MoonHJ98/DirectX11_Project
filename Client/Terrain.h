@@ -2,14 +2,15 @@
 
 #include "GameObject.h"
 
-class HeightTerrainBuffer;
 class TerrainBuffer;
+class TerrainBufferTest;
 
 class Transform;
 class Shader;
 class Material;
 class TerrainComponent;
 class Management;
+class Quadtree;
 
 class Terrain :public GameObject, public enable_shared_from_this<Terrain> 
 {
@@ -40,10 +41,10 @@ public:
 	static shared_ptr<Terrain> Create(UINT _terrainWidth, UINT _terrainHeight, wstring _heightMapPath = L"");
 
 private:
-	shared_ptr<HeightTerrainBuffer> heightTerrainBuffer = nullptr;
 	shared_ptr<TerrainBuffer> terrainBuffer = nullptr;
+	shared_ptr<TerrainBufferTest> terrainTest = nullptr;
+	shared_ptr<Quadtree> quadtree = nullptr;
 
-	shared_ptr<Transform> transform = nullptr;
 	shared_ptr<Shader> shader = nullptr;
 	shared_ptr<Material> material = nullptr;
 	shared_ptr<TerrainComponent> terrainComponent = nullptr;

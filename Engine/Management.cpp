@@ -100,6 +100,11 @@ shared_ptr<GameObject> Management::FindGameObjectTest(int _SceneIndex, wstring _
 	return ObjectMgr->FindGameObjectTest(_SceneIndex, _LayerKey, _objKey);
 }
 
+shared_ptr<Frustum>& Management::GetFrustum()
+{
+	return renderer->GetFrustum();
+}
+
 map<wstring, shared_ptr<GameObject>>& Management::GetObjectsForImgui()
 {
 	return ObjectMgr->GetObjectsForImgui();

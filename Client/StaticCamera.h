@@ -2,6 +2,8 @@
 
 #include "Camera.h"
 
+class Frustum;
+
 class StaticCamera : public Camera
 {
 private:
@@ -38,6 +40,7 @@ public:
 private:
 	CameraBufferType CameraBufferDesc;
 	shared_ptr<ConstantBuffer<CameraBufferType>> CameraBuffer;
+
 
 };
 

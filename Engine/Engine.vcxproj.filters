@@ -136,17 +136,8 @@
     <Filter Include="01. Utility\03. Component\01. Buffer\01. TerrainBuffer">
       <UniqueIdentifier>{7217109f-5425-4120-a761-bed9a4212251}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Utility\03. Component\01. Buffer\02. HeightTerrainBuffer">
-      <UniqueIdentifier>{7c4f5bef-ce49-4cd6-8d0b-2c808319bc59}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. Includes\05. Imgui">
       <UniqueIdentifier>{5b97355f-037b-414b-ba60-5c5e829b3b31}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Utility\03. Component\01. Buffer\03. Capsule">
-      <UniqueIdentifier>{6054fc7d-eece-49cb-a9ee-81633f050e04}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Utility\03. Component\01. Buffer\04. Sphere">
-      <UniqueIdentifier>{f169b8c2-6aef-4360-ac7e-05ec9c825368}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. Includes\06. PhysX">
       <UniqueIdentifier>{6a331001-b9d3-4ef0-9c22-cb4d516dc811}</UniqueIdentifier>
@@ -165,6 +156,12 @@
     </Filter>
     <Filter Include="01. Utility\03. Component\09. Terrain">
       <UniqueIdentifier>{240d98b4-9df1-4c8c-b44c-1f57732743ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\03. Component\01. Buffer\02. Capsule">
+      <UniqueIdentifier>{6054fc7d-eece-49cb-a9ee-81633f050e04}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\03. Component\01. Buffer\03. Sphere">
+      <UniqueIdentifier>{f169b8c2-6aef-4360-ac7e-05ec9c825368}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -273,12 +270,6 @@
     <ClInclude Include="RectangleBuffer.h">
       <Filter>01. Utility\03. Component\01. Buffer\00. Rectangle</Filter>
     </ClInclude>
-    <ClInclude Include="TerrainBuffer.h">
-      <Filter>01. Utility\03. Component\01. Buffer\01. TerrainBuffer</Filter>
-    </ClInclude>
-    <ClInclude Include="HeightTerrainBuffer.h">
-      <Filter>01. Utility\03. Component\01. Buffer\02. HeightTerrainBuffer</Filter>
-    </ClInclude>
     <ClInclude Include="imgui.h">
       <Filter>02. Includes\05. Imgui</Filter>
     </ClInclude>
@@ -301,7 +292,7 @@
       <Filter>02. Includes\05. Imgui</Filter>
     </ClInclude>
     <ClInclude Include="Capsule.h">
-      <Filter>01. Utility\03. Component\01. Buffer\03. Capsule</Filter>
+      <Filter>01. Utility\03. Component\01. Buffer\02. Capsule</Filter>
     </ClInclude>
     <ClInclude Include="Collider.h">
       <Filter>02. Includes\06. PhysX\02. Collider</Filter>
@@ -316,7 +307,7 @@
       <Filter>02. Includes\05. Imgui</Filter>
     </ClInclude>
     <ClInclude Include="Sphere.h">
-      <Filter>01. Utility\03. Component\01. Buffer\04. Sphere</Filter>
+      <Filter>01. Utility\03. Component\01. Buffer\03. Sphere</Filter>
     </ClInclude>
     <ClInclude Include="Component.h">
       <Filter>01. Utility\03. Component</Filter>
@@ -328,6 +319,10 @@
       <Filter>02. Includes\06. PhysX\00. Manager</Filter>
     </ClInclude>
     <ClInclude Include="TerrainComponent.h" />
+    <ClInclude Include="Frustum.h" />
+    <ClInclude Include="Quadtree.h" />
+    <ClInclude Include="TerrainBufferTest.h" />
+    <ClInclude Include="TerrainBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -432,12 +427,6 @@
     <ClCompile Include="RectangleBuffer.cpp">
       <Filter>01. Utility\03. Component\01. Buffer\00. Rectangle</Filter>
     </ClCompile>
-    <ClCompile Include="TerrainBuffer.cpp">
-      <Filter>01. Utility\03. Component\01. Buffer\01. TerrainBuffer</Filter>
-    </ClCompile>
-    <ClCompile Include="HeightTerrainBuffer.cpp">
-      <Filter>01. Utility\03. Component\01. Buffer\02. HeightTerrainBuffer</Filter>
-    </ClCompile>
     <ClCompile Include="imgui.cpp">
       <Filter>02. Includes\05. Imgui</Filter>
     </ClCompile>
@@ -460,7 +449,7 @@
       <Filter>02. Includes\05. Imgui</Filter>
     </ClCompile>
     <ClCompile Include="Capsule.cpp">
-      <Filter>01. Utility\03. Component\01. Buffer\03. Capsule</Filter>
+      <Filter>01. Utility\03. Component\01. Buffer\02. Capsule</Filter>
     </ClCompile>
     <ClCompile Include="Collider.cpp">
       <Filter>02. Includes\06. PhysX\02. Collider</Filter>
@@ -472,7 +461,7 @@
       <Filter>02. Includes\05. Imgui</Filter>
     </ClCompile>
     <ClCompile Include="Sphere.cpp">
-      <Filter>01. Utility\03. Component\01. Buffer\04. Sphere</Filter>
+      <Filter>01. Utility\03. Component\01. Buffer\03. Sphere</Filter>
     </ClCompile>
     <ClCompile Include="Component.cpp">
       <Filter>01. Utility\03. Component</Filter>
@@ -484,6 +473,10 @@
       <Filter>02. Includes\06. PhysX\00. Manager</Filter>
     </ClCompile>
     <ClCompile Include="TerrainComponent.cpp" />
+    <ClCompile Include="Frustum.cpp" />
+    <ClCompile Include="Quadtree.cpp" />
+    <ClCompile Include="TerrainBufferTest.cpp" />
+    <ClCompile Include="TerrainBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="ModelVS.hlsl">

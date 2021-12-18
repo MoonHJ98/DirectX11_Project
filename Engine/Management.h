@@ -14,6 +14,7 @@ class LightManager;
 class Light;
 class Scene;
 class Renderer;
+class Frustum;
 
 class Management : public Base
 {
@@ -53,6 +54,9 @@ public:
 	map<wstring, pair<wstring, shared_ptr<GameObject>>>*  FindGameObjectListTest(int _Index, wstring _LayerKey);
 	shared_ptr<GameObject>         FindGameObjectTest(int _SceneIndex, wstring _LayerKey, wstring _objKey);
 
+
+	// Frustum
+	shared_ptr<Frustum>& GetFrustum();
 
 	map<wstring, shared_ptr<GameObject>>& GetObjectsForImgui();
 

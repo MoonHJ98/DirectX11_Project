@@ -11,6 +11,7 @@ class RenderTargetManager;
 class RectangleBuffer;
 class Transform;
 class Management;
+class Frustum;
 
 class Renderer
 {
@@ -32,6 +33,7 @@ public:
 public:
 	HRESULT Initialize();
 	ID3D11ShaderResourceView* GetBlendTexture();
+	shared_ptr<Frustum>& GetFrustum() { return frustum; }
 
 public:
 	void Render();
@@ -46,6 +48,7 @@ private:
 
 public:
 	HRESULT	AddRenderGroup(RENDERID ID, shared_ptr<GameObject> _gameObject);
+
 
 private:
 	shared_ptr<GraphicDevice> Graphic = nullptr;
@@ -62,5 +65,7 @@ private:
 
 	shared_ptr<ConstantBuffer<ProjtoWorldType>> projToWorld;
 	shared_ptr<Management> Manage = nullptr;
+
+	shared_ptr<Frustum> frustum = nullptr;
 };
 

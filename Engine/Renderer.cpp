@@ -8,6 +8,7 @@
 #include "RectangleBuffer.h"
 #include "Transform.h"
 #include "Management.h"
+#include "Frustum.h"
 
 
 HRESULT Renderer::Initialize()
@@ -64,6 +65,7 @@ HRESULT Renderer::Initialize()
 	projToWorld->Create(Graphic->GetDevice());
 
 	Manage = Management::GetInstance();
+	frustum = Frustum::Create();
 	return S_OK;
 }
 
@@ -102,6 +104,10 @@ void Renderer::RenderPriority()
 
 void Renderer::RenderNonAlpha()
 {
+	Matrix view = *Manage->GetTransform(D3DTRANSFORMSTATE_VIEW);
+	Matrix proj = *Manage->GetTransform(D3DTRANSFORMSTATE_PROJECTION);
+
+	frustum->UpdateFrustum(SCREENDEPTH, proj, view);
 
 	deferredBuffer->BeginMRT(L"Shadow");
 	
@@ -109,8 +115,11 @@ void Renderer::RenderNonAlpha()
 	{
 		if (nullptr != pGameObject)
 		{
-			pGameObject->RenderDepthForShadow(true);
-			pGameObject->Render();
+			//if (frustum->CheckPoint(&pGameObject->GetPosition()))
+			//{
+				pGameObject->RenderDepthForShadow(true);
+				pGameObject->Render();
+			//}
 		}
 	}
 	
@@ -125,8 +134,11 @@ void Renderer::RenderNonAlpha()
 	{
 		if (nullptr != pGameObject)
 		{
-			pGameObject->RenderDepthForShadow(false);
-			pGameObject->Render();
+			//if (frustum->CheckPoint(&pGameObject->GetPosition()))
+			//{
+				pGameObject->RenderDepthForShadow(false);
+				pGameObject->Render();
+			//}
 		}
 	}
 

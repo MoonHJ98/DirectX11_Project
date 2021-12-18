@@ -28,6 +28,7 @@ HRESULT Transform::Initialize(TRANSDESC _TransDecs)
 	MatrixBuffer.Create(Graphic->GetDevice());
 
 	Status = _TransDecs;
+	WorldMatrix = XMMatrixIdentity();
 	return S_OK;
 }
 

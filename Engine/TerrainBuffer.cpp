@@ -13,6 +13,8 @@ TerrainBuffer::TerrainBuffer(const TerrainBuffer & Rhs)
 
 TerrainBuffer::~TerrainBuffer()
 {
+	delete vertices;
+	vertices = nullptr;
 }
 
 HRESULT TerrainBuffer::Initialize(HWND _hWnd, UINT _terrainWidth, UINT _terrainHeight)
@@ -40,11 +42,11 @@ HRESULT TerrainBuffer::Initialize(HWND _hWnd, UINT _terrainWidth, UINT _terrainH
 
 HRESULT TerrainBuffer::InitializeBuffers()
 {
-	vector<VertexType> v;
+	vector<TerrainVertexType> v;
 
 
 	vertexCount = terrainWidth * terrainHeight;
-	vertices = new VertexType[vertexCount];
+	vertices = new TerrainVertexType[vertexCount];
 
 
 	for (UINT z = 0; z < terrainHeight; ++z)
@@ -83,7 +85,7 @@ HRESULT TerrainBuffer::InitializeBuffers()
 
 
 
-	CreateStaticBuffer(Graphic->GetDevice(), vertices, vertexCount, sizeof(VertexType), D3D11_BIND_VERTEX_BUFFER, vertexBuffer.GetAddressOf());
+	CreateStaticBuffer(Graphic->GetDevice(), vertices, vertexCount, sizeof(TerrainVertexType), D3D11_BIND_VERTEX_BUFFER, vertexBuffer.GetAddressOf());
 	CreateStaticBuffer(Graphic->GetDevice(), this->indices, indexCount, sizeof(UINT), D3D11_BIND_INDEX_BUFFER, indexBuffer.GetAddressOf());
 
 	return S_OK;
@@ -96,6 +98,12 @@ void TerrainBuffer::Render()
 
 void TerrainBuffer::RenderInspector()
 {
+}
+
+void TerrainBuffer::CopyVertexArray(shared_ptr<TerrainVertexType>& _vertexList)
+{
+	memcpy(_vertexList.get(), vertices, vertexCount * sizeof(TerrainVertexType));
+
 }
 
 Vector3 TerrainBuffer::PickTerrain(Vector2 screenPos)
@@ -188,7 +196,7 @@ Vector3 TerrainBuffer::PickTerrain(Vector2 screenPos)
 void TerrainBuffer::RenderBuffers()
 {
 	// 정점 버퍼 보폭 및 오프셋을 설정합니다.
-	unsigned int stride = sizeof(VertexType);
+	unsigned int stride = sizeof(TerrainVertexType);
 	unsigned int offset = 0;
 
 	// 렌더링 할 수 있도록 입력 어셈블러에서 정점 버퍼를 활성으로 설정합니다.
@@ -198,7 +206,7 @@ void TerrainBuffer::RenderBuffers()
 	Graphic->GetDeviceContext()->IASetIndexBuffer(indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 
 	// 이 버텍스 버퍼에서 렌더링되어야하는 프리미티브의 타입을 설정한다.이 경우 라인리스트이다.
-	Graphic->GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	Graphic->GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
 
 	Graphic->GetDeviceContext()->DrawIndexed(indexCount, 0, 0);
 }

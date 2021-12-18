@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "Terrain.h"
-#include "HeightTerrainBuffer.h"
 #include "Transform.h"
 #include "Shader.h"
 #include "Renderer.h"
@@ -13,6 +12,8 @@
 #include "Management.h"
 #include "StaticCamera.h"
 #include "ImguiManager.h"
+#include "Quadtree.h"
+#include "TerrainBufferTest.h"
 
 
 Terrain::Terrain()
@@ -33,7 +34,6 @@ HRESULT Terrain::Initialize(UINT _terrainWidth, UINT _terrainHeight, wstring _he
 	terrainHeight = _terrainHeight;
 	Graphic = GraphicDevice::GetInstance();
 	Manage = Management::GetInstance();
-	heightTerrainBuffer = HeightTerrainBuffer::Create(terrainWidth, terrainHeight, _heightMapPath);
 	transform = Transform::Create(Transform::TRANSDESC());
 	transform->SetObject(shared_from_this());
 
@@ -53,6 +53,9 @@ HRESULT Terrain::Initialize(UINT _terrainWidth, UINT _terrainHeight, wstring _he
 	material = Material::Create(desc);
 
 	terrainBuffer = TerrainBuffer::Create(GhWnd, 100, 100);
+	terrainTest = TerrainBufferTest::Create(/*"../Resources/heightmap.bmp"*/);
+	quadtree = Quadtree::Create(terrainTest);
+
 
 	terrainComponent = TerrainComponent::Create();
 
@@ -89,7 +92,9 @@ void Terrain::Render()
 			components[i]->Render();
 	}
 
-	terrainBuffer->Render();
+	quadtree->Render();
+
+	//terrainBuffer->Render();
 	//PickTerrain(Vector2());
 	//heightTerrainBuffer->Render();
 }

@@ -24,7 +24,7 @@ public:
 	BOOL GetRenderDeptehForShadow() { return renderDepthForShadow; }
 
 public:
-	Vector3 GetPosition() { return transform->GetState(Transform::POSITION); }
+	Vector3 GetPosition();
 	vector<shared_ptr<Component>>& GetComponents() { return components; }
 	shared_ptr<Component> GetComponent(ComponentType componentType);
 	void AddComponent(ComponentType _componentType, shared_ptr<Component> _component);

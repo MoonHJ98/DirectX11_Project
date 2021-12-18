@@ -171,6 +171,7 @@
     <ClInclude Include="Component.h" />
     <ClInclude Include="DeferredBuffer.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="Frustum.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GraphicDevice.h" />
     <ClInclude Include="imgui.h" />
@@ -194,6 +195,7 @@
     <ClInclude Include="ObjectManager.h" />
     <ClInclude Include="Path.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="Quadtree.h" />
     <ClInclude Include="Rigidbody.h" />
     <ClInclude Include="PhysXManager.h" />
     <ClInclude Include="PipeLine.h" />
@@ -205,8 +207,8 @@
     <ClInclude Include="Sphere.h" />
     <ClInclude Include="Struct.h" />
     <ClInclude Include="RenderTarget.h" />
-    <ClInclude Include="HeightTerrainBuffer.h" />
     <ClInclude Include="TerrainBuffer.h" />
+    <ClInclude Include="TerrainBufferTest.h" />
     <ClInclude Include="TerrainComponent.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TimeManager.h" />
@@ -227,6 +229,7 @@
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="DeferredBuffer.cpp" />
     <ClCompile Include="Engine.cpp" />
+    <ClCompile Include="Frustum.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GraphicDevice.cpp" />
     <ClCompile Include="imgui.cpp">
@@ -269,6 +272,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Quadtree.cpp" />
     <ClCompile Include="Rigidbody.cpp" />
     <ClCompile Include="PhysXManager.cpp" />
     <ClCompile Include="PipeLine.cpp" />
@@ -280,8 +284,8 @@
     <ClCompile Include="Sphere.cpp" />
     <ClCompile Include="Struct.cpp" />
     <ClCompile Include="RenderTarget.cpp" />
-    <ClCompile Include="HeightTerrainBuffer.cpp" />
     <ClCompile Include="TerrainBuffer.cpp" />
+    <ClCompile Include="TerrainBufferTest.cpp" />
     <ClCompile Include="TerrainComponent.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TimeManager.cpp" />

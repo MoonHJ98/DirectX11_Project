@@ -84,6 +84,8 @@ HRESULT StaticCamera::Initialize(CAMERADECS _Decs)
 	CameraBuffer = temp;
 	CameraBuffer->Create(Graphic->GetDevice());
 
+
+
 	return S_OK;
 }
 
