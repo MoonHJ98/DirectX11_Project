@@ -3,6 +3,7 @@
 #include "Management.h"
 #include "Transform.h"
 #include "GraphicDevice.h"
+#include "ImguiManager.h"
 
 StaticCamera::StaticCamera()
 {
@@ -109,6 +110,17 @@ int StaticCamera::Update(float _TimeDelta)
 
 	UpdateViewMatrix(positionVector, lookAtVector, upVector);
 
+
+	//Vector2 sceneSize = ImguiManager::GetInstance()->GetSceneSize();
+	//if (sceneSize.x != 0)
+	//{
+	//	Decs.ScreenWidth = sceneSize.x;
+	//	Decs.ScreenHeight = sceneSize.y;
+	//	Decs.ScreenAspect = sceneSize.x / sceneSize.y;
+	//}
+	UpdateProjectionMatrix(Decs.ScreenWidth, Decs.ScreenHeight, Decs.FiedOfView, Decs.ScreenAspect, Decs.Near, Decs.Far);
+
+
 	CameraBufferDesc.CameraPosition = positionVector;
 
 	return 0;
@@ -119,6 +131,8 @@ void StaticCamera::Render()
 	CameraBuffer->SetData(Graphic->GetDeviceContext(), CameraBufferDesc);
 	auto buffer = CameraBuffer->GetBuffer();
 	Graphic->GetDeviceContext()->VSSetConstantBuffers(3, 1, &buffer);
+
+
 }
 
 void StaticCamera::OnContact()

@@ -51,7 +51,7 @@ HRESULT MainApp::Initialize()
 
 	Manage->AddLight(lightDesc, L"DirectionalLight");
 
-
+	Vector2 screenSize = ImguiManager::GetInstance()->GetSceneSize();
 	Camera::CAMERADECS _decs;
 	_decs.Far = SCREENDEPTH;
 	_decs.Near = SCREENNEAR;

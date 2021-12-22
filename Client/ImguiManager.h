@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Includes.h"
 
 class Management;
 class GameObject;
@@ -11,6 +12,7 @@ class ImguiManager
 public:
 	HRESULT Initialize();
 	void Render();
+	Vector2 GetSceneSize() { return screenSize; }
 
 private:
 	void Frame();
@@ -30,5 +32,7 @@ private:
 	bool isObjectInspector = false;
 
 	weak_ptr<GameObject> objectForInspector;
+
+	Vector2 screenSize;
 };
 

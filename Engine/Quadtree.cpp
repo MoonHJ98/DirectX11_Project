@@ -5,7 +5,7 @@
 #include "Management.h"
 #include "Frustum.h"
 #include "GraphicDevice.h"
-#include "TerrainBufferTest.h"
+#include "DebugTree.h"
 
 
 Quadtree::Quadtree()
@@ -28,13 +28,14 @@ int Quadtree::Update(float _timeDelta)
 void Quadtree::Render()
 {
 	RenderNode(parentNode);
+	debugTree->Render();
 }
 
 void Quadtree::RenderInspector()
 {
 }
 
-HRESULT Quadtree::Initialize(shared_ptr<TerrainBufferTest> _terrainBuffer)
+HRESULT Quadtree::Initialize(shared_ptr<TerrainBuffer> _terrainBuffer)
 {
 	manage = Management::GetInstance();
 	graphic = GraphicDevice::GetInstance();
@@ -78,6 +79,8 @@ HRESULT Quadtree::Initialize(shared_ptr<TerrainBufferTest> _terrainBuffer)
 		vertexList.reset();
 		vertexList = nullptr;
 	}
+
+	debugTree = DebugTree::Create(parentNode);
 
 	return S_OK;
 }
@@ -233,6 +236,7 @@ void Quadtree::CreateTreeNode(shared_ptr<NodeType>& _node, float _positionX, flo
 	CreateStaticBuffer(GraphicDevice::GetInstance()->GetDevice(), vertices, vertexCount, sizeof(TerrainVertexType), D3D11_BIND_VERTEX_BUFFER, _node->vertexBuffer.GetAddressOf());
 	CreateStaticBuffer(GraphicDevice::GetInstance()->GetDevice(), indices, vertexCount, sizeof(ULONG), D3D11_BIND_INDEX_BUFFER, _node->indexBuffer.GetAddressOf());
 
+
 	delete[] vertices;
 	vertices = nullptr;
 
@@ -342,7 +346,7 @@ void Quadtree::RenderNode(shared_ptr<NodeType> _node)
 	graphic->GetDeviceContext()->DrawIndexed(indexCount, 0, 0);
 }
 
-shared_ptr<Quadtree> Quadtree::Create(shared_ptr<TerrainBufferTest> _terrainBuffer)
+shared_ptr<Quadtree> Quadtree::Create(shared_ptr<TerrainBuffer> _terrainBuffer)
 {
 	shared_ptr<Quadtree> Instance(new Quadtree());
 	if (FAILED(Instance->Initialize(_terrainBuffer)))

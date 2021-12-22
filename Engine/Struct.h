@@ -327,6 +327,19 @@ typedef struct ColliderDesc
 	float halfHeight;
 }COLLIDERDESC;
 
+struct NodeType
+{
+	float positionX = 0.f;
+	float positionZ = 0.f;
+	float width = 0.f;
+	int triangleCount = 0;
+	ComPtr<ID3D11Buffer> vertexBuffer;
+	ComPtr<ID3D11Buffer> indexBuffer;
+	shared_ptr<NodeType> nodes[4] = { NULL };
+
+};
+
+
 enum ComponentType { COLLIDER, TRANSFORM, SHADER, MATERIAL, RIGIDBODY, TERRAIN, COMPONENT_END };
 enum RigidbodyType { DYNAMICRIGID, STATICRIGID, RIGIDBODY_END };
 

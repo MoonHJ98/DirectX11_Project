@@ -1,12 +1,25 @@
 #pragma once
-
 #include "Component.h"
 
-class GraphicDevice;
+const int TEXTURE_REPEAT = 1;
+
 class Management;
+class GraphicDevice;
 
 class TerrainBuffer : public Component
 {
+private:
+	struct HeightMapType
+	{
+		float x, y, z;
+		float tu, tv;
+		float nx, ny, nz;
+	};
+
+	struct VectorType
+	{
+		float x, y, z;
+	};
 
 	struct BrushDesc
 	{
@@ -22,53 +35,47 @@ private:
 public:
 	~TerrainBuffer();
 
-private:
-	HRESULT Initialize(HWND _hWnd, UINT _terrainWidth, UINT _terrainHeight);
-	HRESULT InitializeBuffers();
-
-
 public:
 	virtual int Update(float _timeDelta) override;
 	virtual void Render() override;
 	virtual void RenderInspector() override;
-	TerrainVertexType* GetVertices() { return vertices; }
-	void CopyVertexArray(shared_ptr<TerrainVertexType>& _vertexList);
-	UINT GetVertexCount() { return vertexCount; }
+
+public:
+	int GetVertexCount();
+	void CopyVertexArray(void* vertexList);
 	Vector3 PickTerrain(Vector2 screenPos);
 	void SetScreenSize(Vector2 _screenSize) { screenWidth = (UINT)_screenSize.x; screenHeignt = (UINT)_screenSize.y; }
 
+private:
+	bool LoadHeightMap(const char* heightMapFilename);
+	void NormalizeHeightMap();
+	bool CalculateNormals();
+
+
+	void CalculateTextureCoordinates();
+	HRESULT InitializeBuffers();
+
 
 private:
-	void RenderBuffers();
+	HRESULT Initialize(const char* heightMapFilename);
 
 public:
-	static shared_ptr<TerrainBuffer> Create(HWND _hWnd, UINT _terrainWidth, UINT _terrainHeight);
+	static shared_ptr<TerrainBuffer> Create(const char* heightMapFilename = nullptr);
 
 private:
+	shared_ptr<Management> Manage = nullptr;
 	shared_ptr<GraphicDevice> Graphic = nullptr;
-	ComPtr<ID3D11Buffer> vertexBuffer = nullptr;
-	ComPtr<ID3D11Buffer> indexBuffer = nullptr;
 
+	int terrainWidth = 0;
+	int terrainHeight = 0;
+	HeightMapType* heightMap = nullptr;
+	int vertexCount = 0;
 	TerrainVertexType* vertices = nullptr;
-	UINT* indices = nullptr;
 
-	UINT terrainWidth = 0;
-	UINT terrainHeight = 0;
 	UINT screenWidth = 0;
 	UINT screenHeignt = 0;
 
-	UINT vertexCount = 0;
-	UINT indexCount = 0;
-
-	shared_ptr<Management> Manage = nullptr;
-	HWND hWnd;
-
 	BrushDesc brushDesc;
 	shared_ptr<ConstantBuffer<BrushDesc>> brushBuffer = nullptr;
-
-
-
-
-	//Vector2 screenPos = Vector2(0.f, 0.f);
 };
 

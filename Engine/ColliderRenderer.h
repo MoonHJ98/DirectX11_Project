@@ -42,8 +42,6 @@ private:
 
 	PxGeometryType::Enum geoType;
 
-	shared_ptr<Shader> shader = nullptr;
-
 	weak_ptr<GameObject> object;
 	weak_ptr<Collider> collider;
 	weak_ptr<Transform> objectTransform;

@@ -93,7 +93,7 @@ HRESULT ColliderRenderer::CreateBuffer(PxGeometryType::Enum _geoType)
 	if (!indices.empty())
 		CreateStaticBuffer(Graphic->GetDevice(), &indices[0], indices.size(), sizeof(uint16_t), D3D11_BIND_INDEX_BUFFER, indexBuffer.GetAddressOf());
 
-	return E_NOTIMPL;
+	return S_OK;
 }
 
 int ColliderRenderer::Update(float _TimeDelta)

@@ -13,7 +13,7 @@
 #include "StaticCamera.h"
 #include "ImguiManager.h"
 #include "Quadtree.h"
-#include "TerrainBufferTest.h"
+
 
 
 Terrain::Terrain()
@@ -52,9 +52,8 @@ HRESULT Terrain::Initialize(UINT _terrainWidth, UINT _terrainHeight, wstring _he
 
 	material = Material::Create(desc);
 
-	terrainBuffer = TerrainBuffer::Create(GhWnd, 100, 100);
-	terrainTest = TerrainBufferTest::Create(/*"../Resources/heightmap.bmp"*/);
-	quadtree = Quadtree::Create(terrainTest);
+	terrainBuffer = TerrainBuffer::Create(/*"../Resources/heightmap.bmp"*/);
+	quadtree = Quadtree::Create(terrainBuffer);
 
 
 	terrainComponent = TerrainComponent::Create();

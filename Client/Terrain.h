@@ -3,8 +3,6 @@
 #include "GameObject.h"
 
 class TerrainBuffer;
-class TerrainBufferTest;
-
 class Transform;
 class Shader;
 class Material;
@@ -42,7 +40,7 @@ public:
 
 private:
 	shared_ptr<TerrainBuffer> terrainBuffer = nullptr;
-	shared_ptr<TerrainBufferTest> terrainTest = nullptr;
+
 	shared_ptr<Quadtree> quadtree = nullptr;
 
 	shared_ptr<Shader> shader = nullptr;

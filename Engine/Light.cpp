@@ -5,6 +5,7 @@
 #include "Transform.h"
 #include "RectangleBuffer.h"
 
+
 Light::Light()
 {
 }
@@ -37,6 +38,11 @@ void Light::Render()
 	transform->Render();
 	
 	rectangleBuffer->Render();
+
+
+	//Vector2 sceneSize = ImguiManager::GetInstance()->GetSceneSize();
+	//transform->SetScale(Vector3(sceneSize.x, sceneSize.y, 1.f));
+
 }
 
 HRESULT Light::Initialize(LIGHTDESC _LightInfo)

@@ -3,26 +3,14 @@
 #include "Component.h"
 
 class TerrainBuffer;
-class TerrainBufferTest;
 class Management;
 class GraphicDevice;
+class DebugTree;
 
 const int MAX_TRIANGLES = 10000;
 
 class Quadtree : public Component
 {
-private:
-	struct NodeType
-	{
-		float positionX = 0.f;
-		float positionZ = 0.f;
-		float width = 0.f;
-		int triangleCount = 0;
-		ComPtr<ID3D11Buffer> vertexBuffer;
-		ComPtr<ID3D11Buffer> indexBuffer;
-		shared_ptr<NodeType> nodes[4] = { NULL };
-	};
-
 private:
 	Quadtree();
 	Quadtree(const Quadtree& Rhs);
@@ -38,7 +26,7 @@ public:
 
 
 private:
-	HRESULT Initialize(shared_ptr<TerrainBufferTest> _terrainBuffer);
+	HRESULT Initialize(shared_ptr<TerrainBuffer> _terrainBuffer);
 	void CalculateMeshDimensions(UINT _vertexCount, float& _centerX, float& _centerZ, float& _width);
 	void CreateTreeNode(shared_ptr<NodeType>& _node, float _positionX, float _positionZ, float _width);
 	int CountTriangles(float _positionX, float _positionZ, float _width);
@@ -46,7 +34,7 @@ private:
 	void RenderNode(shared_ptr<NodeType> _node);
 
 public:
-	static shared_ptr<Quadtree> Create(shared_ptr<TerrainBufferTest> _terrainBuffer);
+	static shared_ptr<Quadtree> Create(shared_ptr<TerrainBuffer> _terrainBuffer);
 
 private:
 	UINT triangleCount = 0;
@@ -55,5 +43,7 @@ private:
 
 	shared_ptr<Management> manage = nullptr;
 	shared_ptr<GraphicDevice> graphic = nullptr;
+
+	shared_ptr<DebugTree> debugTree = nullptr;
 };
 

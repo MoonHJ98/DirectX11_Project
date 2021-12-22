@@ -83,7 +83,7 @@ void ImguiManager::Scene()
 	
 	MinPos = ImGui::GetItemRectMin();
 	ImVec2 sceneSize = ImGui::GetItemRectSize();
-
+	screenSize = Vector2(sceneSize.x, sceneSize.y);
 	
 	//cout << MinPos.x << " , " << MinPos.y << endl;
 

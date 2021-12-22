@@ -3,9 +3,11 @@
 #include "Base.h"
 
 #include "Transform.h"
+#include "Shader.h"
 
 class GraphicDevice;
 class Component;
+
 
 
 class GameObject abstract : public Base
@@ -40,6 +42,7 @@ protected:
 protected:
 	shared_ptr<GraphicDevice> Graphic = nullptr;
 	shared_ptr<Transform>	transform = nullptr;
+	shared_ptr<Shader>		shader = nullptr;
 	float					TimeDelta = 0;
 
 	bool					isOrtho = false;

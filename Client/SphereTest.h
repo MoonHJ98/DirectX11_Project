@@ -32,7 +32,6 @@ public:
 	static shared_ptr<SphereTest> Create();
 
 private:
-	shared_ptr<Shader> shader = nullptr;
 	shared_ptr<Material> material = nullptr;
 	shared_ptr<Sphere> sphere = nullptr;
 	shared_ptr<Rigidbody> rigidbody = nullptr;

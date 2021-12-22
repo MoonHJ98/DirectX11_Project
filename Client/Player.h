@@ -29,7 +29,6 @@ public:
 
 private:
 	shared_ptr<Model> model;
-	shared_ptr<Shader> shader = nullptr;
 
 };
 
