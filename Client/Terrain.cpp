@@ -77,8 +77,8 @@ int Terrain::Update(float _TimeDelta)
 			components[i]->Update(_TimeDelta);
 	}
 
-	if(terrainComponent != nullptr && terrainComponent->IsTerrainComponentOpened())
-		PickTerrain(screenPos);
+	//if(terrainComponent != nullptr && terrainComponent->IsTerrainComponentOpened())
+	//	PickTerrain(screenPos);
 
 	return 0;
 }
@@ -106,10 +106,10 @@ void Terrain::OnTrigger()
 {
 }
 
-Vector3 Terrain::PickTerrain(Vector2 screenPos)
+Vector3 Terrain::PickTerrain(Vector2 screenPos, Vector2 _screenSize)
 {
-	Vector3 Pos = terrainBuffer->PickTerrain(screenPos);
-
+	Vector3 Pos = quadtree->PickTerrain(screenPos, _screenSize);
+	
 	//cout << Pos.x << " , " << Pos.y << " , " << Pos.z << endl;
 	return Pos;
 }

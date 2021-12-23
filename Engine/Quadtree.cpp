@@ -35,6 +35,17 @@ void Quadtree::RenderInspector()
 {
 }
 
+Vector3 Quadtree::PickTerrain(Vector2 _screenCursorPos, Vector2 _screenSize)
+{
+	if (debugTree == nullptr)
+		return Vector3(0.f, 0.f, 0.f);
+
+	if (_screenCursorPos.x < 0 || _screenCursorPos.x > _screenSize.x || _screenCursorPos.y < 0 || _screenCursorPos.y > _screenSize.y)
+		return Vector3(0.f, 0.f, 0.f);
+
+	return debugTree->PickTerrain(_screenCursorPos, _screenSize);
+}
+
 HRESULT Quadtree::Initialize(shared_ptr<TerrainBuffer> _terrainBuffer)
 {
 	manage = Management::GetInstance();
@@ -74,13 +85,8 @@ HRESULT Quadtree::Initialize(shared_ptr<TerrainBuffer> _terrainBuffer)
 	// 정점 목록 데이터와 메쉬 차원을 기반으로 쿼드트리를 재귀적으로 생성한다.
 	CreateTreeNode(parentNode, centerX, centerZ, width);
 
-	if (vertexList)
-	{
-		vertexList.reset();
-		vertexList = nullptr;
-	}
+	debugTree = DebugTree::Create(parentNode, vertexList);
 
-	debugTree = DebugTree::Create(parentNode);
 
 	return S_OK;
 }

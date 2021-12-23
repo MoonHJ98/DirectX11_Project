@@ -129,8 +129,8 @@ bool TerrainBuffer::LoadHeightMap(const char * heightMapFilename)
 {
 	if (heightMapFilename == nullptr)
 	{
-		terrainHeight = 250;
-		terrainWidth = 250;
+		terrainHeight = 200;
+		terrainWidth = 200;
 		heightMap = new HeightMapType[terrainWidth * terrainHeight];
 		for (int j = 0; j < terrainHeight; j++)
 		{

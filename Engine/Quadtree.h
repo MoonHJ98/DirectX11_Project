@@ -24,6 +24,9 @@ public:
 	virtual void Render() override;
 	virtual void RenderInspector() override;
 
+public:
+	Vector3 PickTerrain(Vector2 _screenCursorPos, Vector2 _screenSize);
+
 
 private:
 	HRESULT Initialize(shared_ptr<TerrainBuffer> _terrainBuffer);

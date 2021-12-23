@@ -93,9 +93,9 @@ void ImguiManager::Scene()
 	// TODO : 이거 없애면 디퓨즈 빠지는거 해결하기.
 	auto tempTerrain = Manage->FindGameObjectTest(STATIC, L"Terrain", L"Terrain");
 	auto terrain = dynamic_pointer_cast<Terrain>(tempTerrain);
-	terrain->SetScreenSize(Vector2(sceneSize.x, sceneSize.y));
-	terrain->SetScreenPos(MousePos);
-
+	//terrain->SetScreenSize(Vector2(sceneSize.x, sceneSize.y));
+	//terrain->SetScreenPos(MousePos);
+	terrain->PickTerrain(MousePos, screenSize);
 
 
 
