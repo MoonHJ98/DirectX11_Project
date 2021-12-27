@@ -51,16 +51,21 @@ HRESULT Quadtree::Initialize(shared_ptr<TerrainBuffer> _terrainBuffer)
 	manage = Management::GetInstance();
 	graphic = GraphicDevice::GetInstance();
 
+	vertexCount = _terrainBuffer->GetVertexCount();
+
 	float centerX = 0.f;
 	float centerZ = 0.f;
 	float width = 0.f;
 
-	UINT vertexCount = _terrainBuffer->GetVertexCount();
+	indexCount = _terrainBuffer->GetIndexCount();
 
 	triangleCount = vertexCount / 3;
 
 	shared_ptr<TerrainVertexType>tempVertexList(new TerrainVertexType[vertexCount]);
 	vertexList = tempVertexList;
+
+	shared_ptr<UINT>tempIndexList(new UINT[indexCount]);
+	indexList = tempIndexList;
 
 	if (vertexList == nullptr)
 	{
@@ -69,6 +74,7 @@ HRESULT Quadtree::Initialize(shared_ptr<TerrainBuffer> _terrainBuffer)
 	}
 
 	_terrainBuffer->CopyVertexArray(vertexList.get());
+	_terrainBuffer->CopyIndexArray(indexList.get());
 
 	// 중심 x, z와 너비를 계산
 	CalculateMeshDimensions(vertexCount, centerX, centerZ, width);
@@ -97,7 +103,7 @@ void Quadtree::CalculateMeshDimensions(UINT _vertexCount, float& _centerX, float
 	_centerZ = 0.f;
 
 	// 메쉬의 모든 정점을 합친다.
-	for (UINT i = 0; i< _vertexCount; ++i)
+	for (UINT i = 0; i < _vertexCount; ++i)
 	{
 		_centerX += vertexList.get()[i].position.x;
 		_centerZ += vertexList.get()[i].position.z;
@@ -174,7 +180,7 @@ void Quadtree::CreateTreeNode(shared_ptr<NodeType>& _node, float _positionX, flo
 			float offsetZ = (((i % 4) < 2) ? -1.f : 1.f) * (_width / 4.f);
 
 			// 새 노드에 삼각형이 있는지 확인
-			int count = CountTriangles((_positionX + offsetX), (_positionZ + offsetZ), (_width/ 2.f));
+			int count = CountTriangles((_positionX + offsetX), (_positionZ + offsetZ), (_width / 2.f));
 
 			if (count > 0)
 			{
@@ -183,26 +189,30 @@ void Quadtree::CreateTreeNode(shared_ptr<NodeType>& _node, float _positionX, flo
 				CreateTreeNode(_node->nodes[i], (_positionX + offsetX), (_positionZ + offsetZ), (_width / 2.f));
 
 			}
-	
+
 		}
 		return;
 	}
 
 	// 사례 3 : 이 노드가 비어있지 않고, 그 노드의 삼각형수가 최대 값 보다 작으면
-	// 이 노드는 ㅌ리의 맨 아래에 있으므로 저장할 삼각형 목록을 만든다.
+	// 이 노드는 트리의 맨 아래에 있으므로 저장할 삼각형 목록을 만든다.
 	_node->triangleCount = numTriangles;
 
 	//정점의 수를 계산.
 	int vertexCount = numTriangles * 3;
 
 	// 정점 배열 생성
+	//vector<TerrainVertexType> vertices;
 	TerrainVertexType* vertices = new TerrainVertexType[vertexCount];
 
-	ULONG* indices = new ULONG[vertexCount];
+	vector<UINT> indices;
 
 	// 이 새로운 정점 및 인덱스 배열의 인덱스를 초기화한다.
 	int index = 0;
 	int vertexIndex = 0;
+
+
+	//isTriangleContained(_positionX, _positionZ, _width, vertices, indices);
 
 	// 정점 목록의 모든 삼각형을 살펴본다.
 	for (UINT i = 0; i < triangleCount; ++i)
@@ -212,42 +222,47 @@ void Quadtree::CreateTreeNode(shared_ptr<NodeType>& _node, float _positionX, flo
 		{
 			// 지형 버텍스 목록에 인덱스를 계산한다.
 			vertexIndex = i * 3;
-
+	
 			// 지형 목록에서 이 삼각형의 세 꼭지점을 가져온다.
 			vertices[index].position = vertexList.get()[vertexIndex].position;
 			vertices[index].normal = vertexList.get()[vertexIndex].normal;
 			vertices[index].Uv = vertexList.get()[vertexIndex].Uv;
-			indices[index] = index;
+			//indices[index] = index;
+			indices.push_back(index);
 			++index;
-
+	
 			++vertexIndex;
 			vertices[index].position = vertexList.get()[vertexIndex].position;
 			vertices[index].normal = vertexList.get()[vertexIndex].normal;
 			vertices[index].Uv = vertexList.get()[vertexIndex].Uv;
-			indices[index] = index;
+			//indices[index] = index;
+			indices.push_back(index);
+	
 			++index;
-
+	
 			++vertexIndex;
 			vertices[index].position = vertexList.get()[vertexIndex].position;
 			vertices[index].normal = vertexList.get()[vertexIndex].normal;
 			vertices[index].Uv = vertexList.get()[vertexIndex].Uv;
-			indices[index] = index;
+			//indices[index] = index;
+			indices.push_back(index);
+	
 			++index;
 		}
 	}
 
 
-
 	// 정점, 인덱스 버퍼 생성.
 	CreateStaticBuffer(GraphicDevice::GetInstance()->GetDevice(), vertices, vertexCount, sizeof(TerrainVertexType), D3D11_BIND_VERTEX_BUFFER, _node->vertexBuffer.GetAddressOf());
-	CreateStaticBuffer(GraphicDevice::GetInstance()->GetDevice(), indices, vertexCount, sizeof(ULONG), D3D11_BIND_INDEX_BUFFER, _node->indexBuffer.GetAddressOf());
+	CreateStaticBuffer(GraphicDevice::GetInstance()->GetDevice(), &indices[0], indices.size(), sizeof(UINT), D3D11_BIND_INDEX_BUFFER, _node->indexBuffer.GetAddressOf());
 
+	_node->indexCount = indices.size();
 
-	delete[] vertices;
-	vertices = nullptr;
+	//delete[] vertices;
+	//vertices = nullptr;
 
-	delete[] indices;
-	indices = nullptr;
+	//delete[] indices;
+	//indices = nullptr;
 
 }
 
@@ -255,7 +270,7 @@ int Quadtree::CountTriangles(float _positionX, float _positionZ, float _width)
 {
 	// 카운트를 초기화한다.
 	int count = 0;
-	
+
 	// 전체 메쉬의 모든 삼각형을 살펴보고 어떤 노드가 이 노드안에 있는지 확인한다.
 	for (UINT i = 0; i < triangleCount; ++i)
 	{
@@ -263,7 +278,7 @@ int Quadtree::CountTriangles(float _positionX, float _positionZ, float _width)
 		if (isTriangleContained(i, _positionX, _positionZ, _width))
 			++count;
 	}
-	
+
 	return count;
 }
 
@@ -274,6 +289,7 @@ bool Quadtree::isTriangleContained(int _index, float _positionX, float _position
 
 	// 인덱스를 정점 목록으로 가져온다.
 	int vertexIndex = _index * 3;
+
 
 	// 정점 목록에서 이 삼각형의 세 꼭지점을 가져온다.
 	float x1 = vertexList.get()[vertexIndex].position.x;
@@ -318,7 +334,7 @@ void Quadtree::RenderNode(shared_ptr<NodeType> _node)
 	if (frustum == nullptr)
 		return;
 
-	if(!frustum->CheckCube(Vector3(_node->positionX, 0.f, _node->positionZ), _node->width / 2.f))
+	if (!frustum->CheckCube(Vector3(_node->positionX, 0.f, _node->positionZ), _node->width / 2.f))
 		return;
 
 	int count = 0;
@@ -345,11 +361,48 @@ void Quadtree::RenderNode(shared_ptr<NodeType> _node)
 	graphic->GetDeviceContext()->IASetIndexBuffer(_node->indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 
 	// 이 버텍스 버퍼에서 렌더링되어야하는 프리미티브의 타입을 설정한다.이 경우 라인리스트이다.
-	graphic->GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	graphic->GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
 
 	int indexCount = _node->triangleCount * 3;
 
-	graphic->GetDeviceContext()->DrawIndexed(indexCount, 0, 0);
+	//graphic->GetDeviceContext()->Draw(_node->indexCount, 0);
+	graphic->GetDeviceContext()->DrawIndexed(_node->indexCount, 0, 0);
+}
+
+void Quadtree::isTriangleContained(float _positionX, float _positionZ, float _width, vector<TerrainVertexType>& vertices, vector<UINT>& indices)
+{
+	// 이 노드의 반경을 계산.
+	float radius = _width / 2.f;
+
+	int index = 0;
+	int terrainHeight = 50;
+	int terrainWidth = 50;
+
+	for (int z = 0; z < terrainHeight; ++z)
+	{
+		for (int x = 0; x < terrainWidth; ++x)
+		{
+			int index = terrainWidth * z + x;
+			auto vertex = vertexList.get()[index];
+			if(vertex.position.x >= _positionX - radius && vertex.position.x <= _positionX + radius &&
+				vertex.position.z >= _positionZ - radius && vertex.position.z <= _positionZ + radius)
+			vertices.push_back(vertexList.get()[index]);
+		}
+	}
+
+	for (int i = 0; i < indexCount; ++i)
+	{
+		int index = indexList.get()[i];
+		auto vertex = vertexList.get()[index];
+		if (vertex.position.x >= _positionX - radius && vertex.position.x <= _positionX + radius &&
+			vertex.position.z >= _positionZ - radius && vertex.position.z <= _positionZ + radius)
+			indices.push_back(index);
+
+	}
+
+	int a = 10;
+	auto b = indices.size();
+
 }
 
 shared_ptr<Quadtree> Quadtree::Create(shared_ptr<TerrainBuffer> _terrainBuffer)

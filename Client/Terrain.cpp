@@ -52,7 +52,7 @@ HRESULT Terrain::Initialize(UINT _terrainWidth, UINT _terrainHeight, wstring _he
 
 	material = Material::Create(desc);
 
-	terrainBuffer = TerrainBuffer::Create(/*"../Resources/heightmap.bmp"*/);
+	terrainBuffer = TerrainBuffer::Create(terrainWidth, _terrainHeight);
 	quadtree = Quadtree::Create(terrainBuffer);
 
 
@@ -91,9 +91,9 @@ void Terrain::Render()
 			components[i]->Render();
 	}
 
-	quadtree->Render();
+	//quadtree->Render();
 
-	//terrainBuffer->Render();
+	terrainBuffer->Render();
 	//PickTerrain(Vector2());
 	//heightTerrainBuffer->Render();
 }
@@ -108,15 +108,18 @@ void Terrain::OnTrigger()
 
 Vector3 Terrain::PickTerrain(Vector2 screenPos, Vector2 _screenSize)
 {
-	Vector3 Pos = quadtree->PickTerrain(screenPos, _screenSize);
-	
-	//cout << Pos.x << " , " << Pos.y << " , " << Pos.z << endl;
+	//Vector3 Pos = quadtree->PickTerrain(screenPos, _screenSize);
+
+	//if (screenPos.x < 0 || screenPos.x > _screenSize.x || screenPos.y < 0 || screenPos.y > _screenSize.y)
+	//	return Vector3(0.f, 0.f, 0.f);
+	Vector3 Pos = terrainBuffer->PickTerrain(screenPos);
+
 	return Pos;
 }
 
 void Terrain::SetScreenSize(Vector2 _screenSize)
 {
-	terrainBuffer->SetScreenSize(_screenSize);
+	//terrainBuffer->SetScreenSize(_screenSize);
 }
 
 shared_ptr<Terrain> Terrain::Create(UINT _terrainWidth, UINT _terrainHeight, wstring _heightMapPath)

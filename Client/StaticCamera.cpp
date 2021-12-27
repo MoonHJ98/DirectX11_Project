@@ -111,7 +111,7 @@ int StaticCamera::Update(float _TimeDelta)
 	UpdateViewMatrix(positionVector, lookAtVector, upVector);
 
 
-	//Vector2 sceneSize = ImguiManager::GetInstance()->GetSceneSize();
+	Vector2 sceneSize = ImguiManager::GetInstance()->GetSceneSize();
 	//if (sceneSize.x != 0)
 	//{
 	//	Decs.ScreenWidth = sceneSize.x;

@@ -1,7 +1,7 @@
 ﻿#include "pch.h"
 #include "TerrainBuffer.h"
-#include "Management.h"
 #include "GraphicDevice.h"
+#include "Management.h"
 
 TerrainBuffer::TerrainBuffer()
 {
@@ -22,21 +22,197 @@ int TerrainBuffer::Update(float _timeDelta)
 
 void TerrainBuffer::Render()
 {
+	RenderBuffers();
 }
 
 void TerrainBuffer::RenderInspector()
 {
 }
 
-int TerrainBuffer::GetVertexCount()
+HRESULT TerrainBuffer::Initialize(UINT _terrainWidth, UINT _terrainHeight, const char* heightMapFilename)
 {
-	return vertexCount;
+	Graphic = GraphicDevice::GetInstance();
+	Manage = Management::GetInstance();
+
+	terrainWidth = _terrainWidth;
+	terrainHeight = _terrainHeight;
+
+	UINT viewportNum = 1;
+	D3D11_VIEWPORT viewport;
+	Graphic->GetDeviceContext()->RSGetViewports(&viewportNum, &viewport);
+
+
+	screenWidth = (UINT)viewport.Width;
+	screenHeignt = (UINT)viewport.Height;
+
+	shared_ptr<ConstantBuffer<BrushDesc>> temp(new ConstantBuffer<BrushDesc>());
+	brushBuffer = temp;
+	brushBuffer->Create(Graphic->GetDevice());
+
+	// 지형의 높이 맵을 로드합니다.
+	if (!LoadHeightMap(heightMapFilename))
+		return E_FAIL;
+
+
+	// 높이 맵의 높이를 표준화합니다.
+	NormalizeHeightMap();
+
+	// 지형 데이터의 법선을 계산합니다.
+	if (!CalculateNormals())
+		return E_FAIL;
+
+
+	// 텍스처 좌표를 계산합니다.
+	CalculateTextureCoordinates();
+
+	return InitializeBuffers();
 }
 
-void TerrainBuffer::CopyVertexArray(void * vertexList)
+HRESULT TerrainBuffer::InitializeBuffers()
 {
-	memcpy(vertexList, vertices, sizeof(TerrainVertexType) * vertexCount);
+	//vector<TerrainVertexType> v;
+	//
+	//
+	//vertexCount = terrainWidth * terrainHeight;
+	//vertices = new TerrainVertexType[vertexCount];
+	//
+	//
+	//for (int z = 0; z < terrainHeight; ++z)
+	//{
+	//	for (int x = 0; x < terrainWidth; ++x)
+	//	{
+	//
+	//		int index = terrainWidth * z + x;
+	//		vertices[index].position = Vector3((float)x, 0.f, (float)z);
+	//		vertices[index].normal = Vector3(0.f, 1.f, 0.f);
+	//		vertices[index].Uv = Vector2((float)x / (float)terrainWidth, (float)(terrainHeight - 1 - z) / (float)terrainHeight);
+	//
+	//	}
+	//}
+	//
+	//vector<UINT> indices;
+	//
+	//for (int z = 0; z < terrainHeight - 1; ++z)
+	//{
+	//	for (int x = 0; x < terrainWidth - 1; ++x)
+	//	{
+	//		indices.push_back(terrainWidth * z + x);
+	//		indices.push_back(terrainWidth * (z + 1) + x);
+	//		indices.push_back(terrainWidth * z + x + 1);
+	//
+	//		indices.push_back(terrainWidth * z + x + 1);
+	//		indices.push_back(terrainWidth * (z + 1) + x);
+	//		indices.push_back(terrainWidth * (z + 1) + x + 1);
+	//	}
+	//}
+	//
+	//indexCount = indices.size();
+	//this->indices = new UINT[indexCount];
+	//
+	//copy(indices.begin(), indices.end(), this->indices);
+	//
+	//
+	//
+	//CreateStaticBuffer(Graphic->GetDevice(), vertices, vertexCount, sizeof(TerrainVertexType), D3D11_BIND_VERTEX_BUFFER, vertexBuffer.GetAddressOf());
+	//CreateStaticBuffer(Graphic->GetDevice(), this->indices, indexCount, sizeof(UINT), D3D11_BIND_INDEX_BUFFER, indexBuffer.GetAddressOf());
+
+
+	float tu = 0.0f;
+	float tv = 0.0f;
+
+	// 지형 메쉬의 정점 수를 계산합니다.
+	vertexCount = (terrainWidth - 1) * (terrainHeight - 1) * 6;
+
+	// 정점 배열을 만듭니다.
+	vertices = new TerrainVertexType[vertexCount];
+	if (!vertices)
+	{
+		return E_FAIL;
+	}
+
+	// 정점 배열에 대한 인덱스를 초기화합니다.
+	int index = 0;
+
+	// 지형 데이터로 정점 및 인덱스 배열을 로드합니다.
+	for (int j = 0; j < (terrainHeight - 1); j++)
+	{
+		for (int i = 0; i < (terrainWidth - 1); i++)
+		{
+			int index1 = (terrainHeight * j) + i;          // 왼쪽 아래.
+			int index2 = (terrainHeight * j) + (i + 1);      // 오른쪽 아래.
+			int index3 = (terrainHeight * (j + 1)) + i;      // 왼쪽 위.
+			int index4 = (terrainHeight * (j + 1)) + (i + 1);  // 오른쪽 위.
+
+			// 왼쪽 위.
+			tv = heightMap[index3].tv;
+
+			// 상단 가장자리를 덮도록 텍스처 좌표를 수정합니다.
+			if (tv == 1.0f) { tv = 0.0f; }
+
+			vertices[index].position = XMFLOAT3(heightMap[index3].x, heightMap[index3].y, heightMap[index3].z);
+			vertices[index].Uv = XMFLOAT2(heightMap[index3].tu, tv);
+			vertices[index].normal = XMFLOAT3(heightMap[index3].nx, heightMap[index3].ny, heightMap[index3].nz);
+			index++;
+
+			// 오른쪽 위.
+			tu = heightMap[index4].tu;
+			tv = heightMap[index4].tv;
+
+			// 위쪽과 오른쪽 가장자리를 덮도록 텍스처 좌표를 수정합니다.
+			if (tu == 0.0f) { tu = 1.0f; }
+			if (tv == 1.0f) { tv = 0.0f; }
+
+			vertices[index].position = XMFLOAT3(heightMap[index4].x, heightMap[index4].y, heightMap[index4].z);
+			vertices[index].Uv = XMFLOAT2(tu, tv);
+			vertices[index].normal = XMFLOAT3(heightMap[index4].nx, heightMap[index4].ny, heightMap[index4].nz);
+			index++;
+
+			// 왼쪽 아래.
+			vertices[index].position = XMFLOAT3(heightMap[index1].x, heightMap[index1].y, heightMap[index1].z);
+			vertices[index].Uv = XMFLOAT2(heightMap[index1].tu, heightMap[index1].tv);
+			vertices[index].normal = XMFLOAT3(heightMap[index1].nx, heightMap[index1].ny, heightMap[index1].nz);
+			index++;
+
+			// 왼쪽 아래.
+			vertices[index].position = XMFLOAT3(heightMap[index1].x, heightMap[index1].y, heightMap[index1].z);
+			vertices[index].Uv = XMFLOAT2(heightMap[index1].tu, heightMap[index1].tv);
+			vertices[index].normal = XMFLOAT3(heightMap[index1].nx, heightMap[index1].ny, heightMap[index1].nz);
+			index++;
+
+			// 오른쪽 위.
+			tu = heightMap[index4].tu;
+			tv = heightMap[index4].tv;
+
+			// 위쪽과 오른쪽 가장자리를 덮도록 텍스처 좌표를 수정합니다.
+			if (tu == 0.0f) { tu = 1.0f; }
+			if (tv == 1.0f) { tv = 0.0f; }
+
+			vertices[index].position = XMFLOAT3(heightMap[index4].x, heightMap[index4].y, heightMap[index4].z);
+			vertices[index].Uv = XMFLOAT2(tu, tv);
+			vertices[index].normal = XMFLOAT3(heightMap[index4].nx, heightMap[index4].ny, heightMap[index4].nz);
+			index++;
+
+			// 오른쪽 아래.
+			tu = heightMap[index2].tu;
+
+			// 오른쪽 가장자리를 덮도록 텍스처 좌표를 수정합니다.
+			if (tu == 0.0f) { tu = 1.0f; }
+
+			vertices[index].position = XMFLOAT3(heightMap[index2].x, heightMap[index2].y, heightMap[index2].z);
+			vertices[index].Uv = XMFLOAT2(tu, heightMap[index2].tv);
+			vertices[index].normal = XMFLOAT3(heightMap[index2].nx, heightMap[index2].ny, heightMap[index2].nz);
+			index++;
+		}
+	}
+
+
+	// 정점, 인덱스 버퍼 생성.
+	CreateStaticBuffer(GraphicDevice::GetInstance()->GetDevice(), vertices, vertexCount, sizeof(TerrainVertexType), D3D11_BIND_VERTEX_BUFFER, vertexBuffer.GetAddressOf());
+
+
+	return S_OK;
 }
+
 
 Vector3 TerrainBuffer::PickTerrain(Vector2 screenPos)
 {
@@ -82,56 +258,137 @@ Vector3 TerrainBuffer::PickTerrain(Vector2 screenPos)
 
 	Vector3 Pos;
 
-	for (int z = 0; z < terrainHeight - 1; ++z)
+	for (int i = 0; i < vertexCount; i++)
 	{
-		for (int x = 0; x < terrainWidth - 1; ++x)
+		int index0 = i;
+		int index1 = i + 1;
+		int index2 = i + 2;
+		int index3 = i + 3;
+		int index4 = i + 4;
+		int index5 = i + 5;
+
+		ray.position = RayPos;
+
+		ray.direction = RayDir;
+
+		Vector3 vertex1 = vertices[index0].position;
+		Vector3 vertex2 = vertices[index1].position;
+		Vector3 vertex3 = vertices[index2].position;
+		Vector3 vertex4 = vertices[index3].position;
+		Vector3 vertex5 = vertices[index4].position;
+		Vector3 vertex6 = vertices[index5].position;
+
+
+		if (ray.Intersects(vertex1, vertex2, vertex3, dist))
 		{
-			int	index[4] = { -1 };
-			index[0] = terrainWidth * z + x;
-			index[1] = terrainWidth * (z + 1) + x;
-			index[2] = terrainWidth * z + x + 1;
-			index[3] = terrainWidth * (z + 1) + (x + 1);
-
-
-			Vector3 vertex1 = vertices[index[0]].position;
-			Vector3 vertex2 = vertices[index[1]].position;
-			Vector3 vertex3 = vertices[index[2]].position;
-			Vector3 vertex4 = vertices[index[3]].position;
-
-			ray.position = RayPos;
-
-			ray.direction = RayDir;
-
-
-			if (ray.Intersects(vertex1, vertex2, vertex3, dist))
-			{
-				Pos = ray.position + ray.direction * dist;
-				return Pos;
-			}
-			if (ray.Intersects(vertex4, vertex2, vertex3, dist))
-			{
-				Pos = ray.position + ray.direction * dist;
-				return Pos;
-			}
+			Pos = ray.position + ray.direction * dist;
+			brushDesc.position = Pos;
+			brushBuffer->SetData(Graphic->GetDeviceContext(), brushDesc);
+			auto buffer = brushBuffer->GetBuffer();
+			Graphic->GetDeviceContext()->PSSetConstantBuffers(0, 1, &buffer);
+			return Pos;
+		}
+		if (ray.Intersects(vertex4, vertex5, vertex6, dist))
+		{
+			Pos = ray.position + ray.direction * dist;
+			brushDesc.position = Pos;
+			brushBuffer->SetData(Graphic->GetDeviceContext(), brushDesc);
+			auto buffer = brushBuffer->GetBuffer();
+			Graphic->GetDeviceContext()->PSSetConstantBuffers(0, 1, &buffer);
+			return Pos;
 		}
 	}
 
-	//brushDesc.position = Pos;
-	//brushBuffer->SetData(Graphic->GetDeviceContext(), brushDesc);
-	//auto buffer = brushBuffer->GetBuffer();
-	//Graphic->GetDeviceContext()->PSSetConstantBuffers(0, 1, &buffer);
+
+
+	//for (int z = 0; z < terrainHeight - 1; ++z)
+	//{
+	//	for (int x = 0; x < terrainWidth - 1; ++x)
+	//	{
+	//		int	index[4];
+	//		index[0] = terrainWidth * z + x;
+	//		index[1] = terrainWidth * (z + 1) + x;
+	//		index[2] = terrainWidth * z + x + 1;
+	//		index[3] = terrainWidth * (z + 1) + (x + 1);
+	//
+	//
+	//		Vector3 vertex1 = vertices[index[0]].position;
+	//		Vector3 vertex2 = vertices[index[1]].position;
+	//		Vector3 vertex3 = vertices[index[2]].position;
+	//		Vector3 vertex4 = vertices[index[3]].position;
+	//
+	//		ray.position = RayPos;
+	//
+	//		ray.direction = RayDir;
+	//
+	//
+	//		if (ray.Intersects(vertex1, vertex2, vertex3, dist))
+	//		{
+	//			Pos = ray.position + ray.direction * dist;
+	//		}
+	//		if (ray.Intersects(vertex4, vertex2, vertex3, dist))
+	//		{
+	//			Pos = ray.position + ray.direction * dist;
+	//		}
+	//	}
+	//}
+
+	brushDesc.position = Pos;
+	brushBuffer->SetData(Graphic->GetDeviceContext(), brushDesc);
+	auto buffer = brushBuffer->GetBuffer();
+	Graphic->GetDeviceContext()->PSSetConstantBuffers(0, 1, &buffer);
 
 	//cout << Pos.x << " , " << Pos.y << " , " << Pos.z << endl;
-	return Vector3(0.f, 0.f, 0.f);
+	return Pos;
+}
+
+int TerrainBuffer::GetVertexCount()
+{
+	return vertexCount;
+}
+
+int TerrainBuffer::GetIndexCount()
+{
+	return indexCount;
+}
+
+void TerrainBuffer::CopyVertexArray(void * vertexList)
+{
+	memcpy(vertexList, vertices, sizeof(TerrainVertexType) * vertexCount);
+
+}
+
+void TerrainBuffer::CopyIndexArray(void * indexList)
+{
+	memcpy(indexList, indices, sizeof(UINT) * indexCount);
+
+}
+
+void TerrainBuffer::RenderBuffers()
+{
+	// 정점 버퍼 보폭 및 오프셋을 설정합니다.
+	unsigned int stride = sizeof(TerrainVertexType);
+	unsigned int offset = 0;
+
+	// 렌더링 할 수 있도록 입력 어셈블러에서 정점 버퍼를 활성으로 설정합니다.
+	Graphic->GetDeviceContext()->IASetVertexBuffers(0, 1, vertexBuffer.GetAddressOf(), &stride, &offset);
+
+	// 렌더링 할 수 있도록 입력 어셈블러에서 인덱스 버퍼를 활성으로 설정합니다.
+	Graphic->GetDeviceContext()->IASetIndexBuffer(indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+
+	// 이 버텍스 버퍼에서 렌더링되어야하는 프리미티브의 타입을 설정한다.이 경우 라인리스트이다.
+	Graphic->GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	Graphic->GetDeviceContext()->Draw(vertexCount, 0);
+	//Graphic->GetDeviceContext()->DrawIndexed(indexCount, 0, 0);
 }
 
 bool TerrainBuffer::LoadHeightMap(const char * heightMapFilename)
 {
 	if (heightMapFilename == nullptr)
 	{
-		terrainHeight = 200;
-		terrainWidth = 200;
 		heightMap = new HeightMapType[terrainWidth * terrainHeight];
+
 		for (int j = 0; j < terrainHeight; j++)
 		{
 			for (int i = 0; i < terrainWidth; i++)
@@ -436,134 +693,10 @@ void TerrainBuffer::CalculateTextureCoordinates()
 	}
 }
 
-
-HRESULT TerrainBuffer::InitializeBuffers()
-{
-	float tu = 0.0f;
-	float tv = 0.0f;
-
-	// 지형 메쉬의 정점 수를 계산합니다.
-	vertexCount = (terrainWidth - 1) * (terrainHeight - 1) * 6;
-
-	// 정점 배열을 만듭니다.
-	vertices = new TerrainVertexType[vertexCount];
-	if (!vertices)
-	{
-		return E_FAIL;
-	}
-
-	// 정점 배열에 대한 인덱스를 초기화합니다.
-	int index = 0;
-
-	// 지형 데이터로 정점 및 인덱스 배열을 로드합니다.
-	for (int j = 0; j < (terrainHeight - 1); j++)
-	{
-		for (int i = 0; i < (terrainWidth - 1); i++)
-		{
-			int index1 = (terrainHeight * j) + i;          // 왼쪽 아래.
-			int index2 = (terrainHeight * j) + (i + 1);      // 오른쪽 아래.
-			int index3 = (terrainHeight * (j + 1)) + i;      // 왼쪽 위.
-			int index4 = (terrainHeight * (j + 1)) + (i + 1);  // 오른쪽 위.
-
-			// 왼쪽 위.
-			tv = heightMap[index3].tv;
-
-			// 상단 가장자리를 덮도록 텍스처 좌표를 수정합니다.
-			if (tv == 1.0f) { tv = 0.0f; }
-
-			vertices[index].position = XMFLOAT3(heightMap[index3].x, heightMap[index3].y, heightMap[index3].z);
-			vertices[index].Uv = XMFLOAT2(heightMap[index3].tu, tv);
-			vertices[index].normal = XMFLOAT3(heightMap[index3].nx, heightMap[index3].ny, heightMap[index3].nz);
-			index++;
-
-			// 오른쪽 위.
-			tu = heightMap[index4].tu;
-			tv = heightMap[index4].tv;
-
-			// 위쪽과 오른쪽 가장자리를 덮도록 텍스처 좌표를 수정합니다.
-			if (tu == 0.0f) { tu = 1.0f; }
-			if (tv == 1.0f) { tv = 0.0f; }
-
-			vertices[index].position = XMFLOAT3(heightMap[index4].x, heightMap[index4].y, heightMap[index4].z);
-			vertices[index].Uv = XMFLOAT2(tu, tv);
-			vertices[index].normal = XMFLOAT3(heightMap[index4].nx, heightMap[index4].ny, heightMap[index4].nz);
-			index++;
-
-			// 왼쪽 아래.
-			vertices[index].position = XMFLOAT3(heightMap[index1].x, heightMap[index1].y, heightMap[index1].z);
-			vertices[index].Uv = XMFLOAT2(heightMap[index1].tu, heightMap[index1].tv);
-			vertices[index].normal = XMFLOAT3(heightMap[index1].nx, heightMap[index1].ny, heightMap[index1].nz);
-			index++;
-
-			// 왼쪽 아래.
-			vertices[index].position = XMFLOAT3(heightMap[index1].x, heightMap[index1].y, heightMap[index1].z);
-			vertices[index].Uv = XMFLOAT2(heightMap[index1].tu, heightMap[index1].tv);
-			vertices[index].normal = XMFLOAT3(heightMap[index1].nx, heightMap[index1].ny, heightMap[index1].nz);
-			index++;
-
-			// 오른쪽 위.
-			tu = heightMap[index4].tu;
-			tv = heightMap[index4].tv;
-
-			// 위쪽과 오른쪽 가장자리를 덮도록 텍스처 좌표를 수정합니다.
-			if (tu == 0.0f) { tu = 1.0f; }
-			if (tv == 1.0f) { tv = 0.0f; }
-
-			vertices[index].position = XMFLOAT3(heightMap[index4].x, heightMap[index4].y, heightMap[index4].z);
-			vertices[index].Uv = XMFLOAT2(tu, tv);
-			vertices[index].normal = XMFLOAT3(heightMap[index4].nx, heightMap[index4].ny, heightMap[index4].nz);
-			index++;
-
-			// 오른쪽 아래.
-			tu = heightMap[index2].tu;
-
-			// 오른쪽 가장자리를 덮도록 텍스처 좌표를 수정합니다.
-			if (tu == 0.0f) { tu = 1.0f; }
-
-			vertices[index].position = XMFLOAT3(heightMap[index2].x, heightMap[index2].y, heightMap[index2].z);
-			vertices[index].Uv = XMFLOAT2(tu, heightMap[index2].tv);
-			vertices[index].normal = XMFLOAT3(heightMap[index2].nx, heightMap[index2].ny, heightMap[index2].nz);
-			index++;
-		}
-	}
-
-	return S_OK;
-}
-
-HRESULT TerrainBuffer::Initialize(const char * heightMapFilename)
-{
-	Manage = Management::GetInstance();
-	Graphic = GraphicDevice::GetInstance();
-
-	shared_ptr<ConstantBuffer<BrushDesc>> temp(new ConstantBuffer<BrushDesc>());
-	brushBuffer = temp;
-	brushBuffer->Create(Graphic->GetDevice());
-
-	// 지형의 높이 맵을 로드합니다.
-	if (!LoadHeightMap(heightMapFilename))
-		return E_FAIL;
-
-
-	// 높이 맵의 높이를 표준화합니다.
-	NormalizeHeightMap();
-
-	// 지형 데이터의 법선을 계산합니다.
-	if (!CalculateNormals())
-		return E_FAIL;
-
-
-	// 텍스처 좌표를 계산합니다.
-	CalculateTextureCoordinates();
-
-	// 지형에 대한 지오 메트릭을 포함하는 정점 및 인덱스 버퍼를 초기화합니다.
-	return InitializeBuffers();
-
-}
-
-shared_ptr<TerrainBuffer> TerrainBuffer::Create(const char * heightMapFilename)
+shared_ptr<TerrainBuffer> TerrainBuffer::Create(UINT _terrainWidth, UINT _terrainHeight, const char* heightMapFilename)
 {
 	shared_ptr<TerrainBuffer> Instance(new TerrainBuffer());
-	if (FAILED(Instance->Initialize(heightMapFilename)))
+	if (FAILED(Instance->Initialize(_terrainWidth, _terrainHeight, heightMapFilename)))
 	{
 		MSG_BOX("Failed to create TerrainBuffer.");
 		return nullptr;

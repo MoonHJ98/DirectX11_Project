@@ -321,9 +321,9 @@
     <ClInclude Include="TerrainComponent.h" />
     <ClInclude Include="Frustum.h" />
     <ClInclude Include="Quadtree.h" />
-    <ClInclude Include="TerrainBuffer.h" />
     <ClInclude Include="DebugTree.h" />
     <ClInclude Include="DebugTreeRenderer.h" />
+    <ClInclude Include="TerrainBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -476,9 +476,9 @@
     <ClCompile Include="TerrainComponent.cpp" />
     <ClCompile Include="Frustum.cpp" />
     <ClCompile Include="Quadtree.cpp" />
-    <ClCompile Include="TerrainBuffer.cpp" />
     <ClCompile Include="DebugTree.cpp" />
     <ClCompile Include="DebugTreeRenderer.cpp" />
+    <ClCompile Include="TerrainBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="ModelVS.hlsl">

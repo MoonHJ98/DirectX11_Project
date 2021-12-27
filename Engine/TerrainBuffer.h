@@ -1,10 +1,11 @@
 #pragma once
+
 #include "Component.h"
 
-const int TEXTURE_REPEAT = 1;
+#define TEXTURE_REPEAT 1
 
-class Management;
 class GraphicDevice;
+class Management;
 
 class TerrainBuffer : public Component
 {
@@ -15,12 +16,10 @@ private:
 		float tu, tv;
 		float nx, ny, nz;
 	};
-
 	struct VectorType
 	{
 		float x, y, z;
 	};
-
 	struct BrushDesc
 	{
 		Color color = Color(0.f, 1.f, 0.f, 1.f);
@@ -39,43 +38,48 @@ public:
 	virtual int Update(float _timeDelta) override;
 	virtual void Render() override;
 	virtual void RenderInspector() override;
-
-public:
-	int GetVertexCount();
-	void CopyVertexArray(void* vertexList);
-	Vector3 PickTerrain(Vector2 screenPos);
-	void SetScreenSize(Vector2 _screenSize) { screenWidth = (UINT)_screenSize.x; screenHeignt = (UINT)_screenSize.y; }
-
 private:
+	HRESULT Initialize(UINT _terrainWidth, UINT _terrainHeight, const char* heightMapFilename);
+	HRESULT InitializeBuffers();
+	void RenderBuffers();
 	bool LoadHeightMap(const char* heightMapFilename);
 	void NormalizeHeightMap();
 	bool CalculateNormals();
-
-
 	void CalculateTextureCoordinates();
-	HRESULT InitializeBuffers();
-
-
-private:
-	HRESULT Initialize(const char* heightMapFilename);
 
 public:
-	static shared_ptr<TerrainBuffer> Create(const char* heightMapFilename = nullptr);
+	TerrainVertexType* GetVertices() { return vertices; }
+	Vector3 PickTerrain(Vector2 screenPos);
+	int GetVertexCount();
+	int GetIndexCount();
+	void CopyVertexArray(void* vertexList);
+	void CopyIndexArray(void* indexList);
+
+public:
+	static shared_ptr<TerrainBuffer> Create(UINT _terrainWidth, UINT _terrainHeight, const char* heightMapFilename = nullptr);
 
 private:
 	shared_ptr<Management> Manage = nullptr;
 	shared_ptr<GraphicDevice> Graphic = nullptr;
+	ComPtr<ID3D11Buffer> vertexBuffer = nullptr;
+	ComPtr<ID3D11Buffer> indexBuffer = nullptr;
+
+	TerrainVertexType* vertices = nullptr;
+	UINT* indices = nullptr;
+
+	HeightMapType* heightMap = nullptr;
 
 	int terrainWidth = 0;
 	int terrainHeight = 0;
-	HeightMapType* heightMap = nullptr;
-	int vertexCount = 0;
-	TerrainVertexType* vertices = nullptr;
-
 	UINT screenWidth = 0;
 	UINT screenHeignt = 0;
 
+	UINT vertexCount = 0;
+	UINT indexCount = 0;
+
+
 	BrushDesc brushDesc;
 	shared_ptr<ConstantBuffer<BrushDesc>> brushBuffer = nullptr;
+
 };
 

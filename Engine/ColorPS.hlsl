@@ -61,7 +61,7 @@ Output main(PixelInputType input)
     if(diffuse)
         Out.color = DiffuseTexture.Sample(SampleType, input.uv);
 
-   //Out.color += GetBrushColor(input.WorldPos);
+   Out.color += GetBrushColor(input.WorldPos);
     
     Out.normal = input.normal;
 

@@ -43,7 +43,7 @@ void ImguiManager::Render()
 
 	ImGui::NewFrame();
 
-	ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
+	//ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
 
 	Scene();
 	Menu1();
@@ -75,25 +75,24 @@ void ImguiManager::Scene()
 	
 
 	ID3D11ShaderResourceView* my_texture = Renderer::GetInstance()->GetBlendTexture();
-	ImGui::Image((void*)my_texture, ImVec2(ImGui::GetWindowSize().x, ImGui::GetWindowSize().y - 35.f));
-
+	ImGui::Image((void*)my_texture, ImVec2(800, 600));
 	ImVec2 MinPos;
 	
 	Vector2 MousePos = Vector2();
 	
 	MinPos = ImGui::GetItemRectMin();
-	ImVec2 sceneSize = ImGui::GetItemRectSize();
+	ImVec2 sceneSize = ImGui::GetWindowSize();
 	screenSize = Vector2(sceneSize.x, sceneSize.y);
 	
-	//cout << MinPos.x << " , " << MinPos.y << endl;
 
 	MousePos = Vector2(ImGui::GetMousePos().x - MinPos.x, ImGui::GetMousePos().y - MinPos.y);
-	
+	cout << MousePos.x << " , " << MousePos.y << endl;
+
 	//cout << MousePos.x << " , " << MousePos.y << endl;
 	// TODO : 이거 없애면 디퓨즈 빠지는거 해결하기.
 	auto tempTerrain = Manage->FindGameObjectTest(STATIC, L"Terrain", L"Terrain");
 	auto terrain = dynamic_pointer_cast<Terrain>(tempTerrain);
-	//terrain->SetScreenSize(Vector2(sceneSize.x, sceneSize.y));
+	terrain->SetScreenSize(Vector2(sceneSize.x, sceneSize.y));
 	//terrain->SetScreenPos(MousePos);
 	terrain->PickTerrain(MousePos, screenSize);
 

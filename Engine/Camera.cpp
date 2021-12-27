@@ -62,7 +62,7 @@ HRESULT Camera::Initialize(CAMERADECS _Decs)
 	pipeline = PipeLine::GetInstance();
 	pipeline->Initialize();
 	Graphic = GraphicDevice::GetInstance();
-	transform = Transform::Create(Transform::TRANSDESC(25.f, 5.f));
+	transform = Transform::Create(Transform::TRANSDESC(70.f, 5.f));
 	transform->SetObject(shared_from_this());
 
 	UpdateProjectionMatrix(Decs.ScreenWidth, Decs.ScreenHeight, Decs.FiedOfView, Decs.ScreenAspect, Decs.Near, Decs.Far);

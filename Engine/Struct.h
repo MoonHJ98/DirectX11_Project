@@ -333,6 +333,7 @@ struct NodeType
 	float positionZ = 0.f;
 	float width = 0.f;
 	int triangleCount = 0;
+	int indexCount = 0;
 	ComPtr<ID3D11Buffer> vertexBuffer;
 	ComPtr<ID3D11Buffer> indexBuffer;
 	shared_ptr<NodeType> nodes[4] = { NULL };

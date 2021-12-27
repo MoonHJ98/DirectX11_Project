@@ -7,7 +7,7 @@ class Management;
 class GraphicDevice;
 class DebugTree;
 
-const int MAX_TRIANGLES = 10000;
+const int MAX_TRIANGLES = 1000;
 
 class Quadtree : public Component
 {
@@ -35,6 +35,7 @@ private:
 	int CountTriangles(float _positionX, float _positionZ, float _width);
 	bool isTriangleContained(int _index, float _positionX, float _positionZ, float _width);
 	void RenderNode(shared_ptr<NodeType> _node);
+	void isTriangleContained(float _positionX, float _positionZ, float _width, vector<TerrainVertexType>& vertices, vector<UINT>& indices);
 
 public:
 	static shared_ptr<Quadtree> Create(shared_ptr<TerrainBuffer> _terrainBuffer);
@@ -42,11 +43,16 @@ public:
 private:
 	UINT triangleCount = 0;
 	shared_ptr<TerrainVertexType> vertexList = nullptr;
+	shared_ptr<UINT> indexList = nullptr;
+
 	shared_ptr<NodeType> parentNode = nullptr;
 
 	shared_ptr<Management> manage = nullptr;
 	shared_ptr<GraphicDevice> graphic = nullptr;
 
 	shared_ptr<DebugTree> debugTree = nullptr;
+
+	int vertexCount = 0;
+	int indexCount = 0;
 };
 

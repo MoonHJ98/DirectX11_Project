@@ -83,7 +83,6 @@ Vector3 DebugTree::PickTerrain(Vector2 _screenCursorPos, Vector2 _screenSize)
 	//GetCursorPos(&p);
 	//ScreenToClient(hWnd, &p);
 
-
 	Matrix	matProj;
 	matProj = *Manage->GetTransform(D3DTRANSFORMSTATE_PROJECTION);
 
@@ -122,6 +121,8 @@ Vector3 DebugTree::PickTerrain(Vector2 _screenCursorPos, Vector2 _screenSize)
 
 	for (UINT i = 0; i < boundingBox.size(); ++i)
 	{
+		Vector3 Pos;
+
 		if (ray.Intersects(boundingBox[i], dist))
 		{
 
@@ -131,16 +132,16 @@ Vector3 DebugTree::PickTerrain(Vector2 _screenCursorPos, Vector2 _screenSize)
 			UINT terrainStartZ = (UINT)(boundingBox[i].Center.z - boundingBox[i].Extents.z);
 			UINT terrainStartX = (UINT)(boundingBox[i].Center.x - boundingBox[i].Extents.x);
 
-			for (int z = terrainStartZ; z < terrainHeight; ++z)
+			for (UINT z = terrainStartZ; z < terrainHeight; ++z)
 			{
-				for (int x = terrainStartX; x < terrainWidth; ++x)
+				for (UINT x = terrainStartX; x < terrainWidth; ++x)
 				{
-					Vector3 Pos;
 					int	index[4] = { -1 };
-					index[0] = terrainWidth * z + x;
-					index[1] = terrainWidth * (z + 1) + x;
-					index[2] = terrainWidth * z + x + 1;
-					index[3] = terrainWidth * (z + 1) + (x + 1);
+
+					index[0] = (terrainHeight * z) + x;
+					index[1] = (terrainHeight * (z + 1)) + x;
+					index[2] = (terrainHeight * z) + x + 1;
+					index[3] = (terrainHeight * (z +  1)) + (x + 1);
 
 					
 					Vector3 vertex1 = vertices.lock().get()[index[0]].position;
@@ -149,14 +150,17 @@ Vector3 DebugTree::PickTerrain(Vector2 _screenCursorPos, Vector2 _screenSize)
 					Vector3 vertex4 = vertices.lock().get()[index[3]].position;
 
 
+					//cout << index[0] << " , "<< index[1] << " , " << index[2] << " , "<<index[3]<< endl;
+
+					if(index[0] == -1)
+						return Pos;
 					if (ray.Intersects(vertex1, vertex2, vertex3, dist))
 					{
 						Pos = ray.position + ray.direction * dist;
-
-						cout << Pos.x << " , " <<Pos.y<<" , "<< Pos.z << endl;
+						cout << Pos.x << " , " << Pos.y << " , " << Pos.z << endl;
 						return Pos;
 					}
-					if (ray.Intersects(vertex4, vertex2, vertex3, dist))
+					if (ray.Intersects(vertex4, vertex3, vertex2, dist))
 					{
 						Pos = ray.position + ray.direction * dist;
 						cout << Pos.x << " , " << Pos.y << " , " << Pos.z << endl;
@@ -164,6 +168,7 @@ Vector3 DebugTree::PickTerrain(Vector2 _screenCursorPos, Vector2 _screenSize)
 					}
 				}
 			}
+			return Pos;
 		}
 	}
 
