@@ -70,52 +70,6 @@ HRESULT TerrainBuffer::Initialize(UINT _terrainWidth, UINT _terrainHeight, const
 
 HRESULT TerrainBuffer::InitializeBuffers()
 {
-	//vector<TerrainVertexType> v;
-	//
-	//
-	//vertexCount = terrainWidth * terrainHeight;
-	//vertices = new TerrainVertexType[vertexCount];
-	//
-	//
-	//for (int z = 0; z < terrainHeight; ++z)
-	//{
-	//	for (int x = 0; x < terrainWidth; ++x)
-	//	{
-	//
-	//		int index = terrainWidth * z + x;
-	//		vertices[index].position = Vector3((float)x, 0.f, (float)z);
-	//		vertices[index].normal = Vector3(0.f, 1.f, 0.f);
-	//		vertices[index].Uv = Vector2((float)x / (float)terrainWidth, (float)(terrainHeight - 1 - z) / (float)terrainHeight);
-	//
-	//	}
-	//}
-	//
-	//vector<UINT> indices;
-	//
-	//for (int z = 0; z < terrainHeight - 1; ++z)
-	//{
-	//	for (int x = 0; x < terrainWidth - 1; ++x)
-	//	{
-	//		indices.push_back(terrainWidth * z + x);
-	//		indices.push_back(terrainWidth * (z + 1) + x);
-	//		indices.push_back(terrainWidth * z + x + 1);
-	//
-	//		indices.push_back(terrainWidth * z + x + 1);
-	//		indices.push_back(terrainWidth * (z + 1) + x);
-	//		indices.push_back(terrainWidth * (z + 1) + x + 1);
-	//	}
-	//}
-	//
-	//indexCount = indices.size();
-	//this->indices = new UINT[indexCount];
-	//
-	//copy(indices.begin(), indices.end(), this->indices);
-	//
-	//
-	//
-	//CreateStaticBuffer(Graphic->GetDevice(), vertices, vertexCount, sizeof(TerrainVertexType), D3D11_BIND_VERTEX_BUFFER, vertexBuffer.GetAddressOf());
-	//CreateStaticBuffer(Graphic->GetDevice(), this->indices, indexCount, sizeof(UINT), D3D11_BIND_INDEX_BUFFER, indexBuffer.GetAddressOf());
-
 
 	float tu = 0.0f;
 	float tv = 0.0f;
@@ -258,87 +212,50 @@ Vector3 TerrainBuffer::PickTerrain(Vector2 screenPos)
 
 	Vector3 Pos;
 
-	for (int i = 0; i < vertexCount; i++)
+	int index = 0;
+	for (int z = 0; z < terrainHeight; ++z)
 	{
-		int index0 = i;
-		int index1 = i + 1;
-		int index2 = i + 2;
-		int index3 = i + 3;
-		int index4 = i + 4;
-		int index5 = i + 5;
-
-		ray.position = RayPos;
-
-		ray.direction = RayDir;
-
-		Vector3 vertex1 = vertices[index0].position;
-		Vector3 vertex2 = vertices[index1].position;
-		Vector3 vertex3 = vertices[index2].position;
-		Vector3 vertex4 = vertices[index3].position;
-		Vector3 vertex5 = vertices[index4].position;
-		Vector3 vertex6 = vertices[index5].position;
-
-
-		if (ray.Intersects(vertex1, vertex2, vertex3, dist))
+		for (int x = 0; x < terrainWidth; ++x)
 		{
-			Pos = ray.position + ray.direction * dist;
-			brushDesc.position = Pos;
-			brushBuffer->SetData(Graphic->GetDeviceContext(), brushDesc);
-			auto buffer = brushBuffer->GetBuffer();
-			Graphic->GetDeviceContext()->PSSetConstantBuffers(0, 1, &buffer);
-			return Pos;
-		}
-		if (ray.Intersects(vertex4, vertex5, vertex6, dist))
-		{
-			Pos = ray.position + ray.direction * dist;
-			brushDesc.position = Pos;
-			brushBuffer->SetData(Graphic->GetDeviceContext(), brushDesc);
-			auto buffer = brushBuffer->GetBuffer();
-			Graphic->GetDeviceContext()->PSSetConstantBuffers(0, 1, &buffer);
-			return Pos;
+			ray.position = RayPos;
+
+			ray.direction = RayDir;
+
+			Vector3 vertex1 = vertices[index + 0].position;
+			Vector3 vertex2 = vertices[index + 1].position;
+			Vector3 vertex3 = vertices[index + 2].position;
+			Vector3 vertex4 = vertices[index + 3].position;
+			Vector3 vertex5 = vertices[index + 4].position;
+			Vector3 vertex6 = vertices[index + 5].position;
+
+			if (ray.Intersects(vertex1, vertex2, vertex3, dist))
+			{
+				Pos = ray.position + ray.direction * dist;
+				brushDesc.position = Pos;
+				brushBuffer->SetData(Graphic->GetDeviceContext(), brushDesc);
+				auto buffer = brushBuffer->GetBuffer();
+				Graphic->GetDeviceContext()->PSSetConstantBuffers(0, 1, &buffer);
+				return Pos;
+			}
+			if (ray.Intersects(vertex4, vertex5, vertex6, dist))
+			{
+				Pos = ray.position + ray.direction * dist;
+				brushDesc.position = Pos;
+				brushBuffer->SetData(Graphic->GetDeviceContext(), brushDesc);
+				auto buffer = brushBuffer->GetBuffer();
+				Graphic->GetDeviceContext()->PSSetConstantBuffers(0, 1, &buffer);
+				return Pos;
+			}
+
+			index += 6;
 		}
 	}
-
-
-
-	//for (int z = 0; z < terrainHeight - 1; ++z)
-	//{
-	//	for (int x = 0; x < terrainWidth - 1; ++x)
-	//	{
-	//		int	index[4];
-	//		index[0] = terrainWidth * z + x;
-	//		index[1] = terrainWidth * (z + 1) + x;
-	//		index[2] = terrainWidth * z + x + 1;
-	//		index[3] = terrainWidth * (z + 1) + (x + 1);
-	//
-	//
-	//		Vector3 vertex1 = vertices[index[0]].position;
-	//		Vector3 vertex2 = vertices[index[1]].position;
-	//		Vector3 vertex3 = vertices[index[2]].position;
-	//		Vector3 vertex4 = vertices[index[3]].position;
-	//
-	//		ray.position = RayPos;
-	//
-	//		ray.direction = RayDir;
-	//
-	//
-	//		if (ray.Intersects(vertex1, vertex2, vertex3, dist))
-	//		{
-	//			Pos = ray.position + ray.direction * dist;
-	//		}
-	//		if (ray.Intersects(vertex4, vertex2, vertex3, dist))
-	//		{
-	//			Pos = ray.position + ray.direction * dist;
-	//		}
-	//	}
-	//}
 
 	brushDesc.position = Pos;
 	brushBuffer->SetData(Graphic->GetDeviceContext(), brushDesc);
 	auto buffer = brushBuffer->GetBuffer();
 	Graphic->GetDeviceContext()->PSSetConstantBuffers(0, 1, &buffer);
 
-	//cout << Pos.x << " , " << Pos.y << " , " << Pos.z << endl;
 	return Pos;
 }
 

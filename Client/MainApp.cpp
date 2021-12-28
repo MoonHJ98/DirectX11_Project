@@ -70,7 +70,7 @@ HRESULT MainApp::Initialize()
 
 
 
-	auto terrain = Terrain::Create(25, 25, L"../Resources/heightmap.bmp");
+	auto terrain = Terrain::Create(50, 50, L"../Resources/heightmap.bmp");
 	Manage->AddLayerTest(SCENEID::STATIC, L"Terrain", terrain);
 
 
