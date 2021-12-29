@@ -3,6 +3,7 @@
 #include "GraphicDevice.h"
 #include "Management.h"
 
+
 TerrainBuffer::TerrainBuffer()
 {
 }
@@ -17,6 +18,7 @@ TerrainBuffer::~TerrainBuffer()
 
 int TerrainBuffer::Update(float _timeDelta)
 {
+	timeDelta = _timeDelta;
 	return 0;
 }
 
@@ -160,10 +162,23 @@ HRESULT TerrainBuffer::InitializeBuffers()
 	}
 
 
-	// 정점, 인덱스 버퍼 생성.
-	CreateStaticBuffer(GraphicDevice::GetInstance()->GetDevice(), vertices, vertexCount, sizeof(TerrainVertexType), D3D11_BIND_VERTEX_BUFFER, vertexBuffer.GetAddressOf());
+	//// 정점, 인덱스 버퍼 생성.
+	//CreateStaticBuffer(GraphicDevice::GetInstance()->GetDevice(), vertices, vertexCount, sizeof(TerrainVertexType), D3D11_BIND_VERTEX_BUFFER, vertexBuffer.GetAddressOf());
 
+	D3D11_BUFFER_DESC desc;
+	desc.Usage = D3D11_USAGE_DYNAMIC;
+	desc.ByteWidth = sizeof(TerrainVertexType) * vertexCount;
+	desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	desc.MiscFlags = 0;
+	desc.StructureByteStride = 0;
 
+	D3D11_SUBRESOURCE_DATA data;
+	data.pSysMem = vertices;
+	data.SysMemPitch = 0;
+	data.SysMemSlicePitch = 0;
+
+	Graphic->GetDevice()->CreateBuffer(&desc, &data, vertexBuffer.GetAddressOf());
 	return S_OK;
 }
 
@@ -213,44 +228,38 @@ Vector3 TerrainBuffer::PickTerrain(Vector2 screenPos)
 	Vector3 Pos;
 
 	int index = 0;
-	for (int z = 0; z < terrainHeight; ++z)
+	for (int i = 0; i < vertexCount; i += 6)
 	{
-		for (int x = 0; x < terrainWidth; ++x)
+		ray.position = RayPos;
+
+		ray.direction = RayDir;
+
+		Vector3 vertex1 = vertices[i + 0].position;
+		Vector3 vertex2 = vertices[i + 1].position;
+		Vector3 vertex3 = vertices[i + 2].position;
+		Vector3 vertex4 = vertices[i + 3].position;
+		Vector3 vertex5 = vertices[i + 4].position;
+		Vector3 vertex6 = vertices[i + 5].position;
+
+		if (ray.Intersects(vertex1, vertex2, vertex3, dist))
 		{
-			ray.position = RayPos;
-
-			ray.direction = RayDir;
-
-			Vector3 vertex1 = vertices[index + 0].position;
-			Vector3 vertex2 = vertices[index + 1].position;
-			Vector3 vertex3 = vertices[index + 2].position;
-			Vector3 vertex4 = vertices[index + 3].position;
-			Vector3 vertex5 = vertices[index + 4].position;
-			Vector3 vertex6 = vertices[index + 5].position;
-
-			if (ray.Intersects(vertex1, vertex2, vertex3, dist))
-			{
-				Pos = ray.position + ray.direction * dist;
-				brushDesc.position = Pos;
-				brushBuffer->SetData(Graphic->GetDeviceContext(), brushDesc);
-				auto buffer = brushBuffer->GetBuffer();
-				Graphic->GetDeviceContext()->PSSetConstantBuffers(0, 1, &buffer);
-				return Pos;
-			}
-			if (ray.Intersects(vertex4, vertex5, vertex6, dist))
-			{
-				Pos = ray.position + ray.direction * dist;
-				brushDesc.position = Pos;
-				brushBuffer->SetData(Graphic->GetDeviceContext(), brushDesc);
-				auto buffer = brushBuffer->GetBuffer();
-				Graphic->GetDeviceContext()->PSSetConstantBuffers(0, 1, &buffer);
-				return Pos;
-			}
-
-			index += 6;
+			Pos = ray.position + ray.direction * dist;
+			brushDesc.position = Pos;
+			brushBuffer->SetData(Graphic->GetDeviceContext(), brushDesc);
+			auto buffer = brushBuffer->GetBuffer();
+			Graphic->GetDeviceContext()->PSSetConstantBuffers(0, 1, &buffer);
+			return Pos;
+		}
+		if (ray.Intersects(vertex4, vertex5, vertex6, dist))
+		{
+			Pos = ray.position + ray.direction * dist;
+			brushDesc.position = Pos;
+			brushBuffer->SetData(Graphic->GetDeviceContext(), brushDesc);
+			auto buffer = brushBuffer->GetBuffer();
+			Graphic->GetDeviceContext()->PSSetConstantBuffers(0, 1, &buffer);
+			return Pos;
 		}
 	}
-
 	brushDesc.position = Pos;
 	brushBuffer->SetData(Graphic->GetDeviceContext(), brushDesc);
 	auto buffer = brushBuffer->GetBuffer();
@@ -279,6 +288,68 @@ void TerrainBuffer::CopyIndexArray(void * indexList)
 {
 	memcpy(indexList, indices, sizeof(UINT) * indexCount);
 
+}
+
+void TerrainBuffer::RaiseHeight()
+{
+	D3D11_RECT rect;
+
+	rect.left = (LONG)(brushDesc.position.x - brushDesc.range);
+	rect.top = (LONG)(brushDesc.position.z + brushDesc.range);
+	rect.right = (LONG)(brushDesc.position.x + brushDesc.range);
+	rect.bottom = (LONG)(brushDesc.position.z - brushDesc.range);
+
+	if (rect.left < 0)
+		rect.left = 0;
+	if (rect.top >= terrainHeight)
+		rect.top = (LONG)terrainHeight;
+	if (rect.right >= (LONG)terrainWidth)
+		rect.right = (LONG)terrainWidth;
+	if (rect.bottom < 0)
+		rect.bottom = 0;
+
+	float dist;
+
+	for (int i = 0; i < vertexCount; i+=6)
+	{
+		for (int j = 0; j < 6; ++j)
+		{
+			Vector3 vertex = vertices[i + j].position;
+			float dx = vertex.x - brushDesc.position.x;
+			float dz = vertex.z - brushDesc.position.z;
+
+			// 원의 중심과 vertex 사이의 거리구하기 (피타고라스 정리)
+			dist = sqrt(dx * dx + dz * dz);
+
+			// 원의 중심과 정점의 거리가 반지름의 길이를 넘어갈 경우 계산 안함.
+			if (fabsf(dist) > brushDesc.range)
+				continue;
+
+			/*
+			원의 중심에서 반지름의 길이를 넘어가는 dist(거리)는 위에서 걸러지고
+			dist의 값은 정점이 원이 중심과 멀수록 range의 값과 동일해지고 가까워질수록 0으로 간다.
+			위를 생각하면서 아래 공식에 값을 넣어보면 어떤 결과가 나오는지 알 수 있다.
+			*/
+
+			//float h = brushDesc.range - dist; // 원뿔 형태가 나옴.
+			float h = (float)(pow(brushDesc.range, 2) - (dist * dist)); // 반원 형태가 나옴.
+
+			if (Manage->GetDIKeyState(DIK_LALT) & 0x80)
+				vertices[i + j].position.y -= h * timeDelta;
+			else
+				vertices[i + j].position.y += h * timeDelta;
+		}
+	}
+
+
+	D3D11_MAPPED_SUBRESOURCE mappedResource;
+	if (SUCCEEDED(Graphic->GetDeviceContext()->Map(vertexBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource)))
+	{
+		memcpy(mappedResource.pData, vertices, sizeof(TerrainVertexType) * vertexCount);
+		Graphic->GetDeviceContext()->Unmap(vertexBuffer.Get(), 0);
+	}
+
+	CreateNormalData();
 }
 
 void TerrainBuffer::RenderBuffers()
@@ -608,6 +679,42 @@ void TerrainBuffer::CalculateTextureCoordinates()
 			tvCount = 0;
 		}
 	}
+}
+
+void TerrainBuffer::CreateNormalData()
+{
+	for (int i = 0; i < vertexCount; i+=6)
+	{
+		auto vertex1 = vertices[i + 0];
+		auto vertex2 = vertices[i + 1];
+		auto vertex3 = vertices[i + 2];
+		auto vertex4 = vertices[i + 3];
+		auto vertex5 = vertices[i + 4];
+		auto vertex6 = vertices[i + 5];
+
+
+		Vector3 d1 = vertex2.position - vertex1.position;
+		Vector3 d2 = vertex3.position - vertex1.position;
+
+		Vector3 d3 = vertex4.position - vertex6.position;
+		Vector3 d4 = vertex5.position - vertex6.position;
+
+
+		Vector3 normal, normal2;
+
+		normal = XMVector3Cross(d1, d2);
+		normal2 = XMVector3Cross(d3, d4);
+
+
+		vertices[i + 0].normal = XMVector3Normalize(vertices[i + 0].normal += normal);
+		vertices[i + 1].normal = XMVector3Normalize(vertices[i + 1].normal += normal);
+		vertices[i + 2].normal = XMVector3Normalize(vertices[i + 2].normal += normal);
+
+		vertices[i + 3].normal = XMVector3Normalize(vertices[i + 3].normal += normal2);
+		vertices[i + 4].normal = XMVector3Normalize(vertices[i + 4].normal += normal2);
+		vertices[i + 5].normal = XMVector3Normalize(vertices[i + 5].normal += normal2);
+	}
+
 }
 
 shared_ptr<TerrainBuffer> TerrainBuffer::Create(UINT _terrainWidth, UINT _terrainHeight, const char* heightMapFilename)

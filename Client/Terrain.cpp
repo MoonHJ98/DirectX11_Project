@@ -16,6 +16,7 @@
 
 
 
+
 Terrain::Terrain()
 {
 }
@@ -77,6 +78,7 @@ int Terrain::Update(float _TimeDelta)
 			components[i]->Update(_TimeDelta);
 	}
 
+	terrainBuffer->Update(_TimeDelta);
 	//if(terrainComponent != nullptr && terrainComponent->IsTerrainComponentOpened())
 	//	PickTerrain(screenPos);
 
@@ -114,12 +116,24 @@ Vector3 Terrain::PickTerrain(Vector2 screenPos, Vector2 _screenSize)
 	//	return Vector3(0.f, 0.f, 0.f);
 	Vector3 Pos = terrainBuffer->PickTerrain(screenPos);
 
+	if (Manage->GetDIMouseState(InputDevice::DIM_LB) & 0x80)
+		RaiseHeight();
+
 	return Pos;
 }
 
 void Terrain::SetScreenSize(Vector2 _screenSize)
 {
 	//terrainBuffer->SetScreenSize(_screenSize);
+}
+
+void Terrain::RaiseHeight()
+{
+	if (terrainBuffer == nullptr)
+		return;
+
+	terrainBuffer->RaiseHeight();
+
 }
 
 shared_ptr<Terrain> Terrain::Create(UINT _terrainWidth, UINT _terrainHeight, wstring _heightMapPath)

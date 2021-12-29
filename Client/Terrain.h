@@ -33,6 +33,9 @@ public:
 	void SetScreenPos(Vector2 pos) { screenPos = pos; }
 	Vector3 PickTerrain(Vector2 screenPos, Vector2 _screenSize);
 	void SetScreenSize(Vector2 _screenSize);
+
+private:
+	void RaiseHeight();
 	
 
 public:

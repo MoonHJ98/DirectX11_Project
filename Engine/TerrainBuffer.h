@@ -20,12 +20,7 @@ private:
 	{
 		float x, y, z;
 	};
-	struct BrushDesc
-	{
-		Color color = Color(0.f, 1.f, 0.f, 1.f);
-		Vector3 position = Vector3(0.f, 0.f, 0.f);
-		UINT range = 5;
-	};
+
 
 private:
 	TerrainBuffer();
@@ -38,6 +33,7 @@ public:
 	virtual int Update(float _timeDelta) override;
 	virtual void Render() override;
 	virtual void RenderInspector() override;
+
 private:
 	HRESULT Initialize(UINT _terrainWidth, UINT _terrainHeight, const char* heightMapFilename);
 	HRESULT InitializeBuffers();
@@ -46,6 +42,7 @@ private:
 	void NormalizeHeightMap();
 	bool CalculateNormals();
 	void CalculateTextureCoordinates();
+	void CreateNormalData();
 
 public:
 	TerrainVertexType* GetVertices() { return vertices; }
@@ -54,6 +51,7 @@ public:
 	int GetIndexCount();
 	void CopyVertexArray(void* vertexList);
 	void CopyIndexArray(void* indexList);
+	void RaiseHeight();
 
 public:
 	static shared_ptr<TerrainBuffer> Create(UINT _terrainWidth, UINT _terrainHeight, const char* heightMapFilename = nullptr);
@@ -77,9 +75,12 @@ private:
 	UINT vertexCount = 0;
 	UINT indexCount = 0;
 
+	float timeDelta = 0;
+
 
 	BrushDesc brushDesc;
 	shared_ptr<ConstantBuffer<BrushDesc>> brushBuffer = nullptr;
+
 
 };
 

@@ -18,7 +18,7 @@ HRESULT Renderer::Initialize()
 	UINT viewportNum = 1;
 	D3D11_VIEWPORT viewport;
 	Graphic->GetDeviceContext()->RSGetViewports(&viewportNum, &viewport);
-	
+
 	LightMgr = LightManager::GetInstance();
 
 	deferredBuffer = DeferredBuffer::Create(SCREENSIZEX, SCREENSIZEY, SCREENDEPTH, SCREENNEAR);
@@ -28,11 +28,11 @@ HRESULT Renderer::Initialize()
 	deferredBuffer->AddMultiRenderTarget(L"Deferred", DeferredBuffer::SPECULARMAP);
 	deferredBuffer->AddMultiRenderTarget(L"Deferred", DeferredBuffer::DEPTH);
 	deferredBuffer->AddMultiRenderTarget(L"Deferred", DeferredBuffer::LIGHTVIEWPOS);
-	
 
 
 
-	
+
+
 
 	deferredBuffer->AddMultiRenderTarget(L"Light", DeferredBuffer::SHADE);
 	deferredBuffer->AddMultiRenderTarget(L"Light", DeferredBuffer::SPECULAR);
@@ -50,7 +50,7 @@ HRESULT Renderer::Initialize()
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }
-	
+
 	};
 
 	lightShader = Shader::Create(InputLayout, sizeof(InputLayout), L"../Engine/LightVS.hlsl", L"../Engine/LightPS.hlsl");
@@ -110,19 +110,17 @@ void Renderer::RenderNonAlpha()
 	frustum->UpdateFrustum(SCREENDEPTH, proj, view);
 
 	deferredBuffer->BeginMRT(L"Shadow");
-	
+
 	for (auto& pGameObject : RenderGroup[RENDER_NONALPHA])
 	{
 		if (nullptr != pGameObject)
 		{
-			//if (frustum->CheckPoint(&pGameObject->GetPosition()))
-			//{
-				pGameObject->RenderDepthForShadow(true);
-				pGameObject->Render();
-			//}
+			pGameObject->RenderDepthForShadow(true);
+			pGameObject->Render();
+
 		}
 	}
-	
+
 	deferredBuffer->EndMRT();
 
 
@@ -136,8 +134,8 @@ void Renderer::RenderNonAlpha()
 		{
 			//if (frustum->CheckPoint(&pGameObject->GetPosition()))
 			//{
-				pGameObject->RenderDepthForShadow(false);
-				pGameObject->Render();
+			pGameObject->RenderDepthForShadow(false);
+			pGameObject->Render();
 			//}
 		}
 	}
@@ -162,9 +160,9 @@ void Renderer::RenderUI()
 void Renderer::RenderLight()
 {
 	lightShader->Render();
-	
+
 	deferredBuffer->BeginMRT(L"Light");
-	
+
 	auto normal = deferredBuffer->GetShaderResourceView(DeferredBuffer::NORMALMAP);
 	auto specular = deferredBuffer->GetShaderResourceView(DeferredBuffer::SPECULARMAP);
 	auto depth = deferredBuffer->GetShaderResourceView(DeferredBuffer::DEPTH);
@@ -172,7 +170,7 @@ void Renderer::RenderLight()
 	auto lightViewPos = deferredBuffer->GetShaderResourceView(DeferredBuffer::LIGHTVIEWPOS);
 
 
-	
+
 	Graphic->GetDeviceContext()->PSSetShaderResources(0, 1, &normal);
 	Graphic->GetDeviceContext()->PSSetShaderResources(1, 1, &specular);
 	Graphic->GetDeviceContext()->PSSetShaderResources(2, 1, &depth);
@@ -199,10 +197,10 @@ void Renderer::RenderLight()
 	projToWorld->SetData(Graphic->GetDeviceContext(), buffertype);
 	auto buffer = projToWorld->GetBuffer();
 	Graphic->GetDeviceContext()->PSSetConstantBuffers(1, 1, &buffer);
-	
-	
+
+
 	LightMgr->Render();
-	
+
 	deferredBuffer->EndMRT();
 
 }
@@ -229,7 +227,7 @@ void Renderer::RenderBlend()
 
 
 
-	
+
 	rectangleBuffer->Render();
 
 

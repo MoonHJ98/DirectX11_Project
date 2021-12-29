@@ -340,6 +340,12 @@ struct NodeType
 
 };
 
+struct BrushDesc
+{
+	Color color = Color(0.f, 1.f, 0.f, 1.f);
+	Vector3 position = Vector3(0.f, 0.f, 0.f);
+	UINT range = 5;
+};
 
 enum ComponentType { COLLIDER, TRANSFORM, SHADER, MATERIAL, RIGIDBODY, TERRAIN, COMPONENT_END };
 enum RigidbodyType { DYNAMICRIGID, STATICRIGID, RIGIDBODY_END };

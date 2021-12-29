@@ -86,7 +86,6 @@ void ImguiManager::Scene()
 	
 
 	MousePos = Vector2(ImGui::GetMousePos().x - MinPos.x, ImGui::GetMousePos().y - MinPos.y);
-	cout << MousePos.x << " , " << MousePos.y << endl;
 
 	//cout << MousePos.x << " , " << MousePos.y << endl;
 	// TODO : 이거 없애면 디퓨즈 빠지는거 해결하기.
