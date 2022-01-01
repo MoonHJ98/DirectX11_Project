@@ -324,6 +324,7 @@
     <ClInclude Include="DebugTree.h" />
     <ClInclude Include="DebugTreeRenderer.h" />
     <ClInclude Include="TerrainBuffer.h" />
+    <ClInclude Include="HeightBrush.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -479,6 +480,7 @@
     <ClCompile Include="DebugTree.cpp" />
     <ClCompile Include="DebugTreeRenderer.cpp" />
     <ClCompile Include="TerrainBuffer.cpp" />
+    <ClCompile Include="HeightBrush.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="ModelVS.hlsl">

@@ -27,6 +27,7 @@ public:
 
 public:
 	Vector3 GetPosition();
+	void SetPosition(Vector3 _position);
 	vector<shared_ptr<Component>>& GetComponents() { return components; }
 	shared_ptr<Component> GetComponent(ComponentType componentType);
 	void AddComponent(ComponentType _componentType, shared_ptr<Component> _component);

@@ -6,6 +6,7 @@
 
 class GraphicDevice;
 class Management;
+class HeightBrush;
 
 class TerrainBuffer : public Component
 {
@@ -81,6 +82,6 @@ private:
 	BrushDesc brushDesc;
 	shared_ptr<ConstantBuffer<BrushDesc>> brushBuffer = nullptr;
 
-
+	shared_ptr<HeightBrush> heightBrush = nullptr;
 };
 

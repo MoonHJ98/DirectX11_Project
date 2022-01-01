@@ -176,6 +176,7 @@
     <ClInclude Include="Frustum.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GraphicDevice.h" />
+    <ClInclude Include="HeightBrush.h" />
     <ClInclude Include="imgui.h" />
     <ClInclude Include="ImGuiFileDialog.h" />
     <ClInclude Include="ImGuiFileDialogConfig.h" />
@@ -235,6 +236,7 @@
     <ClCompile Include="Frustum.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GraphicDevice.cpp" />
+    <ClCompile Include="HeightBrush.cpp" />
     <ClCompile Include="imgui.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>

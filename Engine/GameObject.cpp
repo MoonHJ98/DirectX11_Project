@@ -30,6 +30,7 @@ Vector3 GameObject::GetPosition()
 	return pos;
 }
 
+
 shared_ptr<Component> GameObject::GetComponent(ComponentType componentType)
 {
 	if (components[componentType])

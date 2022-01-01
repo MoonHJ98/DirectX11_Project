@@ -1,4 +1,6 @@
 Texture2D DiffuseTexture : register(t0);
+Texture2D HeightTexture : register(t1);
+
 SamplerState SampleType;
 
 cbuffer BrushDesc : register(b0)
@@ -39,7 +41,7 @@ struct Output
     
 };
 
-float4 GetBrushColor(float4 inputWorldPos)
+float4 GetBrushColor(float4 inputWorldPos, float2 inputUV)
 {
     
     float dx = inputWorldPos.x - terrainBrushPosition.x;
@@ -48,7 +50,11 @@ float4 GetBrushColor(float4 inputWorldPos)
     float dist = sqrt(dx * dx + dz * dz);
     
     if (dist <= (float) terrainBrushRange)
-        return terrainBrushColor;
+    {
+        //float4 color = HeightTexture.Sample(SampleType, inputUV);
+        //return color;
+        return terrainBrushColor; 
+    }
     
     return float4(0.f, 0.f, 0.f, 1.f);
 }
@@ -61,7 +67,7 @@ Output main(PixelInputType input)
     if(diffuse)
         Out.color = DiffuseTexture.Sample(SampleType, input.uv);
 
-   Out.color += GetBrushColor(input.WorldPos);
+    Out.color += GetBrushColor(input.WorldPos, input.uv);
     
     Out.normal = input.normal;
 

@@ -369,6 +369,9 @@ struct TerrainVertexType
 	Vector2 Uv;
 };
 
+
+#define EXCEPT_RAISEHEIGHT Vector3(-1.f, -1.f, -1.f)
+
 void SplitString(vector<string>* result, string origin, string tok);
 void SplitString(vector<wstring>* result, wstring origin, wstring tok);
 

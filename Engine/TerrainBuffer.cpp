@@ -2,6 +2,7 @@
 #include "TerrainBuffer.h"
 #include "GraphicDevice.h"
 #include "Management.h"
+#include "HeightBrush.h"
 
 
 TerrainBuffer::TerrainBuffer()
@@ -25,6 +26,8 @@ int TerrainBuffer::Update(float _timeDelta)
 void TerrainBuffer::Render()
 {
 	RenderBuffers();
+
+	heightBrush->Render();
 }
 
 void TerrainBuffer::RenderInspector()
@@ -50,6 +53,8 @@ HRESULT TerrainBuffer::Initialize(UINT _terrainWidth, UINT _terrainHeight, const
 	shared_ptr<ConstantBuffer<BrushDesc>> temp(new ConstantBuffer<BrushDesc>());
 	brushBuffer = temp;
 	brushBuffer->Create(Graphic->GetDevice());
+
+	heightBrush = HeightBrush::Create();
 
 	// 지형의 높이 맵을 로드합니다.
 	if (!LoadHeightMap(heightMapFilename))
@@ -228,7 +233,7 @@ Vector3 TerrainBuffer::PickTerrain(Vector2 screenPos)
 	Vector3 Pos;
 
 	int index = 0;
-	for (int i = 0; i < vertexCount; i += 6)
+	for (UINT i = 0; i < vertexCount; i += 6)
 	{
 		ray.position = RayPos;
 
@@ -244,19 +249,27 @@ Vector3 TerrainBuffer::PickTerrain(Vector2 screenPos)
 		if (ray.Intersects(vertex1, vertex2, vertex3, dist))
 		{
 			Pos = ray.position + ray.direction * dist;
+
+
 			brushDesc.position = Pos;
 			brushBuffer->SetData(Graphic->GetDeviceContext(), brushDesc);
 			auto buffer = brushBuffer->GetBuffer();
 			Graphic->GetDeviceContext()->PSSetConstantBuffers(0, 1, &buffer);
+
+			heightBrush->SetPosition(brushDesc);
 			return Pos;
 		}
 		if (ray.Intersects(vertex4, vertex5, vertex6, dist))
 		{
 			Pos = ray.position + ray.direction * dist;
+
+
 			brushDesc.position = Pos;
 			brushBuffer->SetData(Graphic->GetDeviceContext(), brushDesc);
 			auto buffer = brushBuffer->GetBuffer();
 			Graphic->GetDeviceContext()->PSSetConstantBuffers(0, 1, &buffer);
+			heightBrush->SetPosition(brushDesc);
+
 			return Pos;
 		}
 	}
@@ -292,52 +305,82 @@ void TerrainBuffer::CopyIndexArray(void * indexList)
 
 void TerrainBuffer::RaiseHeight()
 {
-	D3D11_RECT rect;
-
-	rect.left = (LONG)(brushDesc.position.x - brushDesc.range);
-	rect.top = (LONG)(brushDesc.position.z + brushDesc.range);
-	rect.right = (LONG)(brushDesc.position.x + brushDesc.range);
-	rect.bottom = (LONG)(brushDesc.position.z - brushDesc.range);
-
-	if (rect.left < 0)
-		rect.left = 0;
-	if (rect.top >= terrainHeight)
-		rect.top = (LONG)terrainHeight;
-	if (rect.right >= (LONG)terrainWidth)
-		rect.right = (LONG)terrainWidth;
-	if (rect.bottom < 0)
-		rect.bottom = 0;
-
 	float dist;
 
-	for (int i = 0; i < vertexCount; i+=6)
+	for (UINT i = 0; i < vertexCount; i += 6)
 	{
-		for (int j = 0; j < 6; ++j)
+		Vector3 vertex1 = vertices[i + 0].position;
+		Vector3 vertex2 = vertices[i + 1].position;
+		Vector3 vertex3 = vertices[i + 2].position;
+		Vector3 vertex4 = vertices[i + 5].position;
+
+
+		float dx1 = vertex1.x - brushDesc.position.x;
+		float dz1 = vertex1.z - brushDesc.position.z;
+
+		float dx2 = vertex2.x - brushDesc.position.x;
+		float dz2 = vertex2.z - brushDesc.position.z;
+
+		float dx3 = vertex3.x - brushDesc.position.x;
+		float dz3 = vertex3.z - brushDesc.position.z;
+
+		float dx4 = vertex4.x - brushDesc.position.x;
+		float dz4 = vertex4.z - brushDesc.position.z;
+
+		float dist1 = sqrt(dx1 * dx1 + dz1 * dz1);
+		float dist2 = sqrt(dx2 * dx2 + dz2 * dz2);
+		float dist3 = sqrt(dx3 * dx3 + dz3 * dz3);
+		float dist4 = sqrt(dx4 * dx4 + dz4 * dz4);
+
+		float h1 = 0.f;
+		float h2 = 0.f;
+		float h3 = 0.f;
+		float h4 = 0.f;
+
+		if (fabsf(dist1) > brushDesc.range)
+			vertex1 = EXCEPT_RAISEHEIGHT;
+		if (fabsf(dist2) > brushDesc.range)
+			vertex2 = EXCEPT_RAISEHEIGHT;
+		if (fabsf(dist3) > brushDesc.range)
+			vertex3 = EXCEPT_RAISEHEIGHT;
+		if (fabsf(dist4) > brushDesc.range)
+			vertex4 = EXCEPT_RAISEHEIGHT;
+
+
+		Vector3 pos[4] = { vertex1, vertex2, vertex3, vertex4 };
+		float* distArray = heightBrush->RaiseHeight(pos);
+
+		if (distArray == nullptr)
+			continue;
+
+		auto d1 = distArray[0];
+		auto d2 = distArray[1];
+		auto d3 = distArray[2];
+		auto d4 = distArray[3];
+
+		//h1 = (float)(pow(brushDesc.range, 2) - (dist1 * dist1)); // 반원 형태가 나옴.
+
+		if (Manage->GetDIKeyState(DIK_LALT) & 0x80)
 		{
-			Vector3 vertex = vertices[i + j].position;
-			float dx = vertex.x - brushDesc.position.x;
-			float dz = vertex.z - brushDesc.position.z;
+			vertices[i + 0].position.y -= h1 * timeDelta;
+			vertices[i + 1].position.y -= h2 * timeDelta;
+			vertices[i + 2].position.y -= h3 * timeDelta;
 
-			// 원의 중심과 vertex 사이의 거리구하기 (피타고라스 정리)
-			dist = sqrt(dx * dx + dz * dz);
+			vertices[i + 3].position.y -= h3 * timeDelta;
+			vertices[i + 4].position.y -= h2 * timeDelta;
+			vertices[i + 5].position.y -= h4 * timeDelta;
 
-			// 원의 중심과 정점의 거리가 반지름의 길이를 넘어갈 경우 계산 안함.
-			if (fabsf(dist) > brushDesc.range)
-				continue;
 
-			/*
-			원의 중심에서 반지름의 길이를 넘어가는 dist(거리)는 위에서 걸러지고
-			dist의 값은 정점이 원이 중심과 멀수록 range의 값과 동일해지고 가까워질수록 0으로 간다.
-			위를 생각하면서 아래 공식에 값을 넣어보면 어떤 결과가 나오는지 알 수 있다.
-			*/
+		}
+		else
+		{
+			vertices[i + 0].position.y += d1 * timeDelta;
+			vertices[i + 1].position.y += d2 * timeDelta;
+			vertices[i + 2].position.y += d3 * timeDelta;
 
-			//float h = brushDesc.range - dist; // 원뿔 형태가 나옴.
-			float h = (float)(pow(brushDesc.range, 2) - (dist * dist)); // 반원 형태가 나옴.
-
-			if (Manage->GetDIKeyState(DIK_LALT) & 0x80)
-				vertices[i + j].position.y -= h * timeDelta;
-			else
-				vertices[i + j].position.y += h * timeDelta;
+			vertices[i + 3].position.y += d3 * timeDelta;
+			vertices[i + 4].position.y += d2 * timeDelta;
+			vertices[i + 5].position.y += d4 * timeDelta;
 		}
 	}
 
@@ -683,7 +726,7 @@ void TerrainBuffer::CalculateTextureCoordinates()
 
 void TerrainBuffer::CreateNormalData()
 {
-	for (int i = 0; i < vertexCount; i+=6)
+	for (UINT i = 0; i < vertexCount; i += 6)
 	{
 		auto vertex1 = vertices[i + 0];
 		auto vertex2 = vertices[i + 1];

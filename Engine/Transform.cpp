@@ -340,7 +340,7 @@ void Transform::Render()
 		auto buffer = MatrixBuffer.GetBuffer();
 		Graphic->GetDeviceContext()->VSSetConstantBuffers(0, 1, &buffer);
 
-		return ;
+		return;
 	}
 
 	MATRIXBUFFERTYPE desc;
