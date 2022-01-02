@@ -30,8 +30,8 @@ public:
 	virtual void OnTrigger() override;
 
 private:
-	HRESULT Initialize();
-	bool LoadHeightTexture();
+	HRESULT Initialize(const char* _heightMapPath);
+	bool LoadHeightTexture(const char* _heightMapPath);
 	void NormalizeHeightMap();
 	bool CalculateNormals();
 	HRESULT InitializeBuffer();
@@ -42,7 +42,7 @@ public:
 	float* RaiseHeight(Vector3 * _pos);
 
 public:
-	static shared_ptr<HeightBrush> Create();
+	static shared_ptr<HeightBrush> Create(const char* _heightMapPath);
 
 private:
 	HeightMapType* heightMap = nullptr;

@@ -7,6 +7,7 @@
 class GraphicDevice;
 class Management;
 class HeightBrush;
+class Texture;
 
 class TerrainBuffer : public Component
 {
@@ -21,6 +22,8 @@ private:
 	{
 		float x, y, z;
 	};
+
+	enum HeightMapOption { Circle, Mountain, DesertMountain, HeigitMapOptionEnd };
 
 
 private:
@@ -82,6 +85,14 @@ private:
 	BrushDesc brushDesc;
 	shared_ptr<ConstantBuffer<BrushDesc>> brushBuffer = nullptr;
 
-	shared_ptr<HeightBrush> heightBrush = nullptr;
+	shared_ptr<HeightBrush> mountain = nullptr;
+	shared_ptr<HeightBrush> desertMountain = nullptr;
+	shared_ptr<Texture> mountainTexture = nullptr;
+	shared_ptr<Texture> desertMountainTexture = nullptr;
+	shared_ptr<Texture> circleTexture = nullptr;
+	int heightMapTextureCount = 0;
+	ComPtr<ID3D11ShaderResourceView> heightMapTexture = nullptr;
+	HeightMapOption heightMapOption = HeigitMapOptionEnd;
+	int style_idx = -1;
 };
 

@@ -38,7 +38,7 @@ void HeightBrush::OnTrigger()
 {
 }
 
-HRESULT HeightBrush::Initialize()
+HRESULT HeightBrush::Initialize(const char* _heightMapPath)
 {
 	Graphic = GraphicDevice::GetInstance();
 
@@ -59,7 +59,7 @@ HRESULT HeightBrush::Initialize()
 	components[ComponentType::TRANSFORM] = transform;
 	components[ComponentType::SHADER] = shader;
 
-	if (!LoadHeightTexture())
+	if (!LoadHeightTexture(_heightMapPath))
 		return E_FAIL;
 
 	// 높이 맵의 높이를 표준화합니다.
@@ -74,13 +74,13 @@ HRESULT HeightBrush::Initialize()
 	return InitializeBuffer();
 }
 
-bool HeightBrush::LoadHeightTexture()
+bool HeightBrush::LoadHeightTexture(const char* _heightMapPath)
 {
 
 
 	// 바이너리 모드로 높이맵 파일을 엽니다.
 	FILE* filePtr = nullptr;
-	if (fopen_s(&filePtr, "../Resources/Mountain2.bmp", "rb") != 0)
+	if (fopen_s(&filePtr, _heightMapPath, "rb") != 0)
 	{
 		return false;
 	}
@@ -525,10 +525,10 @@ float* HeightBrush::RaiseHeight(Vector3 * _pos)
 	return distArray;
 }
 
-shared_ptr<HeightBrush> HeightBrush::Create()
+shared_ptr<HeightBrush> HeightBrush::Create(const char* _heightMapPath)
 {
 	shared_ptr<HeightBrush> Instance(new HeightBrush());
-	if (FAILED(Instance->Initialize()))
+	if (FAILED(Instance->Initialize(_heightMapPath)))
 	{
 		MSG_BOX("Failed to create HeightBrush.");
 		return nullptr;

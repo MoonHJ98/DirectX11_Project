@@ -62,7 +62,7 @@ HRESULT Terrain::Initialize(UINT _terrainWidth, UINT _terrainHeight, wstring _he
 	components[ComponentType::TRANSFORM] = transform;
 	components[ComponentType::SHADER] = shader;
 	components[ComponentType::MATERIAL] = material;
-	components[ComponentType::TERRAIN] = terrainComponent;
+	components[ComponentType::BUFFER] = terrainBuffer;
 
 
 	return S_OK;
@@ -78,7 +78,7 @@ int Terrain::Update(float _TimeDelta)
 			components[i]->Update(_TimeDelta);
 	}
 
-	terrainBuffer->Update(_TimeDelta);
+	//terrainBuffer->Update(_TimeDelta);
 	//if(terrainComponent != nullptr && terrainComponent->IsTerrainComponentOpened())
 	//	PickTerrain(screenPos);
 
@@ -95,7 +95,7 @@ void Terrain::Render()
 
 	//quadtree->Render();
 
-	terrainBuffer->Render();
+	//terrainBuffer->Render();
 	//PickTerrain(Vector2());
 	//heightTerrainBuffer->Render();
 }

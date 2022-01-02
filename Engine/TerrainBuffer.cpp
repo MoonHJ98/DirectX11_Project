@@ -3,6 +3,7 @@
 #include "GraphicDevice.h"
 #include "Management.h"
 #include "HeightBrush.h"
+#include "Texture.h"
 
 
 TerrainBuffer::TerrainBuffer()
@@ -27,11 +28,101 @@ void TerrainBuffer::Render()
 {
 	RenderBuffers();
 
-	heightBrush->Render();
+	switch (heightMapOption)
+	{
+	case TerrainBuffer::Circle:
+		break;
+	case TerrainBuffer::Mountain:
+		mountain->Render();
+		break;
+	case TerrainBuffer::DesertMountain:
+		desertMountain->Render();
+		break;
+	case TerrainBuffer::HeigitMapOptionEnd:
+		break;
+	default:
+		break;
+	}
+	
 }
 
 void TerrainBuffer::RenderInspector()
 {
+	static char RaiseOrLowerTerrain[1024 * 16] =
+		" Left click to raise.\n"
+		" Hold shift and left click to lower.\n";
+
+	static char PaintTexture[1024 * 16] = 
+		"Paints the selected material layor onto the terrain texture.";
+
+	static char SetHeight[1024 * 16] =
+		"Left click to set the height.\n"
+		"Hold control and left click to sample the target height.";
+
+	
+
+	if (ImGui::CollapsingHeader("Terrain"))
+	{
+		ImGui::Spacing();
+		ImGui::Spacing();
+
+		ImGui::Combo("Terrain Setting", &style_idx, "Raise or Lower Terrain\0Paint Texture\0Set Height\0");
+
+		ImGui::Spacing();
+		ImGui::Spacing();
+
+		if(style_idx == 0)
+			ImGui::InputTextMultiline("##source0", RaiseOrLowerTerrain, IM_ARRAYSIZE(RaiseOrLowerTerrain), ImVec2(-FLT_MIN, ImGui::GetTextLineHeight() * 4), ImGuiInputTextFlags_ReadOnly);
+		if (style_idx == 1)
+			ImGui::InputTextMultiline("##source1", PaintTexture, IM_ARRAYSIZE(PaintTexture), ImVec2(-FLT_MIN, ImGui::GetTextLineHeight() * 4), ImGuiInputTextFlags_ReadOnly);
+		if (style_idx == 2)
+			ImGui::InputTextMultiline("##source2", SetHeight, IM_ARRAYSIZE(SetHeight), ImVec2(-FLT_MIN, ImGui::GetTextLineHeight() * 4), ImGuiInputTextFlags_ReadOnly);
+
+		ImGui::Spacing();
+		ImGui::Spacing();
+
+		ImGui::Text("Brushes");
+		
+		ImGui::Spacing();
+
+		
+		ImGui::Image((void*)heightMapTexture.Get(), ImVec2(125, 125));
+
+		ImGui::SameLine();
+
+
+
+		if (ImGui::BeginTable("HeightMapSelect", heightMapTextureCount, ImGuiTableFlags_BordersOuter, ImVec2(50.f * heightMapTextureCount, 125.f)))
+		{
+
+			ImGui::TableNextRow();
+			
+			ImGui::TableSetColumnIndex(0);
+			if (ImGui::ImageButton(*circleTexture->GetTexture(), ImVec2(32, 32)))
+			{
+				heightMapTexture = *circleTexture->GetTexture();
+				heightMapOption = Circle;
+			}
+
+			ImGui::TableSetColumnIndex(1);
+			if (ImGui::ImageButton(*mountainTexture->GetTexture(), ImVec2(32, 32)))
+			{
+				heightMapTexture = *mountainTexture->GetTexture();
+				heightMapOption = Mountain;
+			}
+
+			ImGui::TableSetColumnIndex(2);
+			if (ImGui::ImageButton(*desertMountainTexture->GetTexture(), ImVec2(32, 32)))
+			{
+				heightMapTexture = *desertMountainTexture->GetTexture();
+				heightMapOption = DesertMountain;
+			}
+
+			ImGui::EndTable();
+		}
+
+
+	}
 }
 
 HRESULT TerrainBuffer::Initialize(UINT _terrainWidth, UINT _terrainHeight, const char* heightMapFilename)
@@ -54,12 +145,29 @@ HRESULT TerrainBuffer::Initialize(UINT _terrainWidth, UINT _terrainHeight, const
 	brushBuffer = temp;
 	brushBuffer->Create(Graphic->GetDevice());
 
-	heightBrush = HeightBrush::Create();
+	mountain = HeightBrush::Create("../Resources/Mountain2.bmp");
+	TEXTUREDESC mountainDesc;
+	mountainDesc.Path = L"../Resources/Mountain2.png";
+	mountainTexture = Texture::Create(Graphic->GetDevice(), &mountainDesc);
+	++heightMapTextureCount;
+
+	desertMountain = HeightBrush::Create("../Resources/Desert-Mountain-1.bmp");
+	TEXTUREDESC desertMountainDesc;
+	desertMountainDesc.Path = L"../Resources/Desert-Mountain-1.png";
+	desertMountainTexture = Texture::Create(Graphic->GetDevice(), &desertMountainDesc);
+	++heightMapTextureCount;
+
+	TEXTUREDESC circleDesc;
+	circleDesc.Path = L"../Resources/Circle.png";
+	circleTexture = Texture::Create(Graphic->GetDevice(), &circleDesc);
+	++heightMapTextureCount;
+
+	heightMapTexture = *circleTexture->GetTexture();
 
 	// 지형의 높이 맵을 로드합니다.
 	if (!LoadHeightMap(heightMapFilename))
 		return E_FAIL;
-
+	
 
 	// 높이 맵의 높이를 표준화합니다.
 	NormalizeHeightMap();
@@ -166,10 +274,6 @@ HRESULT TerrainBuffer::InitializeBuffers()
 		}
 	}
 
-
-	//// 정점, 인덱스 버퍼 생성.
-	//CreateStaticBuffer(GraphicDevice::GetInstance()->GetDevice(), vertices, vertexCount, sizeof(TerrainVertexType), D3D11_BIND_VERTEX_BUFFER, vertexBuffer.GetAddressOf());
-
 	D3D11_BUFFER_DESC desc;
 	desc.Usage = D3D11_USAGE_DYNAMIC;
 	desc.ByteWidth = sizeof(TerrainVertexType) * vertexCount;
@@ -256,7 +360,21 @@ Vector3 TerrainBuffer::PickTerrain(Vector2 screenPos)
 			auto buffer = brushBuffer->GetBuffer();
 			Graphic->GetDeviceContext()->PSSetConstantBuffers(0, 1, &buffer);
 
-			heightBrush->SetPosition(brushDesc);
+			switch (heightMapOption)
+			{
+			case TerrainBuffer::Circle:
+				break;
+			case TerrainBuffer::Mountain:
+				mountain->SetPosition(brushDesc);
+				break;
+			case TerrainBuffer::DesertMountain:
+				desertMountain->SetPosition(brushDesc);
+				break;
+			case TerrainBuffer::HeigitMapOptionEnd:
+				break;
+			default:
+				break;
+			}
 			return Pos;
 		}
 		if (ray.Intersects(vertex4, vertex5, vertex6, dist))
@@ -268,7 +386,7 @@ Vector3 TerrainBuffer::PickTerrain(Vector2 screenPos)
 			brushBuffer->SetData(Graphic->GetDeviceContext(), brushDesc);
 			auto buffer = brushBuffer->GetBuffer();
 			Graphic->GetDeviceContext()->PSSetConstantBuffers(0, 1, &buffer);
-			heightBrush->SetPosition(brushDesc);
+			mountain->SetPosition(brushDesc);
 
 			return Pos;
 		}
@@ -305,7 +423,8 @@ void TerrainBuffer::CopyIndexArray(void * indexList)
 
 void TerrainBuffer::RaiseHeight()
 {
-	float dist;
+	if (heightMapOption == HeigitMapOptionEnd)
+		return;
 
 	for (UINT i = 0; i < vertexCount; i += 6)
 	{
@@ -346,17 +465,58 @@ void TerrainBuffer::RaiseHeight()
 		if (fabsf(dist4) > brushDesc.range)
 			vertex4 = EXCEPT_RAISEHEIGHT;
 
-
-		Vector3 pos[4] = { vertex1, vertex2, vertex3, vertex4 };
-		float* distArray = heightBrush->RaiseHeight(pos);
-
-		if (distArray == nullptr)
+		if (vertex1 == EXCEPT_RAISEHEIGHT && vertex2 == EXCEPT_RAISEHEIGHT && vertex3 == EXCEPT_RAISEHEIGHT && vertex4 == EXCEPT_RAISEHEIGHT)
 			continue;
 
-		auto d1 = distArray[0];
-		auto d2 = distArray[1];
-		auto d3 = distArray[2];
-		auto d4 = distArray[3];
+		Vector3 pos[4] = { vertex1, vertex2, vertex3, vertex4 };
+
+		float* distArray = nullptr;
+
+		switch (heightMapOption)
+		{
+		case TerrainBuffer::Circle:
+			break;
+		case TerrainBuffer::Mountain:
+			distArray = mountain->RaiseHeight(pos);
+			break;
+		case TerrainBuffer::DesertMountain:
+			distArray = desertMountain->RaiseHeight(pos);
+			break;
+		case TerrainBuffer::HeigitMapOptionEnd:
+			break;
+		default:
+			break;
+		}
+
+
+		if (heightMapOption != Circle && distArray == nullptr)
+			continue;
+
+		
+		if (distArray != nullptr)
+		{
+			h1 = distArray[0];
+			h2 = distArray[1];
+			h3 = distArray[2];
+			h4 = distArray[3];
+		}
+
+		if (heightMapOption == Circle)
+		{
+			h1 = (float)(pow(brushDesc.range, 2) - (dist1 * dist1));
+			if (h1 <= 0)
+				h1 = 0;
+			h2 = (float)(pow(brushDesc.range, 2) - (dist2 * dist2));
+			if (h2 <= 0)
+				h2 = 0;
+			h3 = (float)(pow(brushDesc.range, 2) - (dist3 * dist3));
+			if (h3 <= 0)
+				h3 = 0;
+			h4 = (float)(pow(brushDesc.range, 2) - (dist4 * dist4));
+			if (h4 <= 0)
+				h4 = 0;
+
+		}
 
 		//h1 = (float)(pow(brushDesc.range, 2) - (dist1 * dist1)); // 반원 형태가 나옴.
 
@@ -374,13 +534,13 @@ void TerrainBuffer::RaiseHeight()
 		}
 		else
 		{
-			vertices[i + 0].position.y += d1 * timeDelta;
-			vertices[i + 1].position.y += d2 * timeDelta;
-			vertices[i + 2].position.y += d3 * timeDelta;
+			vertices[i + 0].position.y += h1 * timeDelta;
+			vertices[i + 1].position.y += h2 * timeDelta;
+			vertices[i + 2].position.y += h3 * timeDelta;
 
-			vertices[i + 3].position.y += d3 * timeDelta;
-			vertices[i + 4].position.y += d2 * timeDelta;
-			vertices[i + 5].position.y += d4 * timeDelta;
+			vertices[i + 3].position.y += h3 * timeDelta;
+			vertices[i + 4].position.y += h2 * timeDelta;
+			vertices[i + 5].position.y += h4 * timeDelta;
 		}
 	}
 
