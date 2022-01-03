@@ -45,7 +45,7 @@ HRESULT Terrain::Initialize(UINT _terrainWidth, UINT _terrainHeight, wstring _he
 		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 	};
 
-	shader = Shader::Create(InputLayout, sizeof(InputLayout), L"../Engine/ColorVS.hlsl", L"../Engine/ColorPS.hlsl");
+	shader = Shader::Create(InputLayout, sizeof(InputLayout), L"../Engine/TerrainVS.hlsl", L"../Engine/TerrainPS.hlsl");
 
 	MATERIALDESC desc;
 	desc.name = L"Terrain";
@@ -74,13 +74,9 @@ int Terrain::Update(float _TimeDelta)
 
 	for (size_t i = 0; i < components.size(); ++i)
 	{
-		if(components[i])
+		if (components[i])
 			components[i]->Update(_TimeDelta);
 	}
-
-	//terrainBuffer->Update(_TimeDelta);
-	//if(terrainComponent != nullptr && terrainComponent->IsTerrainComponentOpened())
-	//	PickTerrain(screenPos);
 
 	return 0;
 }
@@ -110,21 +106,34 @@ void Terrain::OnTrigger()
 
 Vector3 Terrain::PickTerrain(Vector2 screenPos, Vector2 _screenSize)
 {
-	//Vector3 Pos = quadtree->PickTerrain(screenPos, _screenSize);
+	if (terrainBuffer == nullptr)
+		return Vector3();
 
-	//if (screenPos.x < 0 || screenPos.x > _screenSize.x || screenPos.y < 0 || screenPos.y > _screenSize.y)
-	//	return Vector3(0.f, 0.f, 0.f);
+	if (screenPos.x < 0 || screenPos.x > _screenSize.x || screenPos.y < 0 || screenPos.y > _screenSize.y)
+	{
+		terrainBuffer->SetChangeTerrainToolRender(false);
+		terrainBuffer->SetTerrainTool(FALSE);
+		return Vector3();
+	}
+
+	//Vector3 Pos = quadtree->PickTerrain(screenPos, _screenSize);
+	terrainBuffer->SetChangeTerrainToolRender(true);
+
+	
 	Vector3 Pos = terrainBuffer->PickTerrain(screenPos);
 
 	if (Manage->GetDIMouseState(InputDevice::DIM_LB) & 0x80)
+	{
 		RaiseHeight();
+	}
+
 
 	return Pos;
 }
 
 void Terrain::SetScreenSize(Vector2 _screenSize)
 {
-	//terrainBuffer->SetScreenSize(_screenSize);
+	terrainBuffer->SetScreenSize(_screenSize);
 }
 
 void Terrain::RaiseHeight()

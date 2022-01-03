@@ -519,5 +519,7 @@
     <FxCompile Include="ColliderVS.hlsl">
       <Filter>02. Includes\01. HLSL</Filter>
     </FxCompile>
+    <FxCompile Include="TerrainPS.hlsl" />
+    <FxCompile Include="TerrainVS.hlsl" />
   </ItemGroup>
 </Project>

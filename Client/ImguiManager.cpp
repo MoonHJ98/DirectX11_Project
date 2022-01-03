@@ -22,9 +22,7 @@ HRESULT ImguiManager::Initialize()
 	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NavEnableSetMousePos;
 
-
-
-
+	ImGui::GetIO().ConfigWindowsMoveFromTitleBarOnly = true;
 
 	ImGui_ImplWin32_Init(GhWnd);
 	ImGui_ImplDX11_Init(GraphicDevice::GetInstance()->GetDevice(), GraphicDevice::GetInstance()->GetDeviceContext());
@@ -36,6 +34,7 @@ HRESULT ImguiManager::Initialize()
 
 void ImguiManager::Render()
 {
+
 
 	// Start ImGui frame. 갱신되게 하는 것.
 	ImGui_ImplDX11_NewFrame();
@@ -64,7 +63,6 @@ void ImguiManager::Render()
 		ImGui::RenderPlatformWindowsDefault();
 
 	}
-
 }
 
 void ImguiManager::Scene()
@@ -72,26 +70,28 @@ void ImguiManager::Scene()
 	static int counter = 0;
 
 	ImGui::Begin("Scene");
-	
 
 	ID3D11ShaderResourceView* my_texture = Renderer::GetInstance()->GetBlendTexture();
-	ImGui::Image((void*)my_texture, ImVec2(800, 600));
+	ImGui::Image((void*)my_texture, ImVec2(SCREENSIZEX, SCREENSIZEY));
 	ImVec2 MinPos;
-	
+
 	Vector2 MousePos = Vector2();
-	
+
 	MinPos = ImGui::GetItemRectMin();
 	ImVec2 sceneSize = ImGui::GetWindowSize();
 	screenSize = Vector2(sceneSize.x, sceneSize.y);
-	
+
+	POINT p;
+	GetCursorPos(&p);
+	ScreenToClient(GhWnd, &p);
 
 	MousePos = Vector2(ImGui::GetMousePos().x - MinPos.x, ImGui::GetMousePos().y - MinPos.y);
 
-	//cout << MousePos.x << " , " << MousePos.y << endl;
+	cout << MousePos.x << " , " << MousePos.y << endl;
 	// TODO : 이거 없애면 디퓨즈 빠지는거 해결하기.
 	auto tempTerrain = Manage->FindGameObjectTest(STATIC, L"Terrain", L"Terrain");
 	auto terrain = dynamic_pointer_cast<Terrain>(tempTerrain);
-	terrain->SetScreenSize(Vector2(sceneSize.x, sceneSize.y));
+	//terrain->SetScreenSize(Vector2(sceneSize.x, sceneSize.y));
 	//terrain->SetScreenPos(MousePos);
 	terrain->PickTerrain(MousePos, screenSize);
 
@@ -207,7 +207,7 @@ void ImguiManager::ObjectInspector()
 	ImGui::Spacing();
 	ImGui::SetCursorPosX((float)ImGui::GetWindowSize().x / 4);
 
-	
+
 	ComponentPopup();
 
 }
@@ -229,10 +229,10 @@ void ImguiManager::ComponentPopup()
 			if (ImGui::MenuItem("Sphere Collider"))
 				obj->AddComponent(ComponentType::COLLIDER, Collider::Create(obj, PxGeometryType::eSPHERE));
 
-			if(ImGui::MenuItem("Box Collider"))
+			if (ImGui::MenuItem("Box Collider"))
 				obj->AddComponent(ComponentType::COLLIDER, Collider::Create(obj, PxGeometryType::eBOX));
 
-			if(ImGui::MenuItem("Capsule Collider"))
+			if (ImGui::MenuItem("Capsule Collider"))
 				obj->AddComponent(ComponentType::COLLIDER, Collider::Create(obj, PxGeometryType::eCAPSULE));
 
 

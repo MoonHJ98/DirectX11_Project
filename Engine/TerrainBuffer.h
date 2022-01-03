@@ -23,8 +23,15 @@ private:
 		float x, y, z;
 	};
 
+	struct TerrainToolDesc
+	{
+		BOOL _terrainTool = FALSE;
+		BOOL padding[3] = {};
+	};
+
 	enum HeightMapOption { Circle, Mountain, DesertMountain, HeigitMapOptionEnd };
 
+	enum TerrainToolStyle { RaiseOrLowerTerrain, PaintTexture, TerrainToolStyleEnd };
 
 private:
 	TerrainBuffer();
@@ -56,7 +63,12 @@ public:
 	void CopyVertexArray(void* vertexList);
 	void CopyIndexArray(void* indexList);
 	void RaiseHeight();
+	void SetScreenSize(Vector2 _sceneSize);
 
+	BOOL GetTerrainTool() { return terrainTool; }
+	void SetTerrainTool(BOOL _terrainTool) { terrainTool = _terrainTool; }
+
+	void SetChangeTerrainToolRender(bool _bCheck) { changeTerrainToolRender = _bCheck; }
 public:
 	static shared_ptr<TerrainBuffer> Create(UINT _terrainWidth, UINT _terrainHeight, const char* heightMapFilename = nullptr);
 
@@ -85,6 +97,10 @@ private:
 	BrushDesc brushDesc;
 	shared_ptr<ConstantBuffer<BrushDesc>> brushBuffer = nullptr;
 
+	TerrainToolDesc toolDesc;
+	shared_ptr<ConstantBuffer<TerrainToolDesc>> toolBuffer = nullptr;
+
+
 	shared_ptr<HeightBrush> mountain = nullptr;
 	shared_ptr<HeightBrush> desertMountain = nullptr;
 	shared_ptr<Texture> mountainTexture = nullptr;
@@ -92,7 +108,11 @@ private:
 	shared_ptr<Texture> circleTexture = nullptr;
 	int heightMapTextureCount = 0;
 	ComPtr<ID3D11ShaderResourceView> heightMapTexture = nullptr;
-	HeightMapOption heightMapOption = HeigitMapOptionEnd;
-	int style_idx = -1;
+	HeightMapOption heightMapOption = Circle;
+
+	BOOL terrainTool = FALSE;
+	bool changeTerrainToolRender = true;
+
+	int terrainToolStyle = TerrainToolStyleEnd;
 };
 

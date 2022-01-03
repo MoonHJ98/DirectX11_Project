@@ -21,6 +21,12 @@ TerrainBuffer::~TerrainBuffer()
 int TerrainBuffer::Update(float _timeDelta)
 {
 	timeDelta = _timeDelta;
+
+	toolDesc._terrainTool = terrainTool;
+	toolBuffer->SetData(Graphic->GetDeviceContext(), toolDesc);
+	auto buffer = toolBuffer->GetBuffer();
+	Graphic->GetDeviceContext()->PSSetConstantBuffers(2, 1, &buffer);
+
 	return 0;
 }
 
@@ -54,38 +60,32 @@ void TerrainBuffer::RenderInspector()
 
 	static char PaintTexture[1024 * 16] = 
 		"Paints the selected material layor onto the terrain texture.";
-
-	static char SetHeight[1024 * 16] =
-		"Left click to set the height.\n"
-		"Hold control and left click to sample the target height.";
-
 	
 
 	if (ImGui::CollapsingHeader("Terrain"))
 	{
-		ImGui::Spacing();
-		ImGui::Spacing();
-
-		ImGui::Combo("Terrain Setting", &style_idx, "Raise or Lower Terrain\0Paint Texture\0Set Height\0");
 
 		ImGui::Spacing();
 		ImGui::Spacing();
 
-		if(style_idx == 0)
+		ImGui::Combo("Terrain Setting", &terrainToolStyle, "Raise or Lower Terrain\0Paint Texture\0");
+
+		ImGui::Spacing();
+		ImGui::Spacing();
+
+		if (terrainToolStyle == TerrainToolStyle::RaiseOrLowerTerrain)
 			ImGui::InputTextMultiline("##source0", RaiseOrLowerTerrain, IM_ARRAYSIZE(RaiseOrLowerTerrain), ImVec2(-FLT_MIN, ImGui::GetTextLineHeight() * 4), ImGuiInputTextFlags_ReadOnly);
-		if (style_idx == 1)
+		if (terrainToolStyle == TerrainToolStyle::PaintTexture)
 			ImGui::InputTextMultiline("##source1", PaintTexture, IM_ARRAYSIZE(PaintTexture), ImVec2(-FLT_MIN, ImGui::GetTextLineHeight() * 4), ImGuiInputTextFlags_ReadOnly);
-		if (style_idx == 2)
-			ImGui::InputTextMultiline("##source2", SetHeight, IM_ARRAYSIZE(SetHeight), ImVec2(-FLT_MIN, ImGui::GetTextLineHeight() * 4), ImGuiInputTextFlags_ReadOnly);
 
 		ImGui::Spacing();
 		ImGui::Spacing();
 
 		ImGui::Text("Brushes");
-		
+
 		ImGui::Spacing();
 
-		
+
 		ImGui::Image((void*)heightMapTexture.Get(), ImVec2(125, 125));
 
 		ImGui::SameLine();
@@ -94,9 +94,11 @@ void TerrainBuffer::RenderInspector()
 
 		if (ImGui::BeginTable("HeightMapSelect", heightMapTextureCount, ImGuiTableFlags_BordersOuter, ImVec2(50.f * heightMapTextureCount, 125.f)))
 		{
+			if(changeTerrainToolRender == true)
+				terrainTool = TRUE;
 
 			ImGui::TableNextRow();
-			
+
 			ImGui::TableSetColumnIndex(0);
 			if (ImGui::ImageButton(*circleTexture->GetTexture(), ImVec2(32, 32)))
 			{
@@ -123,6 +125,9 @@ void TerrainBuffer::RenderInspector()
 
 
 	}
+	else
+		terrainTool = FALSE;
+
 }
 
 HRESULT TerrainBuffer::Initialize(UINT _terrainWidth, UINT _terrainHeight, const char* heightMapFilename)
@@ -144,6 +149,10 @@ HRESULT TerrainBuffer::Initialize(UINT _terrainWidth, UINT _terrainHeight, const
 	shared_ptr<ConstantBuffer<BrushDesc>> temp(new ConstantBuffer<BrushDesc>());
 	brushBuffer = temp;
 	brushBuffer->Create(Graphic->GetDevice());
+
+	shared_ptr<ConstantBuffer<TerrainToolDesc>> temp2(new ConstantBuffer<TerrainToolDesc>());
+	toolBuffer = temp2;
+	toolBuffer->Create(Graphic->GetDevice());
 
 	mountain = HeightBrush::Create("../Resources/Mountain2.bmp");
 	TEXTUREDESC mountainDesc;
@@ -326,7 +335,7 @@ Vector3 TerrainBuffer::PickTerrain(Vector2 screenPos)
 
 	Vector3::Transform(RayPos, matView, RayPos);
 	Vector3::TransformNormal(RayDir, matView, RayDir);
-
+	
 
 
 	Ray ray;
@@ -375,9 +384,11 @@ Vector3 TerrainBuffer::PickTerrain(Vector2 screenPos)
 			default:
 				break;
 			}
+
+			//cout << Pos.x << " , " << Pos.z << endl;
 			return Pos;
 		}
-		if (ray.Intersects(vertex4, vertex5, vertex6, dist))
+		else if (ray.Intersects(vertex4, vertex5, vertex6, dist))
 		{
 			Pos = ray.position + ray.direction * dist;
 
@@ -386,7 +397,24 @@ Vector3 TerrainBuffer::PickTerrain(Vector2 screenPos)
 			brushBuffer->SetData(Graphic->GetDeviceContext(), brushDesc);
 			auto buffer = brushBuffer->GetBuffer();
 			Graphic->GetDeviceContext()->PSSetConstantBuffers(0, 1, &buffer);
-			mountain->SetPosition(brushDesc);
+
+			switch (heightMapOption)
+			{
+			case TerrainBuffer::Circle:
+				break;
+			case TerrainBuffer::Mountain:
+				mountain->SetPosition(brushDesc);
+				break;
+			case TerrainBuffer::DesertMountain:
+				desertMountain->SetPosition(brushDesc);
+				break;
+			case TerrainBuffer::HeigitMapOptionEnd:
+				break;
+			default:
+				break;
+			}
+
+			//cout << Pos.x << " , " << Pos.z << endl;
 
 			return Pos;
 		}
@@ -520,27 +548,53 @@ void TerrainBuffer::RaiseHeight()
 
 		//h1 = (float)(pow(brushDesc.range, 2) - (dist1 * dist1)); // 반원 형태가 나옴.
 
-		if (Manage->GetDIKeyState(DIK_LALT) & 0x80)
+		if (Manage->GetDIKeyState(DIK_LSHIFT) & 0x80)
 		{
-			vertices[i + 0].position.y -= h1 * timeDelta;
-			vertices[i + 1].position.y -= h2 * timeDelta;
-			vertices[i + 2].position.y -= h3 * timeDelta;
+			switch (terrainToolStyle)
+			{
+			case TerrainBuffer::RaiseOrLowerTerrain:
+				vertices[i + 0].position.y -= h1 * timeDelta;
+				vertices[i + 1].position.y -= h2 * timeDelta;
+				vertices[i + 2].position.y -= h3 * timeDelta;
 
-			vertices[i + 3].position.y -= h3 * timeDelta;
-			vertices[i + 4].position.y -= h2 * timeDelta;
-			vertices[i + 5].position.y -= h4 * timeDelta;
+				vertices[i + 3].position.y -= h3 * timeDelta;
+				vertices[i + 4].position.y -= h2 * timeDelta;
+				vertices[i + 5].position.y -= h4 * timeDelta;
 
-
+				for (int j = 0; j < 6; ++j)
+				{
+					if (vertices[i + j].position.y <= 0.f)
+						vertices[i + j].position.y = 0.f;
+				}
+				break;
+			case TerrainBuffer::PaintTexture:
+				break;
+			case TerrainBuffer::TerrainToolStyleEnd:
+				break;
+			default:
+				break;
+			}
 		}
 		else
 		{
-			vertices[i + 0].position.y += h1 * timeDelta;
-			vertices[i + 1].position.y += h2 * timeDelta;
-			vertices[i + 2].position.y += h3 * timeDelta;
+			switch (terrainToolStyle)
+			{
+			case TerrainBuffer::RaiseOrLowerTerrain:
+				vertices[i + 0].position.y += h1 * timeDelta;
+				vertices[i + 1].position.y += h2 * timeDelta;
+				vertices[i + 2].position.y += h3 * timeDelta;
 
-			vertices[i + 3].position.y += h3 * timeDelta;
-			vertices[i + 4].position.y += h2 * timeDelta;
-			vertices[i + 5].position.y += h4 * timeDelta;
+				vertices[i + 3].position.y += h3 * timeDelta;
+				vertices[i + 4].position.y += h2 * timeDelta;
+				vertices[i + 5].position.y += h4 * timeDelta;
+				break;
+			case TerrainBuffer::PaintTexture:
+				break;
+			case TerrainBuffer::TerrainToolStyleEnd:
+				break;
+			default:
+				break;
+			}
 		}
 	}
 
@@ -553,6 +607,12 @@ void TerrainBuffer::RaiseHeight()
 	}
 
 	CreateNormalData();
+}
+
+void TerrainBuffer::SetScreenSize(Vector2 _sceneSize)
+{
+	screenWidth = (UINT)_sceneSize.x;
+	screenHeignt = (UINT)_sceneSize.y;
 }
 
 void TerrainBuffer::RenderBuffers()

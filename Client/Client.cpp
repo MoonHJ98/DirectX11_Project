@@ -15,6 +15,7 @@
 #define MAX_LOADSTRING 100
 
 
+
 // 전역 변수:
 HINSTANCE hInst;                                // 현재 인스턴스입니다.
 WCHAR szTitle[MAX_LOADSTRING];                  // 제목 표시줄 텍스트입니다.
@@ -25,7 +26,6 @@ HINSTANCE GInstance = nullptr;
 int  GX;
 int  GY;
 SCENEID GSceneID = SCENE_END;
-
 
 #ifdef UNICODE
 #pragma comment(linker, "/entry:wWinMainCRTStartup /subsystem:console")
@@ -236,7 +236,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_DESTROY:
         PostQuitMessage(0);
         break;
-
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);
     }

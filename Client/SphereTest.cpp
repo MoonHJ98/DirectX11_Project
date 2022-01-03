@@ -49,7 +49,7 @@ void SphereTest::OnTrigger()
 HRESULT SphereTest::Initialize()
 {
 	sphere = Sphere::Create();
-
+	
 	D3D11_INPUT_ELEMENT_DESC InputLayout[] =
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
@@ -63,7 +63,7 @@ HRESULT SphereTest::Initialize()
 
 	transform = Transform::Create(Transform::TRANSDESC());
 	transform->SetObject(shared_from_this());
-	transform->SetState(Transform::POSITION, Vector3(10.f, 30.f, 15.f));
+	transform->SetState(Transform::POSITION, Vector3(10.f, 10.f, 15.f));
 	components[ComponentType::TRANSFORM] = transform;
 
 
