@@ -2,6 +2,7 @@
 
 #include "Includes.h"
 
+class TerrainBuffer;
 
 class ContactCallBack : public PxSimulationEventCallback
 {
@@ -25,6 +26,7 @@ public:
 	PxRigidDynamic* AddRigidbody(Vector3 _pos);
 	PxShape* AddCollider(PxGeometryType::Enum _type, ColliderDesc _desc);
 	void SetupFiltering(PxRigidActor* actor, PxU32 filterGroup, PxU32 filterMask);
+	void CreateHeightField(shared_ptr<TerrainBuffer> _terrainBuffer);
 
 public:
 	void RunSimulate(float _timeDelta);
@@ -39,5 +41,6 @@ private:
 	PxPvd* pvd = nullptr;
 	PxScene* scene = nullptr;
 	PxMaterial* material = nullptr;
+	PxCooking* cooking = nullptr;
 };
 

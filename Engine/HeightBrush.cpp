@@ -509,11 +509,11 @@ float* HeightBrush::RaiseHeight(Vector3 * _pos)
 
 			if (ray[j].Intersects(vertex1, vertex2, vertex3, dist))
 			{
-				distArray[j] = dist * 100;
+				distArray[j] = dist * 50;
 			}
 			else if (ray[j].Intersects(vertex3, vertex2, vertex4, dist))
 			{
-				distArray[j] = dist * 100;
+				distArray[j] = dist * 50;
 			}
 
 

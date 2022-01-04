@@ -1,8 +1,7 @@
-
 #include "pch.h"
 #include "PhysXManager.h"
 #include "GameObject.h"
-
+#include "TerrainBuffer.h"
 
 PxFilterFlags FilterShader(
 	PxFilterObjectAttributes attributes0, PxFilterData filterData0,
@@ -34,7 +33,9 @@ HRESULT PhysXManager::Initialize()
 	auto transport = PxDefaultPvdSocketTransportCreate("127.0.0.1", 5425, 10);
 	auto res = pvd->connect(*transport, PxPvdInstrumentationFlag::eALL);
 
-	physics = PxCreatePhysics(PX_PHYSICS_VERSION, *foundation, PxTolerancesScale(), true, pvd);
+	PxTolerancesScale scale;
+
+	physics = PxCreatePhysics(PX_PHYSICS_VERSION, *foundation, scale, true, pvd);
 
 	PxSceneDesc sceneDesc(physics->getTolerancesScale());
 	sceneDesc.gravity = PxVec3(0.f, -9.81f, 0.f);
@@ -45,7 +46,11 @@ HRESULT PhysXManager::Initialize()
 
 	scene = physics->createScene(sceneDesc);
 
-
+	PxCookingParams params(scale);
+	params.meshWeldTolerance = 0.001f;
+	params.meshPreprocessParams = PxMeshPreprocessingFlags(PxMeshPreprocessingFlag::eWELD_VERTICES);
+	params.buildGPUData = true; //Enable GRB data being produced in cooking.
+	cooking = PxCreateCooking(PX_PHYSICS_VERSION, *foundation, params);
 
 	auto pvdClient = scene->getScenePvdClient();
 
@@ -133,6 +138,51 @@ void PhysXManager::SetupFiltering(PxRigidActor * actor, PxU32 filterGroup, PxU32
 		shape->setSimulationFilterData(filterData);
 	}
 	allocator.deallocate(shapes);
+
+}
+
+void PhysXManager::CreateHeightField(shared_ptr<TerrainBuffer> _terrainBuffer)
+{
+	const PxReal heightScale = 1.f;
+	const PxU32 hfSize = _terrainBuffer->GetTerrainWidth(); // some power of 2
+	const PxU32 hfNumVerts = _terrainBuffer->GetVertexCount();
+
+	const PxReal hfScale = 1.f; // this is how wide one heightfield square is
+
+	PxHeightFieldSample* heightmap = (PxHeightFieldSample*)allocator.allocate(sizeof(PxHeightFieldSample)*hfNumVerts, 0, __FILE__, __LINE__);
+	memset(heightmap, NULL, hfNumVerts * sizeof(PxHeightFieldSample));
+
+	for (PxU32 z = 0; z < hfSize; z++)
+	{
+		for (PxU32 x = 0; x < hfSize; x++)
+		{
+			UINT index = hfSize * z + x;
+			heightmap[index].height = (PxI16)_terrainBuffer.get()->GetVertices()[index].position.y;
+			heightmap[index].setTessFlag();
+			heightmap[index].materialIndex0 = 1;
+			heightmap[index].materialIndex1 = 1;
+		}
+	}
+
+	PxHeightFieldDesc hfDesc;
+	hfDesc.format = PxHeightFieldFormat::eS16_TM;
+	hfDesc.nbColumns = hfSize;
+	hfDesc.nbRows = hfSize;
+	hfDesc.samples.data = heightmap;
+	hfDesc.samples.stride = sizeof(PxHeightFieldSample);
+
+	PxHeightField* heightField = cooking->createHeightField(hfDesc, physics->getPhysicsInsertionCallback());
+
+	PxTransform pose = PxTransform(PxIdentity);
+	pose.p = PxVec3(0.f, 0.f, 0.f);
+
+	PxRigidStatic* actor = physics->createRigidStatic(pose);
+
+	PxHeightFieldGeometry hfGeom(heightField, PxMeshGeometryFlags(), heightScale, hfScale, hfScale);
+	PxShape* hfShape = PxRigidActorExt::createExclusiveShape(*actor, hfGeom, *material);
+	actor->setName("HeightField");
+		
+	scene->addActor(*actor);
 
 }
 

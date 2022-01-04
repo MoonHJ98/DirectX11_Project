@@ -13,6 +13,7 @@
 #include "StaticCamera.h"
 #include "ImguiManager.h"
 #include "Quadtree.h"
+#include "PhysXManager.h"
 
 
 
@@ -54,7 +55,7 @@ HRESULT Terrain::Initialize(UINT _terrainWidth, UINT _terrainHeight, wstring _he
 	material = Material::Create(desc);
 
 	terrainBuffer = TerrainBuffer::Create(terrainWidth, _terrainHeight);
-	quadtree = Quadtree::Create(terrainBuffer);
+	//quadtree = Quadtree::Create(terrainBuffer);
 
 
 	terrainComponent = TerrainComponent::Create();
@@ -64,6 +65,7 @@ HRESULT Terrain::Initialize(UINT _terrainWidth, UINT _terrainHeight, wstring _he
 	components[ComponentType::MATERIAL] = material;
 	components[ComponentType::BUFFER] = terrainBuffer;
 
+	//PhysXManager::GetInstance()->CreateHeightField(terrainBuffer);
 
 	return S_OK;
 }

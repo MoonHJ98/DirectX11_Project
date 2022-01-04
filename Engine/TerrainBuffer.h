@@ -9,20 +9,9 @@ class Management;
 class HeightBrush;
 class Texture;
 
-class TerrainBuffer : public Component
+class TerrainBuffer : public Component, public enable_shared_from_this<TerrainBuffer>
 {
 private:
-	struct HeightMapType
-	{
-		float x, y, z;
-		float tu, tv;
-		float nx, ny, nz;
-	};
-	struct VectorType
-	{
-		float x, y, z;
-	};
-
 	struct TerrainToolDesc
 	{
 		BOOL _terrainTool = FALSE;
@@ -49,10 +38,6 @@ private:
 	HRESULT Initialize(UINT _terrainWidth, UINT _terrainHeight, const char* heightMapFilename);
 	HRESULT InitializeBuffers();
 	void RenderBuffers();
-	bool LoadHeightMap(const char* heightMapFilename);
-	void NormalizeHeightMap();
-	bool CalculateNormals();
-	void CalculateTextureCoordinates();
 	void CreateNormalData();
 
 public:
@@ -69,6 +54,8 @@ public:
 	void SetTerrainTool(BOOL _terrainTool) { terrainTool = _terrainTool; }
 
 	void SetChangeTerrainToolRender(bool _bCheck) { changeTerrainToolRender = _bCheck; }
+
+	int GetTerrainWidth() { return terrainWidth; }
 public:
 	static shared_ptr<TerrainBuffer> Create(UINT _terrainWidth, UINT _terrainHeight, const char* heightMapFilename = nullptr);
 
@@ -79,9 +66,7 @@ private:
 	ComPtr<ID3D11Buffer> indexBuffer = nullptr;
 
 	TerrainVertexType* vertices = nullptr;
-	UINT* indices = nullptr;
-
-	HeightMapType* heightMap = nullptr;
+	vector<UINT> indices;
 
 	int terrainWidth = 0;
 	int terrainHeight = 0;

@@ -69,6 +69,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     MSG msg;
 
+	shared_ptr<PhysXManager> physxManager = PhysXManager::GetInstance();
+	physxManager->Initialize();
 
 	auto mainApp = MainApp::Create();
 
@@ -81,8 +83,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 
 	//CloseWindow(GhWnd);
-	shared_ptr<PhysXManager> physxManager = PhysXManager::GetInstance();
-	physxManager->Initialize();
+
 
 	while (TRUE)
 	{
