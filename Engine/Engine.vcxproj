@@ -211,8 +211,8 @@
     <ClInclude Include="Struct.h" />
     <ClInclude Include="RenderTarget.h" />
     <ClInclude Include="TerrainBuffer.h" />
-    <ClInclude Include="TerrainComponent.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="TextureBrush.h" />
     <ClInclude Include="TimeManager.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Transform.h" />
@@ -290,8 +290,8 @@
     <ClCompile Include="Struct.cpp" />
     <ClCompile Include="RenderTarget.cpp" />
     <ClCompile Include="TerrainBuffer.cpp" />
-    <ClCompile Include="TerrainComponent.cpp" />
     <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="TextureBrush.cpp" />
     <ClCompile Include="TimeManager.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Transform.cpp" />

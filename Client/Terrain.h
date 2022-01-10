@@ -6,9 +6,9 @@ class TerrainBuffer;
 class Transform;
 class Shader;
 class Material;
-class TerrainComponent;
 class Management;
 class Quadtree;
+class PhysXManager;
 
 class Terrain :public GameObject, public enable_shared_from_this<Terrain> 
 {
@@ -36,6 +36,7 @@ public:
 
 private:
 	void RaiseHeight();
+	void PaintTexture();
 	
 
 public:
@@ -48,12 +49,13 @@ private:
 
 	shared_ptr<Shader> shader = nullptr;
 	shared_ptr<Material> material = nullptr;
-	shared_ptr<TerrainComponent> terrainComponent = nullptr;
 
 	shared_ptr<Management> Manage = nullptr;
 
 	UINT terrainWidth, terrainHeight;
 
 	Vector2 screenPos = Vector2();
+	shared_ptr<PhysXManager> physxManager = nullptr;
+
 };
 

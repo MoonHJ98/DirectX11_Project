@@ -141,8 +141,9 @@ void PhysXManager::SetupFiltering(PxRigidActor * actor, PxU32 filterGroup, PxU32
 
 }
 
-void PhysXManager::CreateHeightField(shared_ptr<TerrainBuffer> _terrainBuffer)
+void PhysXManager::UpdateHeightField(shared_ptr<TerrainBuffer> _terrainBuffer)
 {
+
 	const PxReal heightScale = 1.f;
 	const PxU32 hfSize = _terrainBuffer->GetTerrainWidth(); // some power of 2
 	const PxU32 hfNumVerts = _terrainBuffer->GetVertexCount();
@@ -176,14 +177,14 @@ void PhysXManager::CreateHeightField(shared_ptr<TerrainBuffer> _terrainBuffer)
 	PxTransform pose = PxTransform(PxIdentity);
 	pose.p = PxVec3(0.f, 0.f, 0.f);
 
-	PxRigidStatic* actor = physics->createRigidStatic(pose);
+	heightFieldActor = physics->createRigidStatic(pose);
 
 	PxHeightFieldGeometry hfGeom(heightField, PxMeshGeometryFlags(), heightScale, hfScale, hfScale);
-	PxShape* hfShape = PxRigidActorExt::createExclusiveShape(*actor, hfGeom, *material);
-	actor->setName("HeightField");
-		
-	scene->addActor(*actor);
-
+	PxShape* hfShape = PxRigidActorExt::createExclusiveShape(*heightFieldActor, hfGeom, *material);
+	heightFieldActor->setName("HeightField");
+	
+	scene->addActor(*heightFieldActor);
+	allocator.deallocate(heightmap);
 }
 
 void PhysXManager::RunSimulate(float _timeDelta)

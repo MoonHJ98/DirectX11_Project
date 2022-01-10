@@ -7,7 +7,6 @@
 #include "Light.h"
 #include "GraphicDevice.h"
 #include "Material.h"
-#include "TerrainComponent.h"
 #include "TerrainBuffer.h"
 #include "Management.h"
 #include "StaticCamera.h"
@@ -43,7 +42,9 @@ HRESULT Terrain::Initialize(UINT _terrainWidth, UINT _terrainHeight, wstring _he
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+
 	};
 
 	shader = Shader::Create(InputLayout, sizeof(InputLayout), L"../Engine/TerrainVS.hlsl", L"../Engine/TerrainPS.hlsl");
@@ -57,15 +58,14 @@ HRESULT Terrain::Initialize(UINT _terrainWidth, UINT _terrainHeight, wstring _he
 	terrainBuffer = TerrainBuffer::Create(terrainWidth, _terrainHeight);
 	//quadtree = Quadtree::Create(terrainBuffer);
 
-
-	terrainComponent = TerrainComponent::Create();
+	PhysXManager::GetInstance()->UpdateHeightField(terrainBuffer);
 
 	components[ComponentType::TRANSFORM] = transform;
 	components[ComponentType::SHADER] = shader;
 	components[ComponentType::MATERIAL] = material;
 	components[ComponentType::BUFFER] = terrainBuffer;
 
-	//PhysXManager::GetInstance()->CreateHeightField(terrainBuffer);
+	physxManager = PhysXManager::GetInstance();
 
 	return S_OK;
 }
@@ -119,14 +119,27 @@ Vector3 Terrain::PickTerrain(Vector2 screenPos, Vector2 _screenSize)
 	}
 
 	//Vector3 Pos = quadtree->PickTerrain(screenPos, _screenSize);
+
 	terrainBuffer->SetChangeTerrainToolRender(true);
 
-	
+
 	Vector3 Pos = terrainBuffer->PickTerrain(screenPos);
 
 	if (Manage->GetDIMouseState(InputDevice::DIM_LB) & 0x80)
 	{
-		RaiseHeight();
+		switch (terrainBuffer->GetTerrainToolStyle())
+		{
+		case TerrainBuffer::TerrainToolStyle::RaiseOrLowerTerrain:
+			RaiseHeight();
+			break;
+		case TerrainBuffer::TerrainToolStyle::PaintTexture:
+			PaintTexture();
+			break;
+		case TerrainBuffer::TerrainToolStyle::TerrainToolStyleEnd:
+			break;
+		default:
+			break;
+		}
 	}
 
 
@@ -143,8 +156,15 @@ void Terrain::RaiseHeight()
 	if (terrainBuffer == nullptr)
 		return;
 
-	terrainBuffer->RaiseHeight();
 
+	terrainBuffer->RaiseHeight();
+	physxManager->UpdateHeightField(terrainBuffer);
+
+}
+
+void Terrain::PaintTexture()
+{
+	terrainBuffer->DrawAlphaMap();
 }
 
 shared_ptr<Terrain> Terrain::Create(UINT _terrainWidth, UINT _terrainHeight, wstring _heightMapPath)

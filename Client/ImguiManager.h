@@ -32,7 +32,7 @@ private:
 	bool isObjectInspector = false;
 
 	weak_ptr<GameObject> objectForInspector;
-
+	
 	Vector2 screenSize;
 };
 

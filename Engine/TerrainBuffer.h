@@ -8,6 +8,7 @@ class GraphicDevice;
 class Management;
 class HeightBrush;
 class Texture;
+class TextureBrush;
 
 class TerrainBuffer : public Component, public enable_shared_from_this<TerrainBuffer>
 {
@@ -18,9 +19,16 @@ private:
 		BOOL padding[3] = {};
 	};
 
-	enum HeightMapOption { Circle, Mountain, DesertMountain, HeigitMapOptionEnd };
+	struct TextureInfoBufferDesc
+	{
+		BOOL useAlpha = FALSE;
+		BOOL padding[3] = {};
+	};
 
+public:
 	enum TerrainToolStyle { RaiseOrLowerTerrain, PaintTexture, TerrainToolStyleEnd };
+	enum HeightMapOption { Circle, Mountain, DesertMountain, HeigitMapOptionEnd };
+	enum TextureForPaintOption { Texture1, Texture2, Texture3, TextureForPaintOptionEnd };
 
 private:
 	TerrainBuffer();
@@ -39,6 +47,8 @@ private:
 	HRESULT InitializeBuffers();
 	void RenderBuffers();
 	void CreateNormalData();
+	void HeightMapSelect();
+	void TextureForPaintSelect();
 
 public:
 	TerrainVertexType* GetVertices() { return vertices; }
@@ -56,6 +66,11 @@ public:
 	void SetChangeTerrainToolRender(bool _bCheck) { changeTerrainToolRender = _bCheck; }
 
 	int GetTerrainWidth() { return terrainWidth; }
+	int GetTerrainHeight() { return terrainHeight; }
+	void DrawAlphaMap();
+	int GetTerrainToolStyle() { return terrainToolStyle; }
+
+
 public:
 	static shared_ptr<TerrainBuffer> Create(UINT _terrainWidth, UINT _terrainHeight, const char* heightMapFilename = nullptr);
 
@@ -85,7 +100,11 @@ private:
 	TerrainToolDesc toolDesc;
 	shared_ptr<ConstantBuffer<TerrainToolDesc>> toolBuffer = nullptr;
 
+	TextureInfoBufferDesc textureInfoBufferDesc;
+	shared_ptr<ConstantBuffer<TextureInfoBufferDesc>> textureInfoBuffer = nullptr;
 
+private:
+	// For Raise Height
 	shared_ptr<HeightBrush> mountain = nullptr;
 	shared_ptr<HeightBrush> desertMountain = nullptr;
 	shared_ptr<Texture> mountainTexture = nullptr;
@@ -99,5 +118,22 @@ private:
 	bool changeTerrainToolRender = true;
 
 	int terrainToolStyle = TerrainToolStyleEnd;
+
+private:
+	// For Paint Texture
+	vector<shared_ptr<Texture>> textures;
+	shared_ptr<TextureBrush> textureBrush;
+
+	ComPtr<ID3D11ShaderResourceView> selectedTextureForPaint = nullptr;
+
+	TextureForPaintOption textureOption = Texture1;
+
+	int filterTextureHeight = 0;
+	int filterTextureWidth = 0;
+	float brushSize = 10.f;
+	float smoothSize = 5.f;
+	int texPosX = 0;
+	int texPosY = 0;
+
 };
 

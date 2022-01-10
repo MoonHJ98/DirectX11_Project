@@ -345,6 +345,11 @@ struct BrushDesc
 	Color color = Color(0.f, 1.f, 0.f, 1.f);
 	Vector3 position = Vector3(0.f, 0.f, 0.f);
 	UINT range = 5;
+	UINT smoothSize = 5;
+	
+	UINT terrainHeight = 0;
+	UINT terrainWidth = 0;
+	UINT padding = 0;
 };
 
 enum ComponentType { COLLIDER, TRANSFORM, SHADER, MATERIAL, RIGIDBODY, BUFFER, COMPONENT_END };
@@ -367,6 +372,7 @@ struct TerrainVertexType
 	Vector3 position;
 	Vector3 normal;
 	Vector2 Uv;
+	Vector4 color;
 };
 
 

@@ -16,6 +16,7 @@ struct VertexInputType
     float3 position : POSITION;
     float3 normal : NORMAL;
     float2 uv : TEXCOORD0;
+    float4 color : COLOR;
 };
 
 struct PixelInputType
@@ -23,6 +24,7 @@ struct PixelInputType
     float4 position : SV_POSITION0;
     float2 uv : TEXCOORD0;
     float4 normal : NORMAL;
+    float4 color : COLOR;
     float4 WorldPos : TEXCOORD1;
     float4 ProjPos : TEXCOORD2;
     float4 lightViewPosition : TEXCOORD3;

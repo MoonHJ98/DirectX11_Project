@@ -5,6 +5,8 @@
 #include "HeightBrush.h"
 #include "Texture.h"
 #include "PhysXManager.h"
+#include "TextureBrush.h"
+#include "Texture.h"
 
 
 TerrainBuffer::TerrainBuffer()
@@ -29,16 +31,24 @@ int TerrainBuffer::Update(float _timeDelta)
 	Graphic->GetDeviceContext()->PSSetConstantBuffers(2, 1, &buffer);
 
 
-	if (Manage->GetDIKeyState(DIK_LALT))
-	{
-		PhysXManager::GetInstance()->CreateHeightField(shared_from_this());
-	}
+	textureInfoBufferDesc.useAlpha = TRUE;
+	textureInfoBuffer->SetData(Graphic->GetDeviceContext(), textureInfoBufferDesc);
+	auto buffer2 = textureInfoBuffer->GetBuffer();
+	Graphic->GetDeviceContext()->PSSetConstantBuffers(3, 1, &buffer2);
+
 
 	return 0;
 }
 
 void TerrainBuffer::Render()
 {
+	textureBrush->Render();
+	Graphic->GetDeviceContext()->PSSetShaderResources(2, 1, textures[0]->GetTexture());
+	Graphic->GetDeviceContext()->PSSetShaderResources(3, 1, textures[1]->GetTexture());
+	Graphic->GetDeviceContext()->PSSetShaderResources(4, 1, textures[2]->GetTexture());
+
+
+
 	RenderBuffers();
 
 	switch (heightMapOption)
@@ -92,48 +102,38 @@ void TerrainBuffer::RenderInspector()
 
 		ImGui::Spacing();
 
-
-		ImGui::Image((void*)heightMapTexture.Get(), ImVec2(125, 125));
+		switch (terrainToolStyle)
+		{
+		case TerrainToolStyle::RaiseOrLowerTerrain:
+			ImGui::Image((void*)heightMapTexture.Get(), ImVec2(125, 125));
+			break;
+		case TerrainToolStyle::PaintTexture:
+			ImGui::Image((void*)selectedTextureForPaint.Get(), ImVec2(125, 125));
+			break;
+		default:
+			break;
+		}
 
 		ImGui::SameLine();
 
 
-
-		if (ImGui::BeginTable("HeightMapSelect", heightMapTextureCount, ImGuiTableFlags_BordersOuter, ImVec2(50.f * heightMapTextureCount, 125.f)))
+		switch (terrainToolStyle)
 		{
-			if (changeTerrainToolRender == true)
-				terrainTool = TRUE;
-
-			ImGui::TableNextRow();
-
-			ImGui::TableSetColumnIndex(0);
-			if (ImGui::ImageButton(*circleTexture->GetTexture(), ImVec2(32, 32)))
-			{
-				heightMapTexture = *circleTexture->GetTexture();
-				heightMapOption = Circle;
-			}
-
-			ImGui::TableSetColumnIndex(1);
-			if (ImGui::ImageButton(*mountainTexture->GetTexture(), ImVec2(32, 32)))
-			{
-				heightMapTexture = *mountainTexture->GetTexture();
-				heightMapOption = Mountain;
-			}
-
-			ImGui::TableSetColumnIndex(2);
-			if (ImGui::ImageButton(*desertMountainTexture->GetTexture(), ImVec2(32, 32)))
-			{
-				heightMapTexture = *desertMountainTexture->GetTexture();
-				heightMapOption = DesertMountain;
-			}
-
-			ImGui::EndTable();
+		case TerrainToolStyle::RaiseOrLowerTerrain:
+			HeightMapSelect();
+			break;
+		case TerrainToolStyle::PaintTexture:
+			TextureForPaintSelect();
+			break;
+		default:
+			break;
 		}
 
 
+
 	}
-	else
-		terrainTool = FALSE;
+	//else
+	//	terrainTool = FALSE;
 
 }
 
@@ -144,6 +144,10 @@ HRESULT TerrainBuffer::Initialize(UINT _terrainWidth, UINT _terrainHeight, const
 
 	terrainWidth = _terrainWidth;
 	terrainHeight = _terrainHeight;
+
+	brushDesc.terrainHeight = _terrainHeight;
+	brushDesc.terrainWidth = _terrainWidth;
+
 
 	UINT viewportNum = 1;
 	D3D11_VIEWPORT viewport;
@@ -161,6 +165,12 @@ HRESULT TerrainBuffer::Initialize(UINT _terrainWidth, UINT _terrainHeight, const
 	toolBuffer = temp2;
 	toolBuffer->Create(Graphic->GetDevice());
 
+	shared_ptr<ConstantBuffer<TextureInfoBufferDesc>> temp3(new ConstantBuffer<TextureInfoBufferDesc>());
+	textureInfoBuffer = temp3;
+	textureInfoBuffer->Create(Graphic->GetDevice());
+
+
+	// Brushes for raise Height.
 	mountain = HeightBrush::Create("../Resources/Mountain2.bmp");
 	TEXTUREDESC mountainDesc;
 	mountainDesc.Path = L"../Resources/Mountain2.png";
@@ -179,6 +189,23 @@ HRESULT TerrainBuffer::Initialize(UINT _terrainWidth, UINT _terrainHeight, const
 	++heightMapTextureCount;
 
 	heightMapTexture = *circleTexture->GetTexture();
+
+	// Sub Texture for splatting
+	TEXTUREDESC desc;
+	desc.MaterialName = L"Terrain0";
+	desc.Path = L"../Resources/Terrain0.tga";
+	textures.push_back(Texture::Create(Graphic->GetDevice(), &desc));
+
+	desc.MaterialName = L"Terrain1";
+	desc.Path = L"../Resources/Terrain1.tga";
+	textures.push_back(Texture::Create(Graphic->GetDevice(), &desc));
+
+	desc.MaterialName = L"Terrain2";
+	desc.Path = L"../Resources/Terrain2.tga";
+	textures.push_back(Texture::Create(Graphic->GetDevice(), &desc));
+
+
+	textureBrush = TextureBrush::Create();
 
 	return InitializeBuffers();
 }
@@ -312,20 +339,23 @@ Vector3 TerrainBuffer::PickTerrain(Vector2 screenPos)
 				auto buffer = brushBuffer->GetBuffer();
 				Graphic->GetDeviceContext()->PSSetConstantBuffers(0, 1, &buffer);
 
-				switch (heightMapOption)
+				if (terrainToolStyle == TerrainToolStyle::RaiseOrLowerTerrain)
 				{
-				case TerrainBuffer::Circle:
-					break;
-				case TerrainBuffer::Mountain:
-					mountain->SetPosition(brushDesc);
-					break;
-				case TerrainBuffer::DesertMountain:
-					desertMountain->SetPosition(brushDesc);
-					break;
-				case TerrainBuffer::HeigitMapOptionEnd:
-					break;
-				default:
-					break;
+					switch (heightMapOption)
+					{
+					case TerrainBuffer::Circle:
+						break;
+					case TerrainBuffer::Mountain:
+						mountain->SetPosition(brushDesc);
+						break;
+					case TerrainBuffer::DesertMountain:
+						desertMountain->SetPosition(brushDesc);
+						break;
+					case TerrainBuffer::HeigitMapOptionEnd:
+						break;
+					default:
+						break;
+					}
 				}
 				return Pos;
 			}
@@ -337,20 +367,24 @@ Vector3 TerrainBuffer::PickTerrain(Vector2 screenPos)
 				auto buffer = brushBuffer->GetBuffer();
 				Graphic->GetDeviceContext()->PSSetConstantBuffers(0, 1, &buffer);
 
-				switch (heightMapOption)
+
+				if (terrainToolStyle == TerrainToolStyle::RaiseOrLowerTerrain)
 				{
-				case TerrainBuffer::Circle:
-					break;
-				case TerrainBuffer::Mountain:
-					mountain->SetPosition(brushDesc);
-					break;
-				case TerrainBuffer::DesertMountain:
-					desertMountain->SetPosition(brushDesc);
-					break;
-				case TerrainBuffer::HeigitMapOptionEnd:
-					break;
-				default:
-					break;
+					switch (heightMapOption)
+					{
+					case TerrainBuffer::Circle:
+						break;
+					case TerrainBuffer::Mountain:
+						mountain->SetPosition(brushDesc);
+						break;
+					case TerrainBuffer::DesertMountain:
+						desertMountain->SetPosition(brushDesc);
+						break;
+					case TerrainBuffer::HeigitMapOptionEnd:
+						break;
+					default:
+						break;
+					}
 				}
 
 				return Pos;
@@ -578,7 +612,7 @@ void TerrainBuffer::RenderBuffers()
 
 void TerrainBuffer::CreateNormalData()
 {
-	for (int i = 0; i < indexCount / 3; ++i)
+	for (UINT i = 0; i < indexCount / 3; ++i)
 	{
 		auto index0 = indices[i * 3 + 0];
 		auto index1 = indices[i * 3 + 1];
@@ -600,6 +634,84 @@ void TerrainBuffer::CreateNormalData()
 
 
 	}
+}
+
+void TerrainBuffer::HeightMapSelect()
+{
+	if (ImGui::BeginTable("HeightMapSelect", heightMapTextureCount, ImGuiTableFlags_BordersOuter, ImVec2(50.f * heightMapTextureCount, 125.f)))
+	{
+		if (changeTerrainToolRender == true)
+			terrainTool = TRUE;
+
+		ImGui::TableNextRow();
+
+		ImGui::TableSetColumnIndex(0);
+		if (ImGui::ImageButton(*circleTexture->GetTexture(), ImVec2(32, 32)))
+		{
+			heightMapTexture = *circleTexture->GetTexture();
+			heightMapOption = Circle;
+
+		}
+
+		ImGui::TableSetColumnIndex(1);
+		if (ImGui::ImageButton(*mountainTexture->GetTexture(), ImVec2(32, 32)))
+		{
+			heightMapTexture = *mountainTexture->GetTexture();
+			heightMapOption = Mountain;
+
+		}
+
+		ImGui::TableSetColumnIndex(2);
+		if (ImGui::ImageButton(*desertMountainTexture->GetTexture(), ImVec2(32, 32)))
+		{
+			heightMapTexture = *desertMountainTexture->GetTexture();
+			heightMapOption = DesertMountain;
+		}
+
+		ImGui::EndTable();
+	}
+}
+
+void TerrainBuffer::TextureForPaintSelect()
+{
+	if (ImGui::BeginTable("TextureForPaintSelect", textures.size(), ImGuiTableFlags_BordersOuter, ImVec2(50.f * textures.size(), 125.f)))
+	{
+		if (changeTerrainToolRender == true)
+			terrainTool = TRUE;
+
+		ImGui::TableNextRow();
+
+		ImGui::TableSetColumnIndex(0);
+		if (ImGui::ImageButton(*(textures[0])->GetTexture(), ImVec2(32, 32)))
+		{
+			selectedTextureForPaint = *(textures[0])->GetTexture();
+			textureOption = Texture1;
+
+		}
+
+		ImGui::TableSetColumnIndex(1);
+		if (ImGui::ImageButton(*(textures[1])->GetTexture(), ImVec2(32, 32)))
+		{
+			selectedTextureForPaint = *(textures[1])->GetTexture();
+			textureOption = Texture2;
+
+		}
+
+		ImGui::TableSetColumnIndex(2);
+		if (ImGui::ImageButton(*(textures[2])->GetTexture(), ImVec2(32, 32)))
+		{
+			selectedTextureForPaint = *(textures[2])->GetTexture();
+			textureOption = Texture3;
+		}
+
+		ImGui::EndTable();
+	}
+}
+
+
+void TerrainBuffer::DrawAlphaMap()
+{
+	textureBrush->DrawAlphaMap(brushDesc, textureOption);
 }
 
 

@@ -154,14 +154,35 @@
     <Filter Include="02. Includes\06. PhysX\02. Collider\00. ColliderRenderer">
       <UniqueIdentifier>{5595030b-2d39-4468-8510-79c6e5bc1e6c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Utility\03. Component\09. Terrain">
-      <UniqueIdentifier>{240d98b4-9df1-4c8c-b44c-1f57732743ef}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01. Utility\03. Component\01. Buffer\02. Capsule">
       <UniqueIdentifier>{6054fc7d-eece-49cb-a9ee-81633f050e04}</UniqueIdentifier>
     </Filter>
     <Filter Include="01. Utility\03. Component\01. Buffer\03. Sphere">
       <UniqueIdentifier>{f169b8c2-6aef-4360-ac7e-05ec9c825368}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\03. Component\01. Buffer\04. Terrain">
+      <UniqueIdentifier>{240d98b4-9df1-4c8c-b44c-1f57732743ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\03. Component\01. Buffer\04. Terrain\00. Buffer">
+      <UniqueIdentifier>{12233206-4d2e-4aaa-a933-5e8697c4a0e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\03. Component\01. Buffer\04. Terrain\01. QuadTree">
+      <UniqueIdentifier>{be8a2fe3-17c7-4cd2-8736-1a11ccf7f6f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\03. Component\01. Buffer\04. Terrain\01. QuadTree\00. Debug">
+      <UniqueIdentifier>{9e16da8f-b2db-4875-bcf3-53559d083656}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\02. Object\02. GameObject\01. Camera\00. Frustum">
+      <UniqueIdentifier>{10f4c9c3-5e39-449d-bfd3-b7a326840a02}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\03. Component\01. Buffer\04. Terrain\02. Brush">
+      <UniqueIdentifier>{d65a0d99-8dae-48b6-beed-92d2fa64ecc8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\03. Component\01. Buffer\04. Terrain\02. Brush\00. HeightBrush">
+      <UniqueIdentifier>{a707f3f1-6efb-42c1-b950-b5a4328b254f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\03. Component\01. Buffer\04. Terrain\02. Brush\01. TextureBrush">
+      <UniqueIdentifier>{e1aaa1b6-90e4-4a4a-b7ed-e448d90b43a7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -318,13 +339,27 @@
     <ClInclude Include="PhysXManager.h">
       <Filter>02. Includes\06. PhysX\00. Manager</Filter>
     </ClInclude>
-    <ClInclude Include="TerrainComponent.h" />
-    <ClInclude Include="Frustum.h" />
-    <ClInclude Include="Quadtree.h" />
-    <ClInclude Include="DebugTree.h" />
-    <ClInclude Include="DebugTreeRenderer.h" />
-    <ClInclude Include="TerrainBuffer.h" />
-    <ClInclude Include="HeightBrush.h" />
+    <ClInclude Include="TerrainBuffer.h">
+      <Filter>01. Utility\03. Component\01. Buffer\04. Terrain\00. Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Quadtree.h">
+      <Filter>01. Utility\03. Component\01. Buffer\04. Terrain\01. QuadTree</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugTree.h">
+      <Filter>01. Utility\03. Component\01. Buffer\04. Terrain\01. QuadTree\00. Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugTreeRenderer.h">
+      <Filter>01. Utility\03. Component\01. Buffer\04. Terrain\01. QuadTree\00. Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="Frustum.h">
+      <Filter>01. Utility\02. Object\02. GameObject\01. Camera\00. Frustum</Filter>
+    </ClInclude>
+    <ClInclude Include="HeightBrush.h">
+      <Filter>01. Utility\03. Component\01. Buffer\04. Terrain\02. Brush\00. HeightBrush</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureBrush.h">
+      <Filter>01. Utility\03. Component\01. Buffer\04. Terrain\02. Brush\01. TextureBrush</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -474,13 +509,27 @@
     <ClCompile Include="PhysXManager.cpp">
       <Filter>02. Includes\06. PhysX\00. Manager</Filter>
     </ClCompile>
-    <ClCompile Include="TerrainComponent.cpp" />
-    <ClCompile Include="Frustum.cpp" />
-    <ClCompile Include="Quadtree.cpp" />
-    <ClCompile Include="DebugTree.cpp" />
-    <ClCompile Include="DebugTreeRenderer.cpp" />
-    <ClCompile Include="TerrainBuffer.cpp" />
-    <ClCompile Include="HeightBrush.cpp" />
+    <ClCompile Include="TerrainBuffer.cpp">
+      <Filter>01. Utility\03. Component\01. Buffer\04. Terrain\00. Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Quadtree.cpp">
+      <Filter>01. Utility\03. Component\01. Buffer\04. Terrain\01. QuadTree</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugTree.cpp">
+      <Filter>01. Utility\03. Component\01. Buffer\04. Terrain\01. QuadTree\00. Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugTreeRenderer.cpp">
+      <Filter>01. Utility\03. Component\01. Buffer\04. Terrain\01. QuadTree\00. Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Frustum.cpp">
+      <Filter>01. Utility\02. Object\02. GameObject\01. Camera\00. Frustum</Filter>
+    </ClCompile>
+    <ClCompile Include="HeightBrush.cpp">
+      <Filter>01. Utility\03. Component\01. Buffer\04. Terrain\02. Brush\00. HeightBrush</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureBrush.cpp">
+      <Filter>01. Utility\03. Component\01. Buffer\04. Terrain\02. Brush\01. TextureBrush</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="ModelVS.hlsl">
@@ -519,7 +568,11 @@
     <FxCompile Include="ColliderVS.hlsl">
       <Filter>02. Includes\01. HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="TerrainPS.hlsl" />
-    <FxCompile Include="TerrainVS.hlsl" />
+    <FxCompile Include="TerrainPS.hlsl">
+      <Filter>02. Includes\01. HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="TerrainVS.hlsl">
+      <Filter>02. Includes\01. HLSL</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
