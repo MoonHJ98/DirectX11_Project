@@ -1,0 +1,20 @@
+1. terrian tool
+	1) 텍스쳐레이어 drag&drop으로 레이어 순서 바꾸기
+
+2. camera tool
+	1) action cam 만들기
+
+3. scene
+	1) Light 추가
+	2) UI (pos, scale, rotation)추가
+	3) 각 오브젝트에 자식으로 오브젝트 생성 가능하게 하기
+	4) drag&drop으로 부모자식 상속관계 가능하게 하기
+
+4. Physx
+	1) 애니메이션으로 움직이는 객체에 collider 붙이기 (Bone정보 볼 수 있게 하기)
+	2) character controller
+	3) height field에서 객체 움직일 수 있게 하기
+
+5. 애니메이션
+	1) 애니메이션 추가 (load, play)기능
+
