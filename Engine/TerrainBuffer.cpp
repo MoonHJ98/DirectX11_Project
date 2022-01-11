@@ -713,6 +713,7 @@ void TerrainBuffer::TextureForPaintSelect()
 		{
 			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_DEMO_CELL"))
 			{
+				int a = 10;
 				IM_ASSERT(payload->DataSize == sizeof(int));
 				int payload_n = *(const int*)payload->Data;
 				{
