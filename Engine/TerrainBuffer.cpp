@@ -204,6 +204,7 @@ HRESULT TerrainBuffer::Initialize(UINT _terrainWidth, UINT _terrainHeight, const
 	desc.Path = L"../Resources/Terrain2.tga";
 	textures.push_back(Texture::Create(Graphic->GetDevice(), &desc));
 
+	selectedTextureForPaint = *textures[0]->GetTexture();
 
 	textureBrush = TextureBrush::Create();
 
@@ -674,38 +675,59 @@ void TerrainBuffer::HeightMapSelect()
 
 void TerrainBuffer::TextureForPaintSelect()
 {
-	if (ImGui::BeginTable("TextureForPaintSelect", textures.size(), ImGuiTableFlags_BordersOuter, ImVec2(50.f * textures.size(), 125.f)))
+
+	for (UINT i = 0; i < textures.size(); i++)
 	{
 		if (changeTerrainToolRender == true)
 			terrainTool = TRUE;
 
-		ImGui::TableNextRow();
+		ImGui::PushID(i);
+		if ((i % 3) != 0)
+			ImGui::SameLine();
 
-		ImGui::TableSetColumnIndex(0);
-		if (ImGui::ImageButton(*(textures[0])->GetTexture(), ImVec2(32, 32)))
+		if (ImGui::ImageButton(*(textures[i])->GetTexture(), ImVec2(32, 32)))
 		{
-			selectedTextureForPaint = *(textures[0])->GetTexture();
-			textureOption = Texture1;
+			selectedTextureForPaint = *(textures[i])->GetTexture();
+			textureOption = i;
+		}
+
+		// Our buttons are both drag sources and drag targets here!
+		if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
+		{
+			// Set payload to carry the index of our item (could be anything)
+			ImGui::SetDragDropPayload("DND_DEMO_CELL", &i, sizeof(int));
+
+			// Display preview (could be anything, e.g. when dragging an image we could decide to display
+			// the filename and a small preview of the image, etc.)
+			//if (mode == Mode_Copy) 
+			//	{ ImGui::Text("Copy %s", names[i]); }
+			//if (mode == Mode_Move) 
+			//	{ ImGui::Text("Move %s", names[i]); }
+			//if (mode == Mode_Swap)
+
+			ImGui::Text("Swap %s", ToString(textures[i]->GetTextureDecs().MaterialName).c_str());
+			ImGui::EndDragDropSource();
+		}
+
+		if (ImGui::BeginDragDropTarget())
+		{
+			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_DEMO_CELL"))
+			{
+				IM_ASSERT(payload->DataSize == sizeof(int));
+				int payload_n = *(const int*)payload->Data;
+				{
+					auto temp = textures[i];
+					textures[i] = textures[payload_n];
+					textures[payload_n] = temp;
+				}
+			}
+			ImGui::EndDragDropTarget();
 
 		}
 
-		ImGui::TableSetColumnIndex(1);
-		if (ImGui::ImageButton(*(textures[1])->GetTexture(), ImVec2(32, 32)))
-		{
-			selectedTextureForPaint = *(textures[1])->GetTexture();
-			textureOption = Texture2;
-
-		}
-
-		ImGui::TableSetColumnIndex(2);
-		if (ImGui::ImageButton(*(textures[2])->GetTexture(), ImVec2(32, 32)))
-		{
-			selectedTextureForPaint = *(textures[2])->GetTexture();
-			textureOption = Texture3;
-		}
-
-		ImGui::EndTable();
+		ImGui::PopID();
 	}
+
 }
 
 

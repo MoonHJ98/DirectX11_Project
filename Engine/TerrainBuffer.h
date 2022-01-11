@@ -126,7 +126,7 @@ private:
 
 	ComPtr<ID3D11ShaderResourceView> selectedTextureForPaint = nullptr;
 
-	TextureForPaintOption textureOption = Texture1;
+	int textureOption = Texture1;
 
 	int filterTextureHeight = 0;
 	int filterTextureWidth = 0;

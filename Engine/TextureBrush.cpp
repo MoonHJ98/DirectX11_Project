@@ -70,7 +70,7 @@ HRESULT TextureBrush::InitializeAlphaMap()
 	return S_OK;
 }
 
-void TextureBrush::DrawAlphaMap(BrushDesc& _brushDesc, TerrainBuffer::TextureForPaintOption& _textureOption)
+void TextureBrush::DrawAlphaMap(BrushDesc& _brushDesc, int& _textureOption)
 {
 	// 알파맵의 한 픽셀이 월드 상의 한점의 크기를 구한다.
 	float		PixSize = (float)_brushDesc.terrainWidth / (float)filterTextureWidth;

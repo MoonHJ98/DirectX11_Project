@@ -20,7 +20,7 @@ private:
 	HRESULT InitializeAlphaMap();
 
 public:
-	void DrawAlphaMap(BrushDesc& _brushDesc, TerrainBuffer::TextureForPaintOption& _textureOption);
+	void DrawAlphaMap(BrushDesc& _brushDesc, int& _textureOption);
 	void Render();
 
 private:
