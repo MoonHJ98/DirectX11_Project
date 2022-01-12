@@ -1,8 +1,8 @@
 1. terrian tool
-	1) 텍스쳐레이어 drag&drop으로 레이어 순서 바꾸기
+	1) 텍스쳐레이어 drag&drop으로 레이어 순서 바꾸기 V
 
 2. camera tool
-	1) action cam 만들기
+	1) action cam 만들기 
 
 3. scene
 	1) Light 추가

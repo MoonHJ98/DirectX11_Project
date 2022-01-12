@@ -68,7 +68,7 @@ HRESULT Camera::Initialize(CAMERADECS _Decs)
 
 	UpdateProjectionMatrix(Decs.ScreenWidth, Decs.ScreenHeight, Decs.FiedOfView, Decs.ScreenAspect, Decs.Near, Decs.Far);
 
-	cameraComponent = CameraComponent::Create();
+	cameraComponent = CameraComponent::Create(shared_from_this());
 	components[ComponentType::BUFFER] = cameraComponent;
 
 	return S_OK;
