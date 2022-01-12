@@ -5,6 +5,7 @@
 class PipeLine;
 class Transform;
 class GraphicDevice;
+class CameraComponent;
 
 class Camera : public GameObject, public enable_shared_from_this<Camera>
 {
@@ -40,11 +41,16 @@ public:
 
 protected:
 	HRESULT							Initialize(CAMERADECS _Decs);
-
+	// GameObject을(를) 통해 상속됨
+	virtual void OnContact() override;
+	virtual void OnTrigger() override;
 
 protected:
 	shared_ptr<GraphicDevice>       Graphic = nullptr;
 	CAMERADECS						Decs;
 	XMFLOAT3						Rotation = {};
 	shared_ptr<PipeLine>		    pipeline = nullptr;
+	shared_ptr<CameraComponent>		cameraComponent = nullptr;
+
+
 };

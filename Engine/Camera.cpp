@@ -3,6 +3,7 @@
 #include "PipeLine.h"
 #include "Transform.h"
 #include "GraphicDevice.h"
+#include "CameraComponent.h"
 
 
 Camera::Camera()
@@ -67,6 +68,16 @@ HRESULT Camera::Initialize(CAMERADECS _Decs)
 
 	UpdateProjectionMatrix(Decs.ScreenWidth, Decs.ScreenHeight, Decs.FiedOfView, Decs.ScreenAspect, Decs.Near, Decs.Far);
 
+	cameraComponent = CameraComponent::Create();
+	components[ComponentType::BUFFER] = cameraComponent;
 
 	return S_OK;
+}
+
+void Camera::OnContact()
+{
+}
+
+void Camera::OnTrigger()
+{
 }
