@@ -2,6 +2,7 @@
 #include "Component.h"
 
 class GameObject;
+class CamSphere;
 
 class CameraComponent : public Component
 {
@@ -25,6 +26,7 @@ private:
 	void AddCam();
 	void EyeVectors();
 	void AtVectors();
+	void RenderSpheres();
 	
 
 public:
@@ -32,12 +34,12 @@ public:
 
 private:
 	unordered_map<string, pair<vector<Vector3>, vector<Vector3>>> camList;
+	unordered_map<string, pair<vector<shared_ptr<CamSphere>>, vector<shared_ptr<CamSphere>>>> camSpheres;
 
 	int camCurrentIndex = 0;
-
 	int eyeCurrentIndex = 0;
-
 	int atCurrentIndex = 0;
 
+	bool randerSpheres = false;
 };
 

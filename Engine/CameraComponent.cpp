@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "CameraComponent.h"
 #include "Camera.h"
+#include "CamSphere.h"
 
 CameraComponent::CameraComponent()
 {
@@ -21,18 +22,24 @@ int CameraComponent::Update(float _timeDelta)
 
 void CameraComponent::Render()
 {
+	if(randerSpheres)
+		RenderSpheres();
 }
 
 void CameraComponent::RenderInspector()
 {
 	if (ImGui::CollapsingHeader("Camera"))
 	{
+		randerSpheres = true;
+
 		CamList();
-	
+
 		EyeVectors();
 
 		AtVectors();
 	}
+	else
+		randerSpheres = false;
 }
 
 HRESULT CameraComponent::Initialize(shared_ptr<GameObject> _object)
@@ -96,7 +103,7 @@ void CameraComponent::AddCam()
 		eyeCurrentIndex = 0;
 		camCurrentIndex = camList.size() - 1;
 
-
+		camSpheres.emplace(str, pair<vector<shared_ptr<CamSphere>>, vector<shared_ptr<CamSphere>>>());
 	}
 }
 
@@ -112,6 +119,7 @@ void CameraComponent::EyeVectors()
 		return;
 
 	auto eye = camList.begin();
+	auto camSphere = camSpheres.begin();
 
 	
 	if (ImGui::BeginListBox("", ImVec2(ImGui::GetItemRectSize().x * 2.f, 5.f * ImGui::GetTextLineHeightWithSpacing())))
@@ -119,6 +127,7 @@ void CameraComponent::EyeVectors()
 		for (int i = 0; i < camCurrentIndex; ++i)
 		{
 			++eye;
+			++camSphere;
 		}
 		
 		for (size_t i = 0; i < eye->second.first.size(); ++i)
@@ -143,6 +152,8 @@ void CameraComponent::EyeVectors()
 	{
 		Vector3 pos = object.lock().get()->GetPosition();
 		eye->second.first.push_back(pos);
+		camSphere->second.first.push_back(CamSphere::Create(pos, Vector3(1.f, 1.f, 0.f)));
+
 	}
 	ImGui::SameLine();
 	ImGui::Button("Delete");
@@ -212,6 +223,22 @@ void CameraComponent::AtVectors()
 	}
 	float atpos[3] = { at->second.first[atCurrentIndex].x, at->second.first[atCurrentIndex].y, at->second.first[atCurrentIndex].z };
 	ImGui::InputFloat3("AtPos", atpos);
+}
+
+void CameraComponent::RenderSpheres()
+{
+	if (camSpheres.empty())
+		return;
+
+	auto iter = camSpheres.begin();
+
+	for (int i = 0; i < camCurrentIndex; ++i)
+		++iter;
+
+	for (UINT i = 0; i < iter->second.first.size(); ++i)
+	{
+		iter->second.first[i]->Render();
+	}
 }
 
 shared_ptr<CameraComponent> CameraComponent::Create(shared_ptr<GameObject> _object)

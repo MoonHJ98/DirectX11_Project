@@ -48,7 +48,7 @@ void SphereTest::OnTrigger()
 
 HRESULT SphereTest::Initialize()
 {
-	sphere = Sphere::Create();
+	sphere = Sphere::Create(10.f);
 	
 	D3D11_INPUT_ELEMENT_DESC InputLayout[] =
 	{

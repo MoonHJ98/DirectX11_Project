@@ -165,6 +165,7 @@
     <ClInclude Include="Bone.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CameraComponent.h" />
+    <ClInclude Include="CamSphere.h" />
     <ClInclude Include="Capsule.h" />
     <ClInclude Include="Clip.h" />
     <ClInclude Include="Collider.h" />
@@ -226,6 +227,7 @@
     <ClCompile Include="Bone.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CameraComponent.cpp" />
+    <ClCompile Include="CamSphere.cpp" />
     <ClCompile Include="Capsule.cpp" />
     <ClCompile Include="Clip.cpp" />
     <ClCompile Include="Collider.cpp" />

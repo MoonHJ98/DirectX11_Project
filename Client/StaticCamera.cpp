@@ -4,6 +4,7 @@
 #include "Transform.h"
 #include "GraphicDevice.h"
 #include "ImguiManager.h"
+#include "Renderer.h"
 
 StaticCamera::StaticCamera()
 {
@@ -92,6 +93,9 @@ HRESULT StaticCamera::Initialize(CAMERADECS _Decs)
 
 int StaticCamera::Update(float _TimeDelta)
 {
+	Renderer::GetInstance()->AddRenderGroup(Renderer::RENDER_NONALPHA, shared_from_this());
+
+
 	KeyInput(_TimeDelta);
 
 	MouseInput(_TimeDelta);
@@ -131,6 +135,7 @@ void StaticCamera::Render()
 	CameraBuffer->SetData(Graphic->GetDeviceContext(), CameraBufferDesc);
 	auto buffer = CameraBuffer->GetBuffer();
 	Graphic->GetDeviceContext()->VSSetConstantBuffers(3, 1, &buffer);
+	RenderComponent();
 
 
 }

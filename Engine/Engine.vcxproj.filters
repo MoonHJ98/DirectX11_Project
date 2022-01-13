@@ -361,6 +361,7 @@
       <Filter>01. Utility\03. Component\01. Buffer\04. Terrain\02. Brush\01. TextureBrush</Filter>
     </ClInclude>
     <ClInclude Include="CameraComponent.h" />
+    <ClInclude Include="CamSphere.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -532,6 +533,7 @@
       <Filter>01. Utility\03. Component\01. Buffer\04. Terrain\02. Brush\01. TextureBrush</Filter>
     </ClCompile>
     <ClCompile Include="CameraComponent.cpp" />
+    <ClCompile Include="CamSphere.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="ModelVS.hlsl">
