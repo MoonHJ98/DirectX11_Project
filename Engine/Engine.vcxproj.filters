@@ -362,6 +362,7 @@
     </ClInclude>
     <ClInclude Include="CameraComponent.h" />
     <ClInclude Include="CamSphere.h" />
+    <ClInclude Include="Line.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -534,6 +535,7 @@
     </ClCompile>
     <ClCompile Include="CameraComponent.cpp" />
     <ClCompile Include="CamSphere.cpp" />
+    <ClCompile Include="Line.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="ModelVS.hlsl">
@@ -578,5 +580,7 @@
     <FxCompile Include="TerrainVS.hlsl">
       <Filter>02. Includes\01. HLSL</Filter>
     </FxCompile>
+    <FxCompile Include="LinePS.hlsl" />
+    <FxCompile Include="LineVS.hlsl" />
   </ItemGroup>
 </Project>

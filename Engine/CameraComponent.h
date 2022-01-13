@@ -3,6 +3,7 @@
 
 class GameObject;
 class CamSphere;
+class Line;
 
 class CameraComponent : public Component
 {
@@ -34,6 +35,7 @@ public:
 
 private:
 	unordered_map<string, pair<vector<Vector3>, vector<Vector3>>> camList;
+
 	unordered_map<string, pair<vector<shared_ptr<CamSphere>>, vector<shared_ptr<CamSphere>>>> camSpheres;
 
 	int camCurrentIndex = 0;
@@ -41,5 +43,7 @@ private:
 	int atCurrentIndex = 0;
 
 	bool randerSpheres = false;
+
+	shared_ptr<Line> line = nullptr;
 };
 

@@ -2,6 +2,7 @@
 #include "CameraComponent.h"
 #include "Camera.h"
 #include "CamSphere.h"
+#include "Line.h"
 
 CameraComponent::CameraComponent()
 {
@@ -45,6 +46,8 @@ void CameraComponent::RenderInspector()
 HRESULT CameraComponent::Initialize(shared_ptr<GameObject> _object)
 {
 	object = _object;
+	line = Line::Create();
+
 	return S_OK;
 }
 
@@ -52,6 +55,7 @@ void CameraComponent::CamList()
 {
 	ImGui::Spacing();
 
+	
 	auto iter = camList.begin();
 
 	for (int i = 0; i < camCurrentIndex; ++i)
@@ -153,6 +157,7 @@ void CameraComponent::EyeVectors()
 		Vector3 pos = object.lock().get()->GetPosition();
 		eye->second.first.push_back(pos);
 		camSphere->second.first.push_back(CamSphere::Create(pos, Vector3(1.f, 1.f, 0.f)));
+		line->UpdateBuffer(eye->second.first, Vector4(1.f, 0.f, 0.f, 1.f));
 
 	}
 	ImGui::SameLine();
@@ -239,6 +244,8 @@ void CameraComponent::RenderSpheres()
 	{
 		iter->second.first[i]->Render();
 	}
+
+	line->Render();
 }
 
 shared_ptr<CameraComponent> CameraComponent::Create(shared_ptr<GameObject> _object)
