@@ -51,6 +51,4 @@ protected:
 	XMFLOAT3						Rotation = {};
 	shared_ptr<PipeLine>		    pipeline = nullptr;
 	shared_ptr<CameraComponent>		cameraComponent = nullptr;
-
-
 };

@@ -25,8 +25,10 @@ public:
 	HRESULT					KeyInput(float _TimeDelta);
 	HRESULT					MouseInput(float _TimeDelta);
 
+
 private:
-	HRESULT							Initialize(CAMERADECS _Decs);
+	HRESULT					Initialize(CAMERADECS _Decs);
+	void PlayCam();
 
 public:
 	virtual int Update(float _TimeDelta) override;
@@ -41,6 +43,10 @@ private:
 	CameraBufferType CameraBufferDesc;
 	shared_ptr<ConstantBuffer<CameraBufferType>> CameraBuffer;
 
+	bool playCam = false;
+	vector<Vector3> eye;
+	vector<Vector3> at;
 
+	UINT eyeIndex = 0;
 };
 

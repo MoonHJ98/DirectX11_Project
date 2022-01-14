@@ -57,6 +57,7 @@ HRESULT Camera::UpdateProjectionMatrix(float screenWidth, float screenHeight, fl
 	return pipeline->UpdateProjectionMatrix(screenWidth, screenHeight, _FovY, _Aspect, _Near, _Far);
 }
 
+
 HRESULT Camera::Initialize(CAMERADECS _Decs)
 {
 	Decs = _Decs;
@@ -67,9 +68,6 @@ HRESULT Camera::Initialize(CAMERADECS _Decs)
 	transform->SetObject(shared_from_this());
 
 	UpdateProjectionMatrix(Decs.ScreenWidth, Decs.ScreenHeight, Decs.FiedOfView, Decs.ScreenAspect, Decs.Near, Decs.Far);
-
-	cameraComponent = CameraComponent::Create(shared_from_this());
-	components[ComponentType::BUFFER] = cameraComponent;
 
 	return S_OK;
 }

@@ -87,8 +87,8 @@ void ImguiManager::Scene()
 
 	MousePos = Vector2(ImGui::GetMousePos().x - MinPos.x, ImGui::GetMousePos().y - MinPos.y);
 
-	cout << MousePos.x << " , " << MousePos.y << endl;
-	// TODO : 이거 없애면 디퓨즈 빠지는거 해결하기.
+	//cout << MousePos.x << " , " << MousePos.y << endl;
+
 	auto tempTerrain = Manage->FindGameObjectTest(STATIC, L"Terrain", L"Terrain");
 	auto terrain = dynamic_pointer_cast<Terrain>(tempTerrain);
 	//terrain->SetScreenSize(Vector2(sceneSize.x, sceneSize.y));

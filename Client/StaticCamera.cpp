@@ -5,9 +5,11 @@
 #include "GraphicDevice.h"
 #include "ImguiManager.h"
 #include "Renderer.h"
+#include "CameraComponent.h"
 
 StaticCamera::StaticCamera()
 {
+
 }
 
 StaticCamera::StaticCamera(const StaticCamera & Rhs)
@@ -49,7 +51,7 @@ HRESULT StaticCamera::KeyInput(float _TimeDelta)
 
 	auto pos = transform->GetState(Transform::POSITION);
 
-	
+
 
 	return S_OK;
 }
@@ -82,23 +84,54 @@ HRESULT StaticCamera::Initialize(CAMERADECS _Decs)
 {
 	__super::Initialize(_Decs);
 
+	eyeIndex = 0;
 	shared_ptr<ConstantBuffer<CameraBufferType>> temp(new ConstantBuffer<CameraBufferType>());
 	CameraBuffer = temp;
 	CameraBuffer->Create(Graphic->GetDevice());
 
-
+	cameraComponent = CameraComponent::Create(shared_from_this());
+	components[ComponentType::BUFFER] = cameraComponent;
 
 	return S_OK;
+}
+
+void StaticCamera::PlayCam()
+{
+	transform->SetState(Transform::POSITION, eye[eyeIndex]);
+
+	if (eye.size() - 1 > eyeIndex)
+		++eyeIndex;
+	else
+	{
+		eyeIndex = 0;
+		playCam = false;
+	}
 }
 
 int StaticCamera::Update(float _TimeDelta)
 {
 	Renderer::GetInstance()->AddRenderGroup(Renderer::RENDER_NONALPHA, shared_from_this());
 
+	if (cameraComponent->GetPlayButtonPressed() == true)
+	{
+		playCam = true;
+		cameraComponent->SetPlayButtonPressed(false);
+		cameraComponent->GetEyeAtVector(eye, at);
+		eyeIndex = 0;
+	}
 
-	KeyInput(_TimeDelta);
+	if (!playCam)
+	{
+		KeyInput(_TimeDelta);
 
-	MouseInput(_TimeDelta);
+		MouseInput(_TimeDelta);
+	}
+	else
+	{
+		PlayCam();
+	}
+
+
 
 	XMMATRIX WorldMatrix = *transform->GetWorldMatrix();
 
@@ -114,17 +147,6 @@ int StaticCamera::Update(float _TimeDelta)
 
 	UpdateViewMatrix(positionVector, lookAtVector, upVector);
 
-
-	Vector2 sceneSize = ImguiManager::GetInstance()->GetSceneSize();
-	//if (sceneSize.x != 0)
-	//{
-	//	Decs.ScreenWidth = sceneSize.x;
-	//	Decs.ScreenHeight = sceneSize.y;
-	//	Decs.ScreenAspect = sceneSize.x / sceneSize.y;
-	//}
-	UpdateProjectionMatrix(Decs.ScreenWidth, Decs.ScreenHeight, Decs.FiedOfView, Decs.ScreenAspect, Decs.Near, Decs.Far);
-
-
 	CameraBufferDesc.CameraPosition = positionVector;
 
 	return 0;
@@ -132,9 +154,11 @@ int StaticCamera::Update(float _TimeDelta)
 
 void StaticCamera::Render()
 {
+
 	CameraBuffer->SetData(Graphic->GetDeviceContext(), CameraBufferDesc);
 	auto buffer = CameraBuffer->GetBuffer();
 	Graphic->GetDeviceContext()->VSSetConstantBuffers(3, 1, &buffer);
+
 	RenderComponent();
 
 
