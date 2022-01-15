@@ -410,11 +410,27 @@ void CameraComponent::UpdateCamPos(vector<Vector3>* _eyePos, vector<Vector3>* _a
 	{
 		EyeAt->second.second.clear();
 
-		if (_atPos->size() <= 2)
+		if (_atPos->size() < 2)
 		{
 			for (UINT i = 0; i < _atPos->size(); ++i)
 				EyeAt->second.second.push_back((*_atPos)[i]);
 
+		}
+		else if (_atPos->size() == 2)
+		{
+			for (size_t i = 0; i < _atPos->size() - 1; ++i)
+			{
+				for (int j = 0; j < 100; ++j)
+				{
+					Vector3 result;
+
+					float rate_cat_mull = (j + 1) / 100.f;
+
+					result = XMVectorCatmullRom(XMLoadFloat3(&(*_atPos)[0]), XMLoadFloat3(&(*_atPos)[0]), XMLoadFloat3(&(*_atPos)[1]), XMLoadFloat3(&(*_atPos)[1]), rate_cat_mull);
+
+					EyeAt->second.second.push_back(result);
+				}
+			}
 		}
 		else
 		{

@@ -48,5 +48,10 @@ private:
 	vector<Vector3> at;
 
 	UINT eyeIndex = 0;
+	UINT atIndex;
+
+	Vector3 originPos;
+	Vector3 originLook;
+	Vector3 originUp;
 };
 

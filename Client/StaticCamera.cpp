@@ -97,14 +97,57 @@ HRESULT StaticCamera::Initialize(CAMERADECS _Decs)
 
 void StaticCamera::PlayCam()
 {
-	transform->SetState(Transform::POSITION, eye[eyeIndex]);
+	if(!eye.empty())
+		transform->SetState(Transform::POSITION, eye[eyeIndex]);
 
-	if (eye.size() - 1 > eyeIndex)
+	if (at.empty())
+	{
+		if (!eye.empty())
+		{
+			Vector3 look = eye[eyeIndex + 1] - eye[eyeIndex];
+			look.Normalize();
+			transform->SetState(Transform::LOOK, look);
+		}
+	}
+	else
+	{
+
+		Vector3 look = at[atIndex] - eye[eyeIndex];
+		look.Normalize();
+		transform->SetState(Transform::LOOK, look);
+
+	}
+
+	if (eye.size() - 2 > eyeIndex)
 		++eyeIndex;
 	else
 	{
-		eyeIndex = 0;
-		playCam = false;
+
+		if (eye.size() >= at.size())
+		{
+			eyeIndex = 0;
+			atIndex = 0;
+			playCam = false;
+			transform->SetState(Transform::LOOK, originLook);
+			transform->SetState(Transform::POSITION, originPos);
+			transform->SetState(Transform::UP, originUp);
+
+		}
+	}
+
+	if (at.size() - 2 > atIndex)
+		++atIndex;
+	else
+	{
+		if (at.size() >= eye.size())
+		{
+			atIndex = 0;
+			eyeIndex = 0;
+			playCam = false;
+			transform->SetState(Transform::LOOK, originLook);
+			transform->SetState(Transform::POSITION, originPos);
+			transform->SetState(Transform::UP, originUp);
+		}
 	}
 }
 
@@ -118,6 +161,12 @@ int StaticCamera::Update(float _TimeDelta)
 		cameraComponent->SetPlayButtonPressed(false);
 		cameraComponent->GetEyeAtVector(eye, at);
 		eyeIndex = 0;
+		atIndex = 0;
+
+		originPos = transform->GetState(Transform::POSITION);
+		originLook = transform->GetState(Transform::LOOK);
+		originUp = transform->GetState(Transform::UP);
+
 	}
 
 	if (!playCam)
