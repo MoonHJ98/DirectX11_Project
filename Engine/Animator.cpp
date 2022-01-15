@@ -26,24 +26,24 @@ void Animator::Update(float _timeDelta)
 	KeyframeDesc& desc = keyframeDesc;
 
 	// 현재 애니메이션.
-	{
-		auto& clip = clips[desc.clip];
-		desc.RunningTime += _timeDelta;
-	
-		// 시간 비율
-		float time = 1.f / clip->GetFrameRate() / desc.Speed;
-	
-		// desc.Time이 1보다 크거나 같으면 애니메이션의 다음 프레임
-		if (desc.Time >= 1.f)
-		{
-			desc.RunningTime = 0.f;
-	
-			// 루프. 한번만 플레이하고 싶다면 마지막 프레임에서 멈추면 됨
-			desc.CurrFrame = (desc.CurrFrame + 1) % clip->GetFrameCount();
-		}
-		desc.Time = desc.RunningTime / time;
-	
-	}
+	//{
+	//	auto& clip = clips[desc.clip];
+	//	desc.RunningTime += _timeDelta;
+	//
+	//	// 시간 비율
+	//	float time = 1.f / clip->GetFrameRate() / desc.Speed;
+	//
+	//	// desc.Time이 1보다 크거나 같으면 애니메이션의 다음 프레임
+	//	if (desc.Time >= 1.f)
+	//	{
+	//		desc.RunningTime = 0.f;
+	//
+	//		// 루프. 한번만 플레이하고 싶다면 마지막 프레임에서 멈추면 됨
+	//		desc.CurrFrame = (desc.CurrFrame + 1) % clip->GetFrameCount();
+	//	}
+	//	desc.Time = desc.RunningTime / time;
+	//
+	//}
 }
 
 void Animator::Render()

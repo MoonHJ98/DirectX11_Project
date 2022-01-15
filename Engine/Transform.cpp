@@ -264,7 +264,7 @@ HRESULT Transform::RotationAxis(XMFLOAT3 _Axis, float _Frametime, float* _AngleA
 	return S_OK;
 }
 
-HRESULT Transform::SetRotation(Vector3 angle)
+Matrix Transform::SetRotation(Vector3 angle)
 {
 	Vector3 Right(1.f, 0.f, 0.f), Look(0.f, 0.f, 1.f), Up(0.f, 1.f, 0.f);
 	rotationAngle = angle;
@@ -291,7 +291,7 @@ HRESULT Transform::SetRotation(Vector3 angle)
 	SetState(Transform::LOOK, Look);
 	SetState(Transform::UP, Up);
 
-	return S_OK;
+	return matRot;
 }
 
 
@@ -334,6 +334,8 @@ void Transform::Render()
 		View(3, 1) = pos.y;
 		View(3, 2) = pos.z;
 
+		desc.World = SetRotation(GetRotation());
+
 		desc.View = XMMatrixTranspose(View);
 		desc.Projection = XMMatrixTranspose(*Manage->GetTransform(D3DTRANSFORMSTATE_TEXTURE0));
 		MatrixBuffer.SetData(Graphic->GetDeviceContext(), desc);
@@ -360,6 +362,8 @@ void Transform::Render()
 		View(3, 0) = pos.x;
 		View(3, 1) = pos.y;
 		View(3, 2) = pos.z;
+
+		Vector3 rot = GetRotation();
 
 		desc.View = XMMatrixTranspose(View);
 		desc.Projection = XMMatrixTranspose(*Manage->GetTransform(D3DTRANSFORMSTATE_TEXTURE0));

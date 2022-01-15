@@ -19,7 +19,7 @@ public:
 	HRESULT					      ReserveLayerMap(int _Size);
 
 	void					      AddLayer(int _Index, wstring _LayerKey, shared_ptr<GameObject> _Object);
-	void					      AddLayerTest(int _Index, wstring _LayerKey, shared_ptr<GameObject> _Object);
+	void					      AddLayerTest(int _Index, wstring _LayerKey, shared_ptr<GameObject> _Object, bool _isRoot);
 
 	shared_ptr<Layer>		      FindLayer(int _Index, wstring _LayerKey);
 

@@ -314,6 +314,34 @@ bool GraphicDevice::Initialize(int screenWidth, int screenHeight, bool vsync, HW
 		return false;
 	}
 	
+	// 블렌드 상태 구조체를 초기화 합니다.
+	D3D11_BLEND_DESC blendStateDescription;
+	ZeroMemory(&blendStateDescription, sizeof(D3D11_BLEND_DESC));
+
+	// 알파블렌드 값을 설정합니다.
+	blendStateDescription.RenderTarget[0].BlendEnable = TRUE;
+	blendStateDescription.RenderTarget[0].SrcBlend = D3D11_BLEND_ONE;
+	blendStateDescription.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+	blendStateDescription.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+	blendStateDescription.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+	blendStateDescription.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+	blendStateDescription.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+	blendStateDescription.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+
+	// 블렌드 상태를 생성합니다.
+	if (FAILED(m_device->CreateBlendState(&blendStateDescription, &m_alphaEnableBlendingState)))
+	{
+		return false;
+	}
+
+	// 알파 블렌드를 비활성화 설정합니다.
+	blendStateDescription.RenderTarget[0].BlendEnable = FALSE;
+
+	// 블렌드 상태를 생성합니다.
+	if (FAILED(m_device->CreateBlendState(&blendStateDescription, &m_alphaDisableBlendingState)))
+	{
+		return false;
+	}
 
 	return true;
 }
@@ -392,6 +420,25 @@ void GraphicDevice::TurnZBufferOn()
 void GraphicDevice::TurnZBufferOff()
 {
 	m_deviceContext->OMSetDepthStencilState(m_depthDisabledStencilState.Get(), 1);
+}
+
+void GraphicDevice::TurnOnAlphaBlending()
+{
+	// 블렌드 인수를 설정합니다.
+	float blendFactor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+
+	// 알파 블렌딩을 켭니다.
+	m_deviceContext->OMSetBlendState(m_alphaEnableBlendingState, blendFactor, 0xffffffff);
+
+}
+
+void GraphicDevice::TurnOffAlphaBlending()
+{
+	// 블렌드 인수를 설정합니다.
+	float blendFactor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+	
+	// 알파 블렌딩을 끕니다.
+	m_deviceContext->OMSetBlendState(m_alphaDisableBlendingState, blendFactor, 0xffffffff);
 }
 
 ID3D11DepthStencilView * GraphicDevice::GetDepthStencilView()

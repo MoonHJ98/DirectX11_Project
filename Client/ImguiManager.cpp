@@ -9,6 +9,7 @@
 #include "GameObject.h"
 #include "Rigidbody.h"
 #include "Collider.h"
+#include "UI.h"
 
 HRESULT ImguiManager::Initialize()
 {
@@ -128,13 +129,20 @@ void ImguiManager::Hierarchy()
 
 		for (auto iter = objects.begin(); iter != objects.end(); ++iter)
 		{
-
-			if (ImGui::Selectable(ToString(iter->first).c_str()))
+			
+			if (ImGui::TreeNode(ToString(iter->first).c_str()))
 			{
 				isObjectInspector = true;
 				objectForInspector = iter->second;
-				break;
+				ObjectPopup();
+				ImGui::TreePop();
 			}
+			//if (ImGui::Selectable(ToString(iter->first).c_str()))
+			//{
+			//	isObjectInspector = true;
+			//	objectForInspector = iter->second;
+			//	break;
+			//}
 
 		}
 
@@ -155,7 +163,7 @@ void ImguiManager::Inspector()
 	ImGui::End();
 }
 
-void ImguiManager::ObjectPopup()
+void ImguiManager::ObjectPopup(bool _isRoot)
 {
 	if (ImGui::IsItemClicked(ImGuiPopupFlags_MouseButtonRight))
 		ImGui::OpenPopup("Object");
@@ -184,11 +192,12 @@ void ImguiManager::ObjectPopup()
 		if (ImGui::MenuItem("Effects"))
 			ImGui::CloseCurrentPopup();
 
-		if (ImGui::MenuItem("Light"))
-			ImGui::CloseCurrentPopup();
-
 		if (ImGui::MenuItem("UI"))
+		{
+			auto ui = UI::Create();
+			Manage->AddLayerTest(SCENEID::STATIC, L"UI", ui);
 			ImGui::CloseCurrentPopup();
+		}
 
 		ImGui::EndPopup();
 	}

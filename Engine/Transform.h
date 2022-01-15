@@ -56,7 +56,7 @@ public:
 	HRESULT						LookTarget(XMFLOAT3 _TargetPos);
 	HRESULT						GoToTarget(XMFLOAT3 _TargetPos, float _Frametime);
 	HRESULT						RotationAxis(XMFLOAT3 _Axis, float _Frametime, float* _AngleAcc = nullptr);
-	HRESULT						SetRotation(Vector3 angle);
+	Matrix						SetRotation(Vector3 angle);
 	Vector3						GetRotation() { return rotationAngle; }
 
 public:

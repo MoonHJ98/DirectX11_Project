@@ -32,6 +32,9 @@ public:
 	shared_ptr<Component> GetComponent(ComponentType componentType);
 	void AddComponent(ComponentType _componentType, shared_ptr<Component> _component);
 
+	void SetIsRoot(bool _root) { isRoot = _root; }
+	bool GetIsRoot() { return isRoot; }
+
 public:
 	virtual void OnContact() PURE;
 	virtual void OnTrigger() PURE;
@@ -51,6 +54,8 @@ protected:
 
 	vector<shared_ptr<Component>> components;
 
+	bool isRoot = true;
 
+	vector<shared_ptr<GameObject>> childObject;
 };
 

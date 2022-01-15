@@ -27,8 +27,12 @@ void Light::Render()
 	buffertype.DiffuseColor = LightInfo.Diffuse;
 	buffertype.AmbientColor = LightInfo.Ambient;
 	buffertype.SpecularColor = LightInfo.Specular;
-	buffertype.SpecularPower = LightInfo.SpecularPower;
 	buffertype.Direction = LightInfo.Direction;
+	buffertype.SpecularPower = LightInfo.SpecularPower;
+	buffertype.Position = LightInfo.Position;
+	buffertype.range = LightInfo.Range;
+
+
 
 	LightBuffer->SetData(Graphic->GetDeviceContext(), buffertype);
 	auto buffer = LightBuffer->GetBuffer();
@@ -65,9 +69,12 @@ HRESULT Light::Initialize(LIGHTDESC _LightInfo)
 
 	transform->SetScale(Vector3(viewport.Width/2, viewport.Height/2, 1.f));
 	
-	CreateViewMatrix();
+	if (LightInfo.Type == D3DLIGHT_DIRECTIONAL)
+	{
+		CreateViewMatrix();
 
-	CreateProjMatrix();
+		CreateProjMatrix();
+	}
 
 	return S_OK;
 }

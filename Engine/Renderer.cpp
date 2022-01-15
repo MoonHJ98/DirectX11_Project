@@ -82,7 +82,7 @@ void Renderer::Render()
 
 	RenderAlpha();
 
-	RenderUI();
+	//RenderUI();
 
 	RenderLight();
 
@@ -140,6 +140,7 @@ void Renderer::RenderNonAlpha()
 		}
 	}
 
+	RenderUI();
 	deferredBuffer->EndMRT();
 
 
@@ -153,6 +154,26 @@ void Renderer::RenderAlpha()
 
 void Renderer::RenderUI()
 {
+	//deferredBuffer->BeginMRT(L"Deferred");
+	//Graphic->TurnOnAlphaBlending();
+	for (auto& pGameObject : RenderGroup[RENDER_UI])
+	{
+	
+		if (nullptr != pGameObject)
+		{
+			//if (frustum->CheckPoint(&pGameObject->GetPosition()))
+			//{
+			pGameObject->RenderDepthForShadow(false);
+			pGameObject->Render();
+			//}
+		}
+	}
+
+	//deferredBuffer->EndMRT();
+
+
+	RenderGroup[RENDER_UI].clear();
+	//Graphic->TurnOffAlphaBlending();
 
 
 }

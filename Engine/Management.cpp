@@ -56,9 +56,9 @@ void Management::AddLayer(int _Index, wstring _LayerKey, shared_ptr<GameObject> 
 	ObjectMgr->AddLayer(_Index, _LayerKey, _Object);
 }
 
-void Management::AddLayerTest(int _Index, wstring _LayerKey, shared_ptr<GameObject> _Object)
+void Management::AddLayerTest(int _Index, wstring _LayerKey, shared_ptr<GameObject> _Object, bool _isRoot)
 {
-	ObjectMgr->AddLayerTest(_Index, _LayerKey, _Object);
+	ObjectMgr->AddLayerTest(_Index, _LayerKey, _Object, _isRoot);
 
 }
 

@@ -91,6 +91,8 @@ HRESULT StaticCamera::Initialize(CAMERADECS _Decs)
 
 	cameraComponent = CameraComponent::Create(shared_from_this());
 	components[ComponentType::BUFFER] = cameraComponent;
+	components[ComponentType::TRANSFORM] = transform;
+
 
 	return S_OK;
 }

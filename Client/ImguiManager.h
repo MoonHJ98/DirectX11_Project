@@ -22,7 +22,7 @@ private:
 	void Inspector();
 	
 private:
-	void ObjectPopup();
+	void ObjectPopup(bool _isRoot = true);
 	void ObjectInspector();
 	void ComponentPopup();
 

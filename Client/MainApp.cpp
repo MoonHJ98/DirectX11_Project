@@ -47,8 +47,8 @@ HRESULT MainApp::Initialize()
 	lightDesc.Ambient = Color(0.4f, 0.4f, 0.4f, 1.f);
 	lightDesc.Direction = Vector3(0.5f, -0.5f, 1.f);
 	lightDesc.SpecularPower = 5.f;
-
-
+	
+	
 	Manage->AddLight(lightDesc, L"DirectionalLight");
 
 	Vector2 screenSize = ImguiManager::GetInstance()->GetSceneSize();
@@ -73,7 +73,16 @@ HRESULT MainApp::Initialize()
 	auto terrain = Terrain::Create(50, 50, L"../Resources/heightmap.bmp");
 	Manage->AddLayerTest(SCENEID::STATIC, L"Terrain", terrain);
 
-
+	//LIGHTDESC lightDesc2;
+	//lightDesc2.Type = D3DLIGHT_POINT;
+	//lightDesc2.Diffuse = Color(1.f, 0.f, 0.f, 1.f);
+	//lightDesc2.Specular = Color(1.f, 0.f, 0.f, 1.f);
+	//lightDesc2.Ambient = Color(0.4f, 0.4f, 0.4f, 1.f);
+	//lightDesc2.SpecularPower = 5.f;
+	//lightDesc2.Position = Vector3(0.f, 10.f, 0.f);
+	//lightDesc2.Range = 1.f;
+	//
+	//Manage->AddLight(lightDesc2, L"PointLight");
 	
 	if (FAILED(ReadyScene(LOGO)))
 	{

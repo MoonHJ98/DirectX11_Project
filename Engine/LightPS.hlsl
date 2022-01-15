@@ -4,12 +4,6 @@ Texture2D DepthTexture : register(t2);
 Texture2D ShadowTexture : register(t3);
 Texture2D LightViewPosTexture : register(t4);
 
-
-
-
-
-
-
 SamplerState SampleType; // 텍스쳐를 도형에 셰이딩 할때 사용
 
 cbuffer LightBuffer : register(b0)
@@ -19,6 +13,9 @@ cbuffer LightBuffer : register(b0)
     float4 SpecularColor;
     float3 LightDirection;
     float SpecularPower;
+    float3 Position;
+    float range;
+   
 };
 
 cbuffer ProjtoWorld : register(b1)
@@ -28,15 +25,6 @@ cbuffer ProjtoWorld : register(b1)
     float3 CamPos;
     float padding;
 };
-
-cbuffer LightMatrixBuffer : register(b2)
-{
-    matrix lightViewMatrix;
-    matrix lightProjMatrix;
-    float3 lightPosition;
-    float padding2;
-}
-
 
 struct PSInput
 {
@@ -80,9 +68,11 @@ PSOut main(PSInput input)
         color = AmbientColor;
     
     
-    lightDir = -LightDirection;
+    if (range == 0)
+        lightDir = -LightDirection;
 
     normal = NormalTexture.Sample(SampleType, input.Uv);
+
     specularIntensity = SpecularTexture.Sample(SampleType, input.Uv);
 
     lightViewPosition = LightViewPosTexture.Sample(SampleType, input.Uv);
@@ -104,28 +94,36 @@ PSOut main(PSInput input)
 		    // 빛이 객체 앞에 있으면 픽셀을 비추고, 그렇지 않으면 객체 (오클 루더)가 그림자를 드리 우기 때문에이 픽셀을 그림자로 그립니다.
         if (lightDepthValue < depthValue)
         {
-			    // 이 픽셀의 빛의 양을 계산합니다.
+             // 확산 색과 광 강도의 양에 따라 최종 확산색을 결정합니다.
+
+             // for Specular
+            float fViewZ = vDepthInfo.y * 1000.f; // 1000 : far
+                
+            float4 vPosition;
+                
+	         // 투영행렬까지 곱해놓은 위치.
+            vPosition.x = ((input.Uv.x * 2.f - 1.f)) * fViewZ;
+            vPosition.y = ((input.Uv.y * -2.f + 1.f)) * fViewZ;
+            vPosition.z = vDepthInfo.x * fViewZ;
+            vPosition.w = 1.f * fViewZ;
+                
+            vPosition = mul(vPosition, ProjInv);
+            vPosition = mul(vPosition, ViewInv);
+            float fAtt = 1.f;
+            if(range != 0)
+            {
+                float3 dir = vPosition - float4(Position, 1.f);
+                lightDir = -dir;
+                float fDistance = length(lightDir);
+
+                fAtt = saturate((range - fDistance) / range);
+            }
+			 // 이 픽셀의 빛의 양을 계산합니다.
             lightIntensity = saturate(dot(normal, lightDir));
-			
+            
+            color += DiffuseColor * saturate(dot(normalize(lightDir), normalize(normal))) * fAtt;
             if (lightIntensity > 0.0f)
             {
-				    // 확산 색과 광 강도의 양에 따라 최종 확산색을 결정합니다.
-                color += saturate(DiffuseColor * lightIntensity);
-
-                // for Specular
-                float fViewZ = vDepthInfo.y * 1000.f; // 1000 : far
-                
-                float4 vPosition;
-                
-	            // 투영행렬까지 곱해놓은 위치.
-                vPosition.x = ((input.Uv.x * 2.f - 1.f)) * fViewZ;
-                vPosition.y = ((input.Uv.y * -2.f + 1.f)) * fViewZ;
-                vPosition.z = vDepthInfo.x * fViewZ;
-                vPosition.w = 1.f * fViewZ;
-                
-                vPosition = mul(vPosition, ProjInv);
-                vPosition = mul(vPosition, ViewInv);
-                
                 float3 vLook = vPosition - float4(CamPos, 1.f);
                 
                 reflection = normalize(2 * lightIntensity * normal - lightDir);
@@ -133,24 +131,27 @@ PSOut main(PSInput input)
                 
                 specular = specular * specularIntensity; // For Specular Mapping
 	
+                //color += saturate(DiffuseColor * lightIntensity);
+
+                //color = DiffuseColor * saturate(dot(normalize(lightDir), normalize(normal.xyz))) * fAtt;
             }
         }
     }
     else
-	{
+    {
         
-		lightIntensity = saturate(dot(normal, lightDir));
+        lightIntensity = saturate(dot(normal, lightDir));
 		
-		if (lightIntensity > 0.f)
-		{
-			color += saturate(DiffuseColor * lightIntensity);
-		}
-		if (normal.x == 0.f && normal.y == 0.f && normal.z == 0.f)
-		{
-			color = DiffuseColor;
-		}
+        if (lightIntensity > 0.f)
+        {
+            color += saturate(DiffuseColor * lightIntensity);
+        }
+        if (normal.x == 0.f && normal.y == 0.f && normal.z == 0.f)
+        {
+            color = DiffuseColor;
+        }
 
-	}
+    }
 
 
     Out.shade = color;

@@ -2,13 +2,12 @@
 	1) 텍스쳐레이어 drag&drop으로 레이어 순서 바꾸기 V
 
 2. camera tool
-	1) action cam 만들기 
+	1) action cam 만들기 V
 
 3. scene
-	1) Light 추가
-	2) UI (pos, scale, rotation)추가
-	3) 각 오브젝트에 자식으로 오브젝트 생성 가능하게 하기
-	4) drag&drop으로 부모자식 상속관계 가능하게 하기
+	1) UI (pos, scale, rotation)추가
+	2) 각 오브젝트에 자식으로 오브젝트 생성 가능하게 하기
+	3) drag&drop으로 부모자식 상속관계 가능하게 하기
 
 4. Physx
 	1) 애니메이션으로 움직이는 객체에 collider 붙이기 (Bone정보 볼 수 있게 하기)

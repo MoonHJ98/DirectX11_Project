@@ -25,7 +25,8 @@ public:
 		Vector4 SpecularColor;
 		Vector3 Direction;
 		float SpecularPower;
-		//float Padding = 0.f;
+		Vector3 Position;
+		float range = 0.f;
 	};
 
 
