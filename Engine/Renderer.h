@@ -67,5 +67,7 @@ private:
 	shared_ptr<Management> Manage = nullptr;
 
 	shared_ptr<Frustum> frustum = nullptr;
+
+	shared_ptr<Transform> transform = nullptr;
 };
 

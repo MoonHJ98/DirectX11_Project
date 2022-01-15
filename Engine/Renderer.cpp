@@ -21,7 +21,7 @@ HRESULT Renderer::Initialize()
 
 	LightMgr = LightManager::GetInstance();
 
-	deferredBuffer = DeferredBuffer::Create(SCREENSIZEX, SCREENSIZEY, SCREENDEPTH, SCREENNEAR);
+	deferredBuffer = DeferredBuffer::Create(1200, 800, SCREENDEPTH, SCREENNEAR);
 
 	deferredBuffer->AddMultiRenderTarget(L"Deferred", DeferredBuffer::DIFFUSEMAP);
 	deferredBuffer->AddMultiRenderTarget(L"Deferred", DeferredBuffer::NORMALMAP);
@@ -31,7 +31,9 @@ HRESULT Renderer::Initialize()
 
 
 
-
+	transform = Transform::Create(Transform::TRANSDESC());
+	transform->SetState(Transform::POSITION, Vector3(0.f, 0.f, 0.3f));
+	transform->SetScale(Vector3(viewport.Width / 2.f, viewport.Height / 2.f, 1.f));
 
 
 	deferredBuffer->AddMultiRenderTarget(L"Light", DeferredBuffer::SHADE);
@@ -80,13 +82,15 @@ void Renderer::Render()
 
 	RenderNonAlpha();
 
-	RenderAlpha();
-
-	//RenderUI();
-
 	RenderLight();
 
 	RenderBlend();
+
+	RenderAlpha();
+
+	RenderUI();
+
+
 }
 
 void Renderer::RenderPriority()
@@ -104,6 +108,7 @@ void Renderer::RenderPriority()
 
 void Renderer::RenderNonAlpha()
 {
+
 	Matrix view = *Manage->GetTransform(D3DTRANSFORMSTATE_VIEW);
 	Matrix proj = *Manage->GetTransform(D3DTRANSFORMSTATE_PROJECTION);
 
@@ -140,7 +145,7 @@ void Renderer::RenderNonAlpha()
 		}
 	}
 
-	RenderUI();
+	//RenderUI();
 	deferredBuffer->EndMRT();
 
 
@@ -154,26 +159,27 @@ void Renderer::RenderAlpha()
 
 void Renderer::RenderUI()
 {
-	//deferredBuffer->BeginMRT(L"Deferred");
-	//Graphic->TurnOnAlphaBlending();
+
+	Graphic->TurnZBufferOff();
+	Graphic->TurnOnAlphaBlending();
 	for (auto& pGameObject : RenderGroup[RENDER_UI])
 	{
-	
+
 		if (nullptr != pGameObject)
 		{
-			//if (frustum->CheckPoint(&pGameObject->GetPosition()))
-			//{
+
 			pGameObject->RenderDepthForShadow(false);
 			pGameObject->Render();
-			//}
+
 		}
 	}
 
-	//deferredBuffer->EndMRT();
+
 
 
 	RenderGroup[RENDER_UI].clear();
-	//Graphic->TurnOffAlphaBlending();
+	Graphic->TurnOffAlphaBlending();
+	Graphic->TurnZBufferOn();
 
 
 }
@@ -228,11 +234,10 @@ void Renderer::RenderLight()
 
 void Renderer::RenderBlend()
 {
-	deferredBuffer->BeginMRT(L"Blend");
+	//deferredBuffer->BeginMRT(L"Blend");
 
 
 	// 모든 2D 렌더링을 시작하려면 Z 버퍼를 끕니다.
-
 	Graphic->TurnZBufferOff();
 
 	blendShader->Render();
@@ -248,7 +253,7 @@ void Renderer::RenderBlend()
 
 
 
-
+	//transform->Render();
 	rectangleBuffer->Render();
 
 
@@ -256,12 +261,10 @@ void Renderer::RenderBlend()
 
 
 
-	deferredBuffer->EndMRT();
+	//deferredBuffer->EndMRT();
 
 	// 모든 2D 렌더링이 완료되었으므로 Z 버퍼를 다시 켜십시오.
 	Graphic->TurnZBufferOn();
-
-	//ImGui::CreateContext();
 
 }
 

@@ -71,6 +71,7 @@ void TerrainBuffer::Render()
 
 void TerrainBuffer::RenderInspector()
 {
+	PickTerrain(Vector2());
 	static char RaiseOrLowerTerrain[1024 * 16] =
 		" Left click to raise.\n"
 		" Hold shift and left click to lower.\n";
@@ -135,10 +136,28 @@ void TerrainBuffer::RenderInspector()
 	//else
 	//	terrainTool = FALSE;
 
+	if (Manage->GetDIMouseState(InputDevice::DIM_LB) & 0x80)
+	{
+		switch (terrainToolStyle)
+		{
+		case TerrainBuffer::TerrainToolStyle::RaiseOrLowerTerrain:
+			RaiseHeight();
+			break;
+		case TerrainBuffer::TerrainToolStyle::PaintTexture:
+			DrawAlphaMap();
+			break;
+		case TerrainBuffer::TerrainToolStyle::TerrainToolStyleEnd:
+			break;
+		default:
+			break;
+		}
+	}
+
 }
 
-HRESULT TerrainBuffer::Initialize(UINT _terrainWidth, UINT _terrainHeight, const char* heightMapFilename)
+HRESULT TerrainBuffer::Initialize(UINT _terrainWidth, UINT _terrainHeight, HWND _hWnd, const char* heightMapFilename)
 {
+	hWnd = _hWnd;
 	Graphic = GraphicDevice::GetInstance();
 	Manage = Management::GetInstance();
 
@@ -267,20 +286,21 @@ HRESULT TerrainBuffer::InitializeBuffers()
 
 Vector3 TerrainBuffer::PickTerrain(Vector2 screenPos)
 {
-	//POINT p;
-	//GetCursorPos(&p);
-	//ScreenToClient(hWnd, &p);
+	POINT p;
+	GetCursorPos(&p);
+	ScreenToClient(hWnd, &p);
 
 
 	Matrix	matProj;
 	matProj = *Manage->GetTransform(D3DTRANSFORMSTATE_PROJECTION);
 
+	//cout << p.x << " , " << p.y<< endl;
 
 	// 뷰포트의 마우스를 투영의 마우스로 변환 -> 뷰스페이스로 변환
 	Vector3		Temp;
 
-	Temp.x = (float(screenPos.x) / (screenWidth >> 1) - 1.f) / matProj._11;
-	Temp.y = (float(-screenPos.y) / (screenHeignt >> 1) + 1.f) / matProj._22;
+	Temp.x = (float(p.x) / (screenWidth >> 1) - 1.f) / matProj._11;
+	Temp.y = (float(-p.y) / (screenHeignt >> 1) + 1.f) / matProj._22;
 	Temp.z = 1.f;
 
 	// 뷰 스페이스 상의 rayPos, rayDir
@@ -340,6 +360,7 @@ Vector3 TerrainBuffer::PickTerrain(Vector2 screenPos)
 				auto buffer = brushBuffer->GetBuffer();
 				Graphic->GetDeviceContext()->PSSetConstantBuffers(0, 1, &buffer);
 
+				//cout << Pos.x << " , " << Pos.y << " , " << Pos.z << endl;
 				if (terrainToolStyle == TerrainToolStyle::RaiseOrLowerTerrain)
 				{
 					switch (heightMapOption)
@@ -368,6 +389,7 @@ Vector3 TerrainBuffer::PickTerrain(Vector2 screenPos)
 				auto buffer = brushBuffer->GetBuffer();
 				Graphic->GetDeviceContext()->PSSetConstantBuffers(0, 1, &buffer);
 
+				//cout << Pos.x << " , " << Pos.y << " , " << Pos.z << endl;
 
 				if (terrainToolStyle == TerrainToolStyle::RaiseOrLowerTerrain)
 				{
@@ -739,10 +761,10 @@ void TerrainBuffer::DrawAlphaMap()
 
 
 
-shared_ptr<TerrainBuffer> TerrainBuffer::Create(UINT _terrainWidth, UINT _terrainHeight, const char* heightMapFilename)
+shared_ptr<TerrainBuffer> TerrainBuffer::Create(UINT _terrainWidth, UINT _terrainHeight, HWND _hWnd, const char* heightMapFilename)
 {
 	shared_ptr<TerrainBuffer> Instance(new TerrainBuffer());
-	if (FAILED(Instance->Initialize(_terrainWidth, _terrainHeight, heightMapFilename)))
+	if (FAILED(Instance->Initialize(_terrainWidth, _terrainHeight, _hWnd, heightMapFilename)))
 	{
 		MSG_BOX("Failed to create TerrainBuffer.");
 		return nullptr;

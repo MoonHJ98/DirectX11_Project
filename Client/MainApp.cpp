@@ -56,12 +56,12 @@ HRESULT MainApp::Initialize()
 	_decs.Far = SCREENDEPTH;
 	_decs.Near = SCREENNEAR;
 	_decs.FiedOfView = FoV;
-	_decs.ScreenAspect = (float)SCREENSIZEX / (float)SCREENSIZEY;
+	_decs.ScreenAspect = (float)GX / (float)GY;
 	_decs.ScreenWidth = (float)GX;
 	_decs.ScreenHeight = (float)GY;
 
 	auto camera = StaticCamera::Create(_decs);
-	Manage->AddLayerTest(SCENEID::STATIC, L"Camera", camera);
+	Manage->AddLayerTest(SCENEID::STATIC, L"Camera", camera, true);
 
 
 
@@ -71,7 +71,7 @@ HRESULT MainApp::Initialize()
 
 
 	auto terrain = Terrain::Create(50, 50, L"../Resources/heightmap.bmp");
-	Manage->AddLayerTest(SCENEID::STATIC, L"Terrain", terrain);
+	Manage->AddLayerTest(SCENEID::STATIC, L"Terrain", terrain, true);
 
 	//LIGHTDESC lightDesc2;
 	//lightDesc2.Type = D3DLIGHT_POINT;

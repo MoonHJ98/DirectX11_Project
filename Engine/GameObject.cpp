@@ -24,6 +24,7 @@ void GameObject::RenderComponentsIspector()
 	}
 }
 
+
 Vector3 GameObject::GetPosition()
 {
 	Vector3 pos = transform->GetState(Transform::POSITION);

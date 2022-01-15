@@ -20,7 +20,7 @@ HRESULT ImguiManager::Initialize()
 
 
 	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+	//ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NavEnableSetMousePos;
 
 	ImGui::GetIO().ConfigWindowsMoveFromTitleBarOnly = true;
@@ -45,7 +45,7 @@ void ImguiManager::Render()
 
 	//ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
 
-	Scene();
+	//Scene();
 	Menu1();
 	Hierarchy();
 	Inspector();
@@ -62,7 +62,7 @@ void ImguiManager::Render()
 	{
 		ImGui::UpdatePlatformWindows();
 		ImGui::RenderPlatformWindowsDefault();
-
+	
 	}
 }
 
@@ -72,8 +72,8 @@ void ImguiManager::Scene()
 
 	ImGui::Begin("Scene");
 
-	ID3D11ShaderResourceView* my_texture = Renderer::GetInstance()->GetBlendTexture();
-	ImGui::Image((void*)my_texture, ImVec2(SCREENSIZEX, SCREENSIZEY));
+	//ID3D11ShaderResourceView* my_texture = Renderer::GetInstance()->GetBlendTexture();
+	//ImGui::Image((void*)my_texture, ImVec2(SCREENSIZEX, SCREENSIZEY));
 	ImVec2 MinPos;
 
 	Vector2 MousePos = Vector2();
@@ -103,7 +103,7 @@ void ImguiManager::Scene()
 
 void ImguiManager::Menu1()
 {
-	ImGui::Begin("Menu1");
+	ImGui::Begin("Menu");
 
 
 
@@ -134,7 +134,7 @@ void ImguiManager::Hierarchy()
 			{
 				isObjectInspector = true;
 				objectForInspector = iter->second;
-				ObjectPopup();
+				ObjectPopup(true);
 				ImGui::TreePop();
 			}
 			//if (ImGui::Selectable(ToString(iter->first).c_str()))
@@ -180,7 +180,7 @@ void ImguiManager::ObjectPopup(bool _isRoot)
 			if (ImGui::MenuItem("Sphere"))
 			{
 				auto sphere = SphereTest::Create();
-				Manage->AddLayerTest(SCENEID::STATIC, L"Sphere", sphere);
+				Manage->AddLayerTest(SCENEID::STATIC, L"Sphere", sphere, _isRoot);
 
 			}
 			ImGui::MenuItem("Capsule");
@@ -195,7 +195,7 @@ void ImguiManager::ObjectPopup(bool _isRoot)
 		if (ImGui::MenuItem("UI"))
 		{
 			auto ui = UI::Create();
-			Manage->AddLayerTest(SCENEID::STATIC, L"UI", ui);
+			Manage->AddLayerTest(SCENEID::STATIC, L"UI", ui, true);
 			ImGui::CloseCurrentPopup();
 		}
 

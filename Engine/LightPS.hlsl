@@ -122,6 +122,8 @@ PSOut main(PSInput input)
             lightIntensity = saturate(dot(normal, lightDir));
             
             color += DiffuseColor * saturate(dot(normalize(lightDir), normalize(normal))) * fAtt;
+                //color = DiffuseColor * saturate(dot(normalize(lightDir), normalize(normal.xyz))) * fAtt;
+
             if (lightIntensity > 0.0f)
             {
                 float3 vLook = vPosition - float4(CamPos, 1.f);

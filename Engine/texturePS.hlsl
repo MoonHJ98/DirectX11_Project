@@ -24,7 +24,6 @@ Output main(PixelInputType input) : SV_TARGET
     Output Out;
     
     Out.color = shaderTexture.Sample(SampleType, input.tex);
-    Out.color.a = 1.f;
     Out.normal = float4(0.f, 0.f, 0.f, 0.f);
     Out.depth = float4(0.f, 0.f, 0.f, 0.f);
     Out.Specular = float4(0.f, 0.f, 0.f, 0.f);

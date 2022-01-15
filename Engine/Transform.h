@@ -40,6 +40,7 @@ public:
 	void						SetScale(Vector3 scale);
 	Vector3						GetScale();
 	void						SetObject(shared_ptr<GameObject> _object);
+	void						SetUpdateTransByTool(bool _updatebyTool) { updateTransformByTool = _updatebyTool; }
 
 public:
 	// Component을(를) 통해 상속됨
@@ -75,6 +76,7 @@ private:
 
 	Vector3 rotationAngle = Vector3(0.f, 0.f, 0.f);
 
+	bool updateTransformByTool = true;
 
 };
 

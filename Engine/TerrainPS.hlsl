@@ -172,5 +172,6 @@ Output main(PixelInputType input)
         color += GetBrushColor(input.WorldPos, input.uv);
 
     Out.color = color;
+
     return Out;
 }

@@ -43,7 +43,7 @@ public:
 	virtual void RenderInspector() override;
 
 private:
-	HRESULT Initialize(UINT _terrainWidth, UINT _terrainHeight, const char* heightMapFilename);
+	HRESULT Initialize(UINT _terrainWidth, UINT _terrainHeight, HWND _hWnd, const char* heightMapFilename);
 	HRESULT InitializeBuffers();
 	void RenderBuffers();
 	void CreateNormalData();
@@ -72,7 +72,7 @@ public:
 
 
 public:
-	static shared_ptr<TerrainBuffer> Create(UINT _terrainWidth, UINT _terrainHeight, const char* heightMapFilename = nullptr);
+	static shared_ptr<TerrainBuffer> Create(UINT _terrainWidth, UINT _terrainHeight, HWND _hWnd, const char* heightMapFilename = nullptr);
 
 private:
 	shared_ptr<Management> Manage = nullptr;
@@ -135,5 +135,6 @@ private:
 	int texPosX = 0;
 	int texPosY = 0;
 
+	HWND hWnd;
 };
 

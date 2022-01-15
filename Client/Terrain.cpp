@@ -55,7 +55,7 @@ HRESULT Terrain::Initialize(UINT _terrainWidth, UINT _terrainHeight, wstring _he
 
 	material = Material::Create(desc);
 
-	terrainBuffer = TerrainBuffer::Create(terrainWidth, _terrainHeight);
+	terrainBuffer = TerrainBuffer::Create(terrainWidth, _terrainHeight, GhWnd);
 	//quadtree = Quadtree::Create(terrainBuffer);
 
 	PhysXManager::GetInstance()->UpdateHeightField(terrainBuffer);
@@ -125,22 +125,22 @@ Vector3 Terrain::PickTerrain(Vector2 screenPos, Vector2 _screenSize)
 
 	Vector3 Pos = terrainBuffer->PickTerrain(screenPos);
 
-	if (Manage->GetDIMouseState(InputDevice::DIM_LB) & 0x80)
-	{
-		switch (terrainBuffer->GetTerrainToolStyle())
-		{
-		case TerrainBuffer::TerrainToolStyle::RaiseOrLowerTerrain:
-			RaiseHeight();
-			break;
-		case TerrainBuffer::TerrainToolStyle::PaintTexture:
-			PaintTexture();
-			break;
-		case TerrainBuffer::TerrainToolStyle::TerrainToolStyleEnd:
-			break;
-		default:
-			break;
-		}
-	}
+	//if (Manage->GetDIMouseState(InputDevice::DIM_LB) & 0x80)
+	//{
+	//	switch (terrainBuffer->GetTerrainToolStyle())
+	//	{
+	//	case TerrainBuffer::TerrainToolStyle::RaiseOrLowerTerrain:
+	//		RaiseHeight();
+	//		break;
+	//	case TerrainBuffer::TerrainToolStyle::PaintTexture:
+	//		PaintTexture();
+	//		break;
+	//	case TerrainBuffer::TerrainToolStyle::TerrainToolStyleEnd:
+	//		break;
+	//	default:
+	//		break;
+	//	}
+	//}
 
 
 	return Pos;

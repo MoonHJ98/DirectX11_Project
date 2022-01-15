@@ -19,31 +19,31 @@ DeferredBuffer::~DeferredBuffer()
 
 HRESULT DeferredBuffer::Initialize(int _textureWidth, int _textureHeight, float _screenDepth, float _screenNear)
 {
-	auto Diffuse = RenderTarget::Create(Vector3(-350.f, 250.f, 0.1f), Vector3(50.f, 50.f, 1.f), Vector4(1.f, 1.f, 1.f, 1.f));
+	auto Diffuse = RenderTarget::Create(Vector3(-550.f, 350.f, 0.1f), Vector3(50.f, 50.f, 1.f), Vector4(1.f, 1.f, 1.f, 1.f));
 	renderTargets.push_back(Diffuse);
 
-	auto Normal = RenderTarget::Create(Vector3(-250, 250, 0.1f), Vector3(50.f, 50.f, 1.f), Vector4(1.f, 1.f, 1.f, 1.f));
+	auto Normal = RenderTarget::Create(Vector3(-450, 350, 0.1f), Vector3(50.f, 50.f, 1.f), Vector4(1.f, 1.f, 1.f, 1.f));
 	renderTargets.push_back(Normal);
 
-	auto SpecularMap = RenderTarget::Create(Vector3(-350.f, 150.f, 0.1f), Vector3(50.f, 50.f, 1.f), Vector4(1.f, 1.f, 1.f, 1.f));
+	auto SpecularMap = RenderTarget::Create(Vector3(-550.f, 250.f, 0.1f), Vector3(50.f, 50.f, 1.f), Vector4(1.f, 1.f, 1.f, 1.f));
 	renderTargets.push_back(SpecularMap);
 
-	auto ViewDirection = RenderTarget::Create(Vector3(-250, 150.f, 0.1f), Vector3(50.f, 50.f, 1.f), Vector4(1.f, 1.f, 1.f, 1.f));
+	auto ViewDirection = RenderTarget::Create(Vector3(-450, 250.f, 0.1f), Vector3(50.f, 50.f, 1.f), Vector4(1.f, 1.f, 1.f, 1.f));
 	renderTargets.push_back(ViewDirection);
 
-	auto shade = RenderTarget::Create(Vector3(-350.f, 50.f, 0.1f), Vector3(50.f, 50.f, 1.f), Vector4(1.f, 1.f, 1.f, 1.f));
+	auto shade = RenderTarget::Create(Vector3(-550.f, 150.f, 0.1f), Vector3(50.f, 50.f, 1.f), Vector4(1.f, 1.f, 1.f, 1.f));
 	renderTargets.push_back(shade);
 
-	auto specular = RenderTarget::Create(Vector3(-250, 50.f, 0.1f), Vector3(50.f, 50.f, 1.f), Vector4(1.f, 1.f, 1.f, 1.f));
+	auto specular = RenderTarget::Create(Vector3(-450, 150.f, 0.1f), Vector3(50.f, 50.f, 1.f), Vector4(1.f, 1.f, 1.f, 1.f));
 	renderTargets.push_back(specular);
 
-	auto depthForShadow = RenderTarget::Create(Vector3(-350.f, -50.f, 0.1f), Vector3(50.f, 50.f, 1.f), Vector4(1.f, 1.f, 1.f, 1.f));
+	auto depthForShadow = RenderTarget::Create(Vector3(-550.f, 50.f, 0.1f), Vector3(50.f, 50.f, 1.f), Vector4(1.f, 1.f, 1.f, 1.f));
 	renderTargets.push_back(depthForShadow);
 
-	auto lightViewPos = RenderTarget::Create(Vector3(-250, -50.f, 0.1f), Vector3(50.f, 50.f, 1.f), Vector4(1.f, 1.f, 1.f, 1.f));
+	auto lightViewPos = RenderTarget::Create(Vector3(-450, 50.f, 0.1f), Vector3(50.f, 50.f, 1.f), Vector4(1.f, 1.f, 1.f, 1.f));
 	renderTargets.push_back(lightViewPos);
 
-	auto blend = RenderTarget::Create(Vector3(-350.f, -150.f, 0.1f), Vector3(50.f, 50.f, 1.f), Vector4(1.f, 1.f, 1.f, 1.f));
+	auto blend = RenderTarget::Create(Vector3(-550.f, -50.f, 0.1f), Vector3(50.f, 50.f, 1.f), Vector4(1.f, 1.f, 1.f, 1.f));
 	renderTargets.push_back(blend);
 
 	

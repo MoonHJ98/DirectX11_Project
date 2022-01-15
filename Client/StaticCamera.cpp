@@ -90,6 +90,7 @@ HRESULT StaticCamera::Initialize(CAMERADECS _Decs)
 	CameraBuffer->Create(Graphic->GetDevice());
 
 	cameraComponent = CameraComponent::Create(shared_from_this());
+	transform->SetUpdateTransByTool(false);
 	components[ComponentType::BUFFER] = cameraComponent;
 	components[ComponentType::TRANSFORM] = transform;
 

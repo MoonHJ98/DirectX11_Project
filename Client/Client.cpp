@@ -164,7 +164,7 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
 
-	RECT rc = { 0, 0, 800, 600 };
+	RECT rc = { 0, 0, 1200, 800 };
 	GX = static_cast<int>(rc.right - rc.left);
 	GY = static_cast<int>(rc.bottom - rc.top);
 

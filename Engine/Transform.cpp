@@ -403,7 +403,6 @@ void Transform::RenderInspector()
 		pos[2] = GetState(POSITION).z;
 
 		ImGui::InputFloat3("Position", pos);
-		SetState(POSITION, Vector3(pos[0], pos[1], pos[2]));
 
 		float rot[3];
 		rot[0] = GetRotation().x;
@@ -411,7 +410,6 @@ void Transform::RenderInspector()
 		rot[2] = GetRotation().z;
 
 		ImGui::InputFloat3("Rotation", rot);
-		SetRotation(Vector3(rot[0], rot[1], rot[2]));
 
 
 		float scale[3];
@@ -420,8 +418,16 @@ void Transform::RenderInspector()
 		scale[2] = GetScale().z;
 
 		ImGui::InputFloat3("Scale", scale);
-		if (scale[0] != 0 && scale[1] != 0 && scale[2] != 0)
-			SetScale(Vector3(scale[0], scale[1], scale[2]));
+
+
+		if (updateTransformByTool)
+		{
+			SetState(POSITION, Vector3(pos[0], pos[1], pos[2]));
+			SetRotation(Vector3(rot[0], rot[1], rot[2]));
+			if (scale[0] != 0 && scale[1] != 0 && scale[2] != 0)
+				SetScale(Vector3(scale[0], scale[1], scale[2]));
+		}
+
 	}
 
 }

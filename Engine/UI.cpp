@@ -27,6 +27,7 @@ int UI::Update(float _TimeDelta)
 
 void UI::Render()
 {
+	
 	RenderComponent();
 }
 
