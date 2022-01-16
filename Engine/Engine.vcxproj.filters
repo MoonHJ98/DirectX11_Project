@@ -184,6 +184,15 @@
     <Filter Include="01. Utility\03. Component\01. Buffer\04. Terrain\02. Brush\01. TextureBrush">
       <UniqueIdentifier>{e1aaa1b6-90e4-4a4a-b7ed-e448d90b43a7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Utility\03. Component\09. Camera">
+      <UniqueIdentifier>{9a1db439-648f-46b5-bcd1-386be3b0c606}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\03. Component\09. Camera\00. CamSphere">
+      <UniqueIdentifier>{ae6dd2e5-c8cd-456a-ad68-e4761e270037}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Utility\03. Component\09. Camera\01. CamLine">
+      <UniqueIdentifier>{aecd701e-eb97-4a7f-bbe8-da54a12e49f4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -360,10 +369,15 @@
     <ClInclude Include="TextureBrush.h">
       <Filter>01. Utility\03. Component\01. Buffer\04. Terrain\02. Brush\01. TextureBrush</Filter>
     </ClInclude>
-    <ClInclude Include="CameraComponent.h" />
-    <ClInclude Include="CamSphere.h" />
-    <ClInclude Include="Line.h" />
-    <ClInclude Include="UI.h" />
+    <ClInclude Include="CameraComponent.h">
+      <Filter>01. Utility\03. Component\09. Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="CamSphere.h">
+      <Filter>01. Utility\03. Component\09. Camera\00. CamSphere</Filter>
+    </ClInclude>
+    <ClInclude Include="Line.h">
+      <Filter>01. Utility\03. Component\09. Camera\01. CamLine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -534,10 +548,15 @@
     <ClCompile Include="TextureBrush.cpp">
       <Filter>01. Utility\03. Component\01. Buffer\04. Terrain\02. Brush\01. TextureBrush</Filter>
     </ClCompile>
-    <ClCompile Include="CameraComponent.cpp" />
-    <ClCompile Include="CamSphere.cpp" />
-    <ClCompile Include="Line.cpp" />
-    <ClCompile Include="UI.cpp" />
+    <ClCompile Include="CameraComponent.cpp">
+      <Filter>01. Utility\03. Component\09. Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="CamSphere.cpp">
+      <Filter>01. Utility\03. Component\09. Camera\00. CamSphere</Filter>
+    </ClCompile>
+    <ClCompile Include="Line.cpp">
+      <Filter>01. Utility\03. Component\09. Camera\01. CamLine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="ModelVS.hlsl">
@@ -582,7 +601,17 @@
     <FxCompile Include="TerrainVS.hlsl">
       <Filter>02. Includes\01. HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="LinePS.hlsl" />
-    <FxCompile Include="LineVS.hlsl" />
+    <FxCompile Include="LinePS.hlsl">
+      <Filter>02. Includes\01. HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="LineVS.hlsl">
+      <Filter>02. Includes\01. HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="ParticlePS.hlsl">
+      <Filter>02. Includes\01. HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="ParticleVS.hlsl">
+      <Filter>02. Includes\01. HLSL</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

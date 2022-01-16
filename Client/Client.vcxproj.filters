@@ -25,6 +25,12 @@
     <Filter Include="98. ImgUI">
       <UniqueIdentifier>{ad961e2e-a704-412d-b385-9f151e289108}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\03. UI">
+      <UniqueIdentifier>{48517782-6fe3-4446-8c3a-1932599631a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\04. Particle">
+      <UniqueIdentifier>{2b271744-9978-4e68-ad7b-ef87e629c762}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -59,6 +65,12 @@
     </ClInclude>
     <ClInclude Include="SphereTest.h" />
     <ClInclude Include="ImguiManager.h" />
+    <ClInclude Include="..\Engine\UI.h">
+      <Filter>02. GameObject\03. UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Engine\ParticleSystem.h">
+      <Filter>02. GameObject\04. Particle</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -84,6 +96,12 @@
     </ClCompile>
     <ClCompile Include="SphereTest.cpp" />
     <ClCompile Include="ImguiManager.cpp" />
+    <ClCompile Include="..\Engine\UI.cpp">
+      <Filter>02. GameObject\03. UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Engine\ParticleSystem.cpp">
+      <Filter>02. GameObject\04. Particle</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

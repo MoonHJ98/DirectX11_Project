@@ -321,7 +321,6 @@ void Transform::Render()
 	if (obj == nullptr)
 	{
 		MATRIXBUFFERTYPE desc;
-		desc.World = XMMatrixTranspose(WorldMatrix);
 		Matrix View = XMMatrixIdentity();
 		desc.World = XMMatrixIdentity();
 
@@ -352,7 +351,7 @@ void Transform::Render()
 	if (obj->GetisOrth())
 	{
 		Matrix View = XMMatrixIdentity();
-		desc.World = XMMatrixIdentity();
+		//desc.World = XMMatrixIdentity();
 
 		Vector3 scale = GetScale();
 		View(0, 0) = scale.x;

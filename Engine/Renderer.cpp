@@ -155,6 +155,24 @@ void Renderer::RenderNonAlpha()
 
 void Renderer::RenderAlpha()
 {
+	Graphic->TurnOnAlphaBlending();
+	for (auto& pGameObject : RenderGroup[RENDER_ALPHA])
+	{
+
+		if (nullptr != pGameObject)
+		{
+
+			pGameObject->RenderDepthForShadow(false);
+			pGameObject->Render();
+
+		}
+	}
+
+
+
+
+	RenderGroup[RENDER_ALPHA].clear();
+	Graphic->TurnOffAlphaBlending();
 }
 
 void Renderer::RenderUI()
