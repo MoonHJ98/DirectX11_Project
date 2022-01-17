@@ -65,11 +65,11 @@
     </ClInclude>
     <ClInclude Include="SphereTest.h" />
     <ClInclude Include="ImguiManager.h" />
-    <ClInclude Include="..\Engine\UI.h">
-      <Filter>02. GameObject\03. UI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Engine\ParticleSystem.h">
+    <ClInclude Include="ParticleSystem.h">
       <Filter>02. GameObject\04. Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="UI.h">
+      <Filter>02. GameObject\03. UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -96,11 +96,11 @@
     </ClCompile>
     <ClCompile Include="SphereTest.cpp" />
     <ClCompile Include="ImguiManager.cpp" />
-    <ClCompile Include="..\Engine\UI.cpp">
-      <Filter>02. GameObject\03. UI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Engine\ParticleSystem.cpp">
+    <ClCompile Include="ParticleSystem.cpp">
       <Filter>02. GameObject\04. Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="UI.cpp">
+      <Filter>02. GameObject\03. UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

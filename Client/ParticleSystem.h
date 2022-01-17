@@ -10,7 +10,7 @@ private:
 	struct ParticleType
 	{
 		Vector3 position;
-		Color color = Color(0.f, 0.f, 0.f, 1.f);
+		Vector3 color = Vector3(0.f, 0.f, 0.f);
 		float velocity = 0.f;
 		bool active = false;
 	};
@@ -19,7 +19,7 @@ private:
 	{
 		Vector3 position;
 		Vector2 texture;
-		Color color;
+		Vector3 color;
 	};
 
 private:

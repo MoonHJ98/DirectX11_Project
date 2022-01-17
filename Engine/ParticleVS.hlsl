@@ -10,14 +10,16 @@ struct VertexInputType
 {
     float3 position : POSITION;
     float2 tex : TEXCOORD;
-    float4 color : COLOR;
+    float3 color : COLOR;
 };
 
 struct PixelInputType
 {
     float4 position : SV_POSITION;
     float2 tex : TEXCOORD;
-    float4 color : COLOR;
+    float3 color : COLOR;
+    float4 ProjPos : TEXCOORD1;
+
 };
 
 
@@ -35,6 +37,7 @@ PixelInputType main(VertexInputType input)
     output.tex = input.tex;
     output.color = input.color;
 
+    output.ProjPos = output.position;
     
     return output;
 }

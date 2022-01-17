@@ -22,8 +22,9 @@ public:
 	virtual void Render() PURE;
 	void RenderComponentsIspector();
 	void RenderDepthForShadow(BOOL _renderDepthForShadow) { renderDepthForShadow = _renderDepthForShadow; }
-	bool GetisOrth() { return isOrtho; }
+	bool GetisBillboard() { return isBillboard; }
 	BOOL GetRenderDeptehForShadow() { return renderDepthForShadow; }
+	void ComputeViewZ(Vector3* _worldPos);
 
 public:
 	Vector3 GetPosition();
@@ -34,6 +35,7 @@ public:
 
 	void SetIsRoot(bool _root) { isRoot = _root; }
 	bool GetIsRoot() { return isRoot; }
+	float GetViewZ() const { return viewZ; }
 
 public:
 	virtual void OnContact() PURE;
@@ -49,7 +51,7 @@ protected:
 	shared_ptr<Shader>		shader = nullptr;
 	float					TimeDelta = 0;
 
-	bool					isOrtho = false;
+	bool					isBillboard = false;
 	BOOL                    renderDepthForShadow = FALSE;
 
 	vector<shared_ptr<Component>> components;
@@ -57,5 +59,7 @@ protected:
 	bool isRoot = true;
 
 	vector<shared_ptr<GameObject>> childObject;
+
+	float viewZ = 0.f;
 };
 

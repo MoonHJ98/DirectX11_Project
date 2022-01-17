@@ -7,7 +7,9 @@ struct PixelInputType
 {
     float4 position : SV_POSITION;
     float2 tex : TEXCOORD;
-    float4 color : COLOR;
+    float3 color : COLOR;
+    float4 ProjPos : TEXCOORD1;
+
 
 };
 
@@ -27,10 +29,11 @@ Output main(PixelInputType input) : SV_TARGET
     
     float4 textureColor = shaderTexture.Sample(SampleType, input.tex);
 
-    Out.color = textureColor * input.color;
+    Out.color = textureColor;
 
     Out.normal = float4(0.f, 0.f, 0.f, 0.f);
     Out.depth = float4(0.f, 0.f, 0.f, 0.f);
+
     Out.Specular = float4(0.f, 0.f, 0.f, 0.f);
     Out.lightViewPosition = float4(0.f, 0.f, 0.f, 0.f);
    

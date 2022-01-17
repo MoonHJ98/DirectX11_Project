@@ -145,7 +145,6 @@ void Renderer::RenderNonAlpha()
 		}
 	}
 
-	//RenderUI();
 	deferredBuffer->EndMRT();
 
 
@@ -153,8 +152,17 @@ void Renderer::RenderNonAlpha()
 
 }
 
+bool Compare(shared_ptr<GameObject> pSour, shared_ptr<GameObject> pDest)
+{
+	return pSour->GetViewZ() > pDest->GetViewZ();
+}
+
 void Renderer::RenderAlpha()
 {
+	RenderGroup[RENDER_ALPHA].sort(Compare);
+
+
+	//Graphic->TurnZBufferOff();
 	Graphic->TurnOnAlphaBlending();
 	for (auto& pGameObject : RenderGroup[RENDER_ALPHA])
 	{
@@ -173,6 +181,8 @@ void Renderer::RenderAlpha()
 
 	RenderGroup[RENDER_ALPHA].clear();
 	Graphic->TurnOffAlphaBlending();
+	//Graphic->TurnZBufferOn();
+
 }
 
 void Renderer::RenderUI()

@@ -20,7 +20,8 @@ ParticleSystem::~ParticleSystem()
 
 int ParticleSystem::Update(float _TimeDelta)
 {
-	Renderer::GetInstance()->AddRenderGroup(Renderer::RENDER_ALPHA, shared_from_this());
+	ComputeViewZ(&transform->GetState(Transform::POSITION));
+
 
 
 	UpdateComponent(_TimeDelta);
@@ -36,13 +37,22 @@ int ParticleSystem::Update(float _TimeDelta)
 
 	// 동적 정점 버퍼를 각 파티클의 새 위치로 업데이트합니다.
 	UpdateBuffers();
+
+	Renderer::GetInstance()->AddRenderGroup(Renderer::RENDER_ALPHA, shared_from_this());
+
 	return 0;
 }
 
 void ParticleSystem::Render()
 {
+	//Graphic->TurnOnAlphaBlending();
+
+
 	RenderComponent();
 	RenderBuffers();
+
+	//Graphic->TurnOffAlphaBlending();
+
 }
 
 void ParticleSystem::OnContact()
@@ -164,7 +174,7 @@ void ParticleSystem::EmitParticles(float _timeDelta)
 		float green = (((float)rand() - (float)rand()) / RAND_MAX) + 0.5f;
 		float blue = (((float)rand() - (float)rand()) / RAND_MAX) + 0.5f;
 
-		Color _color = Color(red, green, blue, 1.f);
+		Vector3 _color = Vector3(red, green, blue);
 
 		// 이제 블렌딩을 위해 파티클을 뒤에서 앞으로 렌더링해야하므로 파티클 배열을 정렬해야 합니다.
 		// Z 깊이를 사용하여 정렬하므로 목록에서 파티클을 삽입해야 하는 위치를 찾아야합니다.
@@ -248,37 +258,37 @@ void ParticleSystem::UpdateBuffers()
 		// 왼쪽 아래.
 		vertices.get()[index].position = Vector3(particleList.get()[i].position.x - particleSize, particleList.get()[i].position.y - particleSize, particleList.get()[i].position.z);
 		vertices.get()[index].texture = Vector2(0.0f, 1.0f);
-		vertices.get()[index].color = Color(particleList.get()[i].color);
+		vertices.get()[index].color = Vector3(particleList.get()[i].color);
 		index++;
 
 		// 왼쪽 위.
 		vertices.get()[index].position = Vector3(particleList.get()[i].position.x - particleSize, particleList.get()[i].position.y + particleSize, particleList.get()[i].position.z);
 		vertices.get()[index].texture = Vector2(0.0f, 0.0f);
-		vertices.get()[index].color = Color(particleList.get()[i].color);
+		vertices.get()[index].color = Vector3(particleList.get()[i].color);
 		index++;
 
 		// 오른쪽 아래.
 		vertices.get()[index].position = Vector3(particleList.get()[i].position.x + particleSize, particleList.get()[i].position.y - particleSize, particleList.get()[i].position.z);
 		vertices.get()[index].texture = Vector2(1.0f, 1.0f);
-		vertices.get()[index].color = Color(particleList.get()[i].color);
+		vertices.get()[index].color = Vector3(particleList.get()[i].color);
 		index++;
 
 		// 오른쪽 아래.
 		vertices.get()[index].position = Vector3(particleList.get()[i].position.x + particleSize, particleList.get()[i].position.y - particleSize, particleList.get()[i].position.z);
 		vertices.get()[index].texture = Vector2(1.0f, 1.0f);
-		vertices.get()[index].color = Color(particleList.get()[i].color);
+		vertices.get()[index].color = Vector3(particleList.get()[i].color);
 		index++;
 
 		// 왼쪽 위.
 		vertices.get()[index].position = Vector3(particleList.get()[i].position.x - particleSize, particleList.get()[i].position.y + particleSize, particleList.get()[i].position.z);
 		vertices.get()[index].texture = Vector2(0.0f, 0.0f);
-		vertices.get()[index].color = Color(particleList.get()[i].color);
+		vertices.get()[index].color = Vector3(particleList.get()[i].color);
 		index++;
 
 		// 오른쪽 위.
 		vertices.get()[index].position = Vector3(particleList.get()[i].position.x + particleSize, particleList.get()[i].position.y + particleSize, particleList.get()[i].position.z);
 		vertices.get()[index].texture = Vector2(1.0f, 0.0f);
-		vertices.get()[index].color = Color(particleList.get()[i].color);
+		vertices.get()[index].color = Vector3(particleList.get()[i].color);
 		index++;
 	}
 
@@ -322,15 +332,16 @@ HRESULT ParticleSystem::Initialize(MATERIALDESC& _materialDesc)
 	Graphic = GraphicDevice::GetInstance();
 
 	material = Material::Create(_materialDesc);
-
+	isBillboard = true;
 	transform = Transform::Create(Transform::TRANSDESC());
+	transform->SetState(Transform::POSITION, Vector3(10.f, 2.f, -10.f));
 	transform->SetObject(shared_from_this());
 	
 	D3D11_INPUT_ELEMENT_DESC InputLayout[] =
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+		{ "COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 
 
 	};

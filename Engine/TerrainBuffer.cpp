@@ -42,6 +42,7 @@ int TerrainBuffer::Update(float _timeDelta)
 
 void TerrainBuffer::Render()
 {
+
 	textureBrush->Render();
 	Graphic->GetDeviceContext()->PSSetShaderResources(2, 1, textures[0]->GetTexture());
 	Graphic->GetDeviceContext()->PSSetShaderResources(3, 1, textures[1]->GetTexture());

@@ -63,7 +63,6 @@ PSOut main(PSInput input)
 
     float4 vDepthInfo = DepthTexture.Sample(SampleType, input.Uv);
 
-
     if (vDepthInfo.b != 1.f)
         color = AmbientColor;
     

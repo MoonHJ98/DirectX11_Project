@@ -156,12 +156,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\Engine\ParticleSystem.h" />
-    <ClInclude Include="..\Engine\UI.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="ImguiManager.h" />
     <ClInclude Include="MainApp.h" />
+    <ClInclude Include="ParticleSystem.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Resource.h" />
@@ -170,13 +169,13 @@
     <ClInclude Include="StaticCamera.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Terrain.h" />
+    <ClInclude Include="UI.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Engine\ParticleSystem.cpp" />
-    <ClCompile Include="..\Engine\UI.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="ImguiManager.cpp" />
     <ClCompile Include="MainApp.cpp" />
+    <ClCompile Include="ParticleSystem.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -188,6 +187,7 @@
     <ClCompile Include="Stage.cpp" />
     <ClCompile Include="StaticCamera.cpp" />
     <ClCompile Include="Terrain.cpp" />
+    <ClCompile Include="UI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc" />

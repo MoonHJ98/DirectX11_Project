@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "GameObject.h"
 #include "Component.h"
+#include "Management.h"
 
 GameObject::GameObject()
 {
@@ -24,6 +25,21 @@ void GameObject::RenderComponentsIspector()
 	}
 }
 
+
+void GameObject::ComputeViewZ(Vector3* _worldPos)
+{
+
+	Matrix*	ViewMatrix = Management::GetInstance()->GetTransform(D3DTRANSFORMSTATE_VIEW);
+
+	Matrix		CameraMatrix;
+	
+	CameraMatrix = XMMatrixInverse(nullptr, XMLoadFloat4x4(ViewMatrix));
+
+
+	Vector3		Dir = *_worldPos - *(Vector3*)&CameraMatrix.m[3][0];
+
+	viewZ = Dir.Length();
+}
 
 Vector3 GameObject::GetPosition()
 {

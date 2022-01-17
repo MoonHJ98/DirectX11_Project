@@ -23,7 +23,13 @@ float4 main(PSInput input) : SV_TARGET
     specular = SpecularTexture.Sample(SampleType, input.Uv);
 
 
-    color = shade * diffuse;
-    color = saturate(color + specular);
+    if(diffuse.a != 0)
+    {
+        color = shade * diffuse;
+        color = saturate(color + specular);
+    }
+    else
+        color = diffuse;
+
     return color;
 }

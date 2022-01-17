@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "Transform.h"
 #include "GraphicDevice.h"
 #include "Management.h"
@@ -347,28 +347,34 @@ void Transform::Render()
 	MATRIXBUFFERTYPE desc;
 	desc.World = XMMatrixTranspose(WorldMatrix);
 	desc.View = XMMatrixTranspose(*Manage->GetTransform(D3DTRANSFORMSTATE_VIEW));
-
-	if (obj->GetisOrth())
+	desc.Projection = XMMatrixTranspose(*Manage->GetTransform(D3DTRANSFORMSTATE_PROJECTION));
+	if (obj->GetisBillboard())
 	{
-		Matrix View = XMMatrixIdentity();
-		//desc.World = XMMatrixIdentity();
+		auto camera = Manage->FindGameObjectTest(0, L"Camera", L"Camera");
+		Vector3 cameraPos = camera->GetPosition();
 
-		Vector3 scale = GetScale();
-		View(0, 0) = scale.x;
-		View(1, 1) = scale.y;
+		// 빌보드 모델의 위치를 ​​설정합니다.
+		Vector3 billBoardPos = GetState(POSITION);
 
-		Vector3 pos = GetState(POSITION);
-		View(3, 0) = pos.x;
-		View(3, 1) = pos.y;
-		View(3, 2) = pos.z;
+		// 아크 탄젠트 함수를 사용하여 현재 카메라 위치를 향하도록 빌보드 모델에 적용해야하는 회전을 계산합니다.
+		double angle = atan2(billBoardPos.x - cameraPos.x, billBoardPos.z - cameraPos.z) * (180.0 / XM_PI);
 
-		Vector3 rot = GetRotation();
+		// 회전을 라디안으로 변환합니다.
+		float rotation = XMConvertToRadians((float)angle);
 
-		desc.View = XMMatrixTranspose(View);
-		desc.Projection = XMMatrixTranspose(*Manage->GetTransform(D3DTRANSFORMSTATE_TEXTURE0));
+		// 세계 행렬을 사용하여 원점에서 빌보드 회전을 설정합니다.
+		Matrix worldMatrix = XMMatrixRotationY(rotation);
+
+		// 빌보드 모델에서 번역 행렬을 설정합니다.
+		Matrix translateMatrix = XMMatrixTranslation(billBoardPos.x, billBoardPos.y, billBoardPos.z);
+
+		// 마지막으로 회전 및 변환 행렬을 결합하여 빌보드 모델의 최종 행렬을 만듭니다.
+		worldMatrix = XMMatrixMultiply(worldMatrix, translateMatrix);
+		desc.World = XMMatrixTranspose(worldMatrix);
+
 	}
-	else
-		desc.Projection = XMMatrixTranspose(*Manage->GetTransform(D3DTRANSFORMSTATE_PROJECTION));
+	//else
+	//	desc.Projection = XMMatrixTranspose(*Manage->GetTransform(D3DTRANSFORMSTATE_PROJECTION));
 
 	auto light = Manage->FindLight(L"DirectionalLight", 0);
 	Matrix lightViewMatrix = *light->GetViewMatrix();
