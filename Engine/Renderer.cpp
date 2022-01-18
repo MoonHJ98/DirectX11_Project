@@ -161,7 +161,6 @@ void Renderer::RenderAlpha()
 {
 	RenderGroup[RENDER_ALPHA].sort(Compare);
 
-
 	//Graphic->TurnZBufferOff();
 	Graphic->TurnOnAlphaBlending();
 	for (auto& pGameObject : RenderGroup[RENDER_ALPHA])

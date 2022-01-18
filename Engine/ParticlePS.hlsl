@@ -1,7 +1,16 @@
 
 Texture2D shaderTexture : register(t0);
+Texture2D depthTexture : register(t1);
+
 SamplerState SampleType;
 
+cbuffer ProjtoWorld : register(b0)
+{
+    matrix ViewInv;
+    matrix ProjInv;
+    float3 CamPos;
+    float padding;
+};
 
 struct PixelInputType
 {
@@ -9,6 +18,7 @@ struct PixelInputType
     float2 tex : TEXCOORD;
     float3 color : COLOR;
     float4 ProjPos : TEXCOORD1;
+    float4 WorldPos : TEXCOORD2;
 
 
 };
@@ -26,10 +36,12 @@ struct Output
 Output main(PixelInputType input) : SV_TARGET
 {
     Output Out;
+   
     
     float4 textureColor = shaderTexture.Sample(SampleType, input.tex);
 
     Out.color = textureColor;
+
 
     Out.normal = float4(0.f, 0.f, 0.f, 0.f);
     Out.depth = float4(0.f, 0.f, 0.f, 0.f);

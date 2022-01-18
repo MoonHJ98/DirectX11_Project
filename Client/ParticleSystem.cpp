@@ -45,13 +45,11 @@ int ParticleSystem::Update(float _TimeDelta)
 
 void ParticleSystem::Render()
 {
-	//Graphic->TurnOnAlphaBlending();
 
 
 	RenderComponent();
 	RenderBuffers();
 
-	//Graphic->TurnOffAlphaBlending();
 
 }
 

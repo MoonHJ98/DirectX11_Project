@@ -69,10 +69,10 @@ HRESULT MainApp::Initialize()
 	//Manage->AddLayerTest(SCENEID::STATIC, L"Player", player);
 
 
-	//MATERIALDESC matDesc;
-	//matDesc.DiffuseMap = L"../Resources/A_Health_HP.tga";
-	//auto particle = ParticleSystem::Create(matDesc);
-	//Manage->AddLayerTest(SCENEID::STATIC, L"Particle", particle, true);
+	MATERIALDESC matDesc;
+	matDesc.DiffuseMap = L"../Resources/A_Health_HP.tga";
+	auto particle = ParticleSystem::Create(matDesc);
+	Manage->AddLayerTest(SCENEID::STATIC, L"Particle", particle, true);
 
 	auto terrain = Terrain::Create(50, 50, L"../Resources/heightmap.bmp");
 	Manage->AddLayerTest(SCENEID::STATIC, L"Terrain", terrain, true);

@@ -19,6 +19,7 @@ struct PixelInputType
     float2 tex : TEXCOORD;
     float3 color : COLOR;
     float4 ProjPos : TEXCOORD1;
+    float4 WorldPos : TEXCOORD2;
 
 };
 
@@ -30,6 +31,7 @@ PixelInputType main(VertexInputType input)
 
 	// 월드, 뷰 및 투영 행렬에 대한 정점의 위치를 계산합니다.
     output.position = mul(float4(input.position, 1.f), worldMatrix);
+    output.WorldPos = output.position;
     output.position = mul(output.position, viewMatrix);
     output.position = mul(output.position, projectionMatrix);
     
