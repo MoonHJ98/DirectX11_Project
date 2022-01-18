@@ -62,7 +62,11 @@ HRESULT PhysXManager::Initialize()
 
 	}
 
+	
+	controllerManager = PxCreateControllerManager(*scene);
 
+
+	
 	return CreateSimulation();
 }
 
@@ -185,6 +189,14 @@ void PhysXManager::UpdateHeightField(shared_ptr<TerrainBuffer> _terrainBuffer)
 	
 	scene->addActor(*heightFieldActor);
 	allocator.deallocate(heightmap);
+}
+
+void PhysXManager::CreateController(PxController * _controller, PxExtendedVec3 _pos)
+{
+	PxCapsuleControllerDesc desc = PxCapsuleControllerDesc();
+	desc.height = 10.f;
+	desc.radius = 5.f;
+	desc.position = _pos;
 }
 
 void PhysXManager::RunSimulate(float _timeDelta)

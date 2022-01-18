@@ -27,6 +27,7 @@ public:
 	PxShape* AddCollider(PxGeometryType::Enum _type, ColliderDesc _desc);
 	void SetupFiltering(PxRigidActor* actor, PxU32 filterGroup, PxU32 filterMask);
 	void UpdateHeightField(shared_ptr<TerrainBuffer> _terrainBuffer);
+	void CreateController(PxController* _controller, PxExtendedVec3 _pos);
 
 public:
 	void RunSimulate(float _timeDelta);
@@ -44,5 +45,7 @@ private:
 	PxCooking* cooking = nullptr;
 
 	PxRigidStatic* heightFieldActor = nullptr;
+
+	PxControllerManager* controllerManager = nullptr;
 };
 

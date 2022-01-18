@@ -33,8 +33,6 @@ HRESULT Rigidbody::Initialize(shared_ptr<GameObject> _object)
 	
 
 
-
-
 	return S_OK;
 }
 

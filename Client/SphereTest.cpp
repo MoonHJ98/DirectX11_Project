@@ -7,6 +7,7 @@
 #include "Material.h"
 #include "Rigidbody.h"
 #include "Collider.h"
+#include "PhysXManager.h"
 
 SphereTest::SphereTest()
 {
@@ -26,6 +27,7 @@ int SphereTest::Update(float _TimeDelta)
 
 	Renderer::GetInstance()->AddRenderGroup(Renderer::RENDER_NONALPHA, shared_from_this());
 
+	
 	return 0;
 }
 
@@ -63,7 +65,7 @@ HRESULT SphereTest::Initialize()
 
 	transform = Transform::Create(Transform::TRANSDESC());
 	transform->SetObject(shared_from_this());
-	transform->SetState(Transform::POSITION, Vector3(10.f, 10.f, 15.f));
+	transform->SetState(Transform::POSITION, Vector3(5.f, 5.f, 15.f));
 	components[ComponentType::TRANSFORM] = transform;
 
 
@@ -77,7 +79,8 @@ HRESULT SphereTest::Initialize()
 	//collider = Collider::Create(shared_from_this(), PxGeometryType::eBOX);
 	//components[ComponentType::COLLIDER] = collider;
 
-
+	Vector3 pos = transform->GetState(Transform::POSITION);
+	PhysXManager::GetInstance()->CreateController(controller, PxExtendedVec3((PxExtended)pos.x, (PxExtended)pos.y, (PxExtended)pos.z));
 	return S_OK;
 }
 
