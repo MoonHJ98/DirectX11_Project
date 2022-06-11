@@ -10,7 +10,6 @@
 #include "ImguiManager.h"
 #include "SphereTest.h"
 #include "PhysXManager.h"
-#include "ParticleSystem.h"
 
 
 
@@ -68,11 +67,6 @@ HRESULT MainApp::Initialize()
 	//auto player = Player::Create(GraphicDev->GetDevice());
 	//Manage->AddLayerTest(SCENEID::STATIC, L"Player", player);
 
-
-	//MATERIALDESC matDesc;
-	//matDesc.DiffuseMap = L"../Resources/A_Health_HP.tga";
-	//auto particle = ParticleSystem::Create(matDesc);
-	//Manage->AddLayerTest(SCENEID::STATIC, L"Particle", particle, true);
 
 	auto terrain = Terrain::Create(50, 50, L"../Resources/heightmap.bmp");
 	Manage->AddLayerTest(SCENEID::STATIC, L"Terrain", terrain, true);

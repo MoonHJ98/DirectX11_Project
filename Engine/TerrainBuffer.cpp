@@ -380,6 +380,8 @@ Vector3 TerrainBuffer::PickTerrain(Vector2 screenPos)
 						break;
 					}
 				}
+				cout << Pos.x << " , " << Pos.y << " , " << Pos.z << endl;
+
 				return Pos;
 			}
 			if (ray.Intersects(vertex4, vertex2, vertex3, dist))
@@ -390,7 +392,7 @@ Vector3 TerrainBuffer::PickTerrain(Vector2 screenPos)
 				auto buffer = brushBuffer->GetBuffer();
 				Graphic->GetDeviceContext()->PSSetConstantBuffers(0, 1, &buffer);
 
-				//cout << Pos.x << " , " << Pos.y << " , " << Pos.z << endl;
+				cout << Pos.x << " , " << Pos.y << " , " << Pos.z << endl;
 
 				if (terrainToolStyle == TerrainToolStyle::RaiseOrLowerTerrain)
 				{

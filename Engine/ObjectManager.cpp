@@ -52,7 +52,7 @@ void ObjectManager::AddLayer(int _Index, wstring _LayerKey, shared_ptr<GameObjec
 	LayerMap[_Index][_LayerKey]->AddGameObject(_Object);
 }
 
-void ObjectManager::AddLayerTest(int _Index, wstring _LayerKey, shared_ptr<GameObject> _Object, bool _isRoot)
+void ObjectManager::AddLayerTest(int _Index, wstring _LayerKey, shared_ptr<GameObject> _Object, bool _isRoot, shared_ptr<GameObject> _parent)
 {
 	auto layerFind = FindLayer(_Index, _LayerKey);
 	if (layerFind == nullptr)
@@ -66,6 +66,12 @@ void ObjectManager::AddLayerTest(int _Index, wstring _LayerKey, shared_ptr<GameO
 	if(_isRoot)
 		AddObjectsforImgui(key, _Object);
 
+	if (_parent != nullptr)
+		AddChildObject();
+}
+
+void ObjectManager::AddChildObject()
+{
 }
 
 shared_ptr<Layer> ObjectManager::FindLayer(int _Index, wstring _LayerKey)

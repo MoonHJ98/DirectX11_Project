@@ -120,8 +120,6 @@ void ImguiManager::Hierarchy()
 
 	if (ImGui::TreeNode("Scene"))
 	{
-
-
 		// For Popup.
 		ObjectPopup();
 
@@ -129,14 +127,31 @@ void ImguiManager::Hierarchy()
 
 		for (auto iter = objects.begin(); iter != objects.end(); ++iter)
 		{
-			
+		
+
 			if (ImGui::TreeNode(ToString(iter->first).c_str()))
 			{
-				isObjectInspector = true;
-				objectForInspector = iter->second;
-				ObjectPopup(true);
+				//if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
+				//{
+				//	ObjectPopup(true, iter->second);
+				//}
+				//
+				//if (ImGui::IsItemClicked(ImGuiMouseButton_Left))
+				//{
+				//	int a = 10;
+				//	isObjectInspector = true;
+				//	objectForInspector = iter->second;
+				//}
+
+				if (ImGui::IsItemClicked(ImGuiMouseButton_Left))
+				{
+					isObjectInspector = true;
+					objectForInspector = iter->second;
+					//ImGui::TreePop();
+				}
 				ImGui::TreePop();
 			}
+			
 			//if (ImGui::Selectable(ToString(iter->first).c_str()))
 			//{
 			//	isObjectInspector = true;
@@ -145,6 +160,19 @@ void ImguiManager::Hierarchy()
 			//}
 
 		}
+
+		//for (auto iter = objects.begin(); iter != objects.end(); ++iter)
+		//{
+		//	if (ImGui::TreeNode(ToString(iter->first).c_str()))
+		//	{
+		//
+		//		//isObjectInspector = true;
+		//		//objectForInspector = iter->second;
+		//
+		//		ImGui::TreePop();
+		//	}
+		//}
+
 
 		ImGui::TreePop();
 	}
@@ -163,7 +191,7 @@ void ImguiManager::Inspector()
 	ImGui::End();
 }
 
-void ImguiManager::ObjectPopup(bool _isRoot)
+void ImguiManager::ObjectPopup(bool _isRoot, shared_ptr<GameObject> _parent)
 {
 	if (ImGui::IsItemClicked(ImGuiPopupFlags_MouseButtonRight))
 		ImGui::OpenPopup("Object");

@@ -22,7 +22,7 @@ private:
 	void Inspector();
 	
 private:
-	void ObjectPopup(bool _isRoot = true);
+	void ObjectPopup(bool _isRoot = true, shared_ptr<GameObject> _parent = nullptr);
 	void ObjectInspector();
 	void ComponentPopup();
 

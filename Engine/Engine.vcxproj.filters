@@ -19,9 +19,6 @@
     <Filter Include="01. Utility">
       <UniqueIdentifier>{30da6128-eca8-4bfe-8053-06e42a791c7d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Utility\00. Management">
-      <UniqueIdentifier>{37056554-c654-46cd-8698-9f5d4f64f1e4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01. Utility\01. Scene">
       <UniqueIdentifier>{ee9bc5fc-759b-48ed-8c86-25fa9548d6c1}</UniqueIdentifier>
     </Filter>
@@ -193,6 +190,9 @@
     <Filter Include="01. Utility\03. Component\09. Camera\01. CamLine">
       <UniqueIdentifier>{aecd701e-eb97-4a7f-bbe8-da54a12e49f4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Utility\01. Scene\00. Management">
+      <UniqueIdentifier>{37056554-c654-46cd-8698-9f5d4f64f1e4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -250,7 +250,7 @@
       <Filter>01. Utility\02. Object\02. GameObject\00. ObjectManager</Filter>
     </ClInclude>
     <ClInclude Include="Management.h">
-      <Filter>01. Utility\00. Management</Filter>
+      <Filter>01. Utility\01. Scene\00. Management</Filter>
     </ClInclude>
     <ClInclude Include="AssimpConverter.h">
       <Filter>02. Includes\02. Assimp</Filter>
@@ -423,7 +423,7 @@
       <Filter>01. Utility\02. Object\01. Layer</Filter>
     </ClCompile>
     <ClCompile Include="Management.cpp">
-      <Filter>01. Utility\00. Management</Filter>
+      <Filter>01. Utility\01. Scene\00. Management</Filter>
     </ClCompile>
     <ClCompile Include="SceneManager.cpp">
       <Filter>01. Utility\01. Scene\00. Manager</Filter>
