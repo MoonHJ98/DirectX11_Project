@@ -157,13 +157,13 @@ Vector3 DebugTree::PickTerrain(Vector2 _screenCursorPos, Vector2 _screenSize)
 					if (ray.Intersects(vertex1, vertex2, vertex3, dist))
 					{
 						Pos = ray.position + ray.direction * dist;
-						cout << Pos.x << " , " << Pos.y << " , " << Pos.z << endl;
+						//cout << Pos.x << " , " << Pos.y << " , " << Pos.z << endl;
 						return Pos;
 					}
 					if (ray.Intersects(vertex4, vertex3, vertex2, dist))
 					{
 						Pos = ray.position + ray.direction * dist;
-						cout << Pos.x << " , " << Pos.y << " , " << Pos.z << endl;
+						//cout << Pos.x << " , " << Pos.y << " , " << Pos.z << endl;
 						return Pos;
 					}
 				}

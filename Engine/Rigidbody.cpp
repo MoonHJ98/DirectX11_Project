@@ -104,7 +104,7 @@ void Rigidbody::SetPosition()
 {
 	PxVec3 bodyPos = body->getGlobalPose().p;
 
-	cout << bodyPos.y << endl;
+	//cout << bodyPos.y << endl;
 	transform.lock()->SetState(Transform::POSITION, Vector3(bodyPos.x, bodyPos.y, bodyPos.z));
 }
 

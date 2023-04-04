@@ -168,8 +168,8 @@ Output main(PixelInputType input)
     
     color = blendColor;
 
-    if (terrainTool)
-        color += GetBrushColor(input.WorldPos, input.uv);
+    //if (terrainTool)
+    //    color += GetBrushColor(input.WorldPos, input.uv);
 
     Out.color = color;
 
