@@ -136,5 +136,6 @@ private:
 	int texPosY = 0;
 
 	HWND hWnd;
+	shared_ptr<TerrainBuffer> thisbuffer;
 };
 

@@ -9,6 +9,7 @@
 #include "Texture.h"
 
 
+
 TerrainBuffer::TerrainBuffer()
 {
 }
@@ -565,6 +566,7 @@ void TerrainBuffer::RaiseHeight()
 					if (vertices[indices[i + j]].position.y <= 0.f)
 						vertices[indices[i + j]].position.y = 0.f;
 				}
+				PhysXManager::GetInstance()->UpdateHeightField(shared_from_this());
 				break;
 			case TerrainBuffer::PaintTexture:
 				break;
@@ -586,6 +588,8 @@ void TerrainBuffer::RaiseHeight()
 				vertices[indices[i + 3]].position.y += h3 * timeDelta * 0.5f;
 				vertices[indices[i + 4]].position.y += h2 * timeDelta * 0.5f;
 				vertices[indices[i + 5]].position.y += h4 * timeDelta * 0.5f;
+				PhysXManager::GetInstance()->UpdateHeightField(shared_from_this());
+
 				break;
 			case TerrainBuffer::PaintTexture:
 				break;
@@ -767,10 +771,13 @@ void TerrainBuffer::DrawAlphaMap()
 shared_ptr<TerrainBuffer> TerrainBuffer::Create(UINT _terrainWidth, UINT _terrainHeight, HWND _hWnd, const char* heightMapFilename)
 {
 	shared_ptr<TerrainBuffer> Instance(new TerrainBuffer());
+
+
 	if (FAILED(Instance->Initialize(_terrainWidth, _terrainHeight, _hWnd, heightMapFilename)))
 	{
 		MSG_BOX("Failed to create TerrainBuffer.");
 		return nullptr;
 	}
+	
 	return Instance;
 }

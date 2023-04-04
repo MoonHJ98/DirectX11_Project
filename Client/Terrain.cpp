@@ -90,7 +90,7 @@ void Terrain::Render()
 		if (components[i])
 			components[i]->Render();
 	}
-	physxManager->UpdateHeightField(terrainBuffer);
+	//physxManager->UpdateHeightField(terrainBuffer);
 
 	//quadtree->Render();
 

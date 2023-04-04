@@ -65,7 +65,7 @@ HRESULT SphereTest::Initialize()
 
 	transform = Transform::Create(Transform::TRANSDESC());
 	transform->SetObject(shared_from_this());
-	transform->SetState(Transform::POSITION, Vector3(5.f, 5.f, 15.f));
+	transform->SetState(Transform::POSITION, Vector3(10.f, 15.f, 15.f));
 	components[ComponentType::TRANSFORM] = transform;
 
 
